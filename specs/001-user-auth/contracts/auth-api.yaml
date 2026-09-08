@@ -1,0 +1,221 @@
+openapi: 3.0.3
+info:
+  title: go-agree Authentication Orchestration API
+  description: HTTP orchestration endpoints for authentication, session verification, and identity linking.
+  version: 1.0.0
+paths:
+  /api/auth/register:
+    post:
+      summary: Register a new user account with email and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: usuario@ejemplo.com
+                password:
+                  type: string
+                  format: password
+                  minLength: 8
+                  maxLength: 128
+                  example: PasswordSegura123!
+      responses:
+        '201':
+          description: User registered and authenticated successfully. Sets HttpOnly session cookie.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthSuccessResponse'
+        '400':
+          description: Validation error (invalid email format or weak password)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Account with this email already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/auth/login:
+    post:
+      summary: Authenticate an existing user with email and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+      responses:
+        '200':
+          description: Login successful. Sets HttpOnly session cookie.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthSuccessResponse'
+        '401':
+          description: Invalid email or password credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/auth/google:
+    get:
+      summary: Get Google OAuth redirect authorization URL
+      parameters:
+        - in: query
+          name: redirect
+          schema:
+            type: string
+          description: Target return URL within the application after successful sign in
+      responses:
+        '302':
+          description: Redirects browser to Google OAuth consent screen
+
+  /api/auth/callback:
+    get:
+      summary: OAuth callback endpoint for Google OAuth code exchange
+      parameters:
+        - in: query
+          name: code
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: next
+          schema:
+            type: string
+            default: /dashboard
+      responses:
+        '302':
+          description: Sets HttpOnly session cookie and redirects user to dashboard or requested target URL
+
+  /api/auth/logout:
+    post:
+      summary: Terminate the current session and clear session cookies
+      responses:
+        '200':
+          description: Session successfully cleared
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+  /api/auth/reset-password:
+    post:
+      summary: Request password recovery email link
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        '200':
+          description: Reset email dispatched if account exists (enumeration-safe response)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Si el correo existe en el sistema, recibirás un enlace de recuperación."
+
+  /api/auth/session:
+    get:
+      summary: Verify current session and retrieve authenticated user profile
+      responses:
+        '200':
+          description: Active session found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionResponse'
+        '401':
+          description: No active or valid session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    UserAccount:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        authProviders:
+          type: array
+          items:
+            type: string
+            enum: [email_password, google]
+        createdAt:
+          type: string
+          format: date-time
+        lastLoginAt:
+          type: string
+          format: date-time
+
+    AuthSuccessResponse:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/UserAccount'
+        redirectTo:
+          type: string
+          example: /dashboard
+
+    SessionResponse:
+      type: object
+      properties:
+        isAuthenticated:
+          type: boolean
+          example: true
+        user:
+          $ref: '#/components/schemas/UserAccount'
+        expiresAt:
+          type: string
+          format: date-time
+
+    ErrorResponse:
+      type: object
+      required: [error, message]
+      properties:
+        error:
+          type: string
+          example: INVALID_CREDENTIALS
+        message:
+          type: string
+          example: "Credenciales inválidas. Por favor, verifica tu correo y contraseña."
