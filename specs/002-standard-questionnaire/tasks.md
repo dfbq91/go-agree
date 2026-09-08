@@ -11,10 +11,10 @@
 
 **Purpose**: Scaffolding for questionnaire domain directories, application use cases, UI component folders, and Spanish copy catalog
 
-- [ ] T001 [P] Create questionnaire domain entity, value-object, and service subdirectories in `packages/domain/src/entities/`, `packages/domain/src/value-objects/`, and `packages/domain/src/services/`
-- [ ] T002 [P] Create application questionnaire use cases and ports directory structure in `packages/application/src/use-cases/questionnaire/` and `packages/application/src/ports/`
-- [ ] T003 [P] Create questionnaire UI component directory structure and types in `apps/web/src/components/questionnaire/` and `apps/web/src/components/questionnaire/types/`
-- [ ] T004 Extend Spanish localization dictionary (`es.ts`) with all questionnaire strings, prompts (Q0–Q11), option labels, tooltips, "¿Por qué te preguntamos esto?" legal rationales, validation messages, and review labels in `apps/web/src/locales/es.ts`
+- [X] T001 [P] Create questionnaire domain entity, value-object, and service subdirectories in `packages/domain/src/entities/`, `packages/domain/src/value-objects/`, and `packages/domain/src/services/`
+- [X] T002 [P] Create application questionnaire use cases and ports directory structure in `packages/application/src/use-cases/questionnaire/` and `packages/application/src/ports/`
+- [X] T003 [P] Create questionnaire UI component directory structure and types in `apps/web/src/components/questionnaire/` and `apps/web/src/components/questionnaire/types/`
+- [X] T004 Extend Spanish localization dictionary (`es.ts`) with all questionnaire strings, prompts (Q0–Q11), option labels, tooltips, "¿Por qué te preguntamos esto?" legal rationales, validation messages, and review labels in `apps/web/src/locales/es.ts`
 
 ---
 
@@ -24,14 +24,14 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T005 [P] Implement questionnaire domain errors (`ContractNotFoundError`, `UnauthorizedContractAccessError`, `InvalidAnswerError`, `EmptyTitleError`) in `packages/domain/src/errors/DomainErrors.ts`
-- [ ] T006 [P] Implement `QuestionOption` value object with tooltips and values in `packages/domain/src/value-objects/QuestionOption.ts`
-- [ ] T007 [P] Implement `ConditionRule` value object with operator evaluation logic (`equals`, `greater_than`, `in`) in `packages/domain/src/value-objects/ConditionRule.ts`
-- [ ] T008 [P] Implement `AnswerValue` value object encapsulating validated answer payloads in `packages/domain/src/value-objects/AnswerValue.ts`
-- [ ] T009 [P] Define `QuestionnaireEnginePort` interface and DTOs per contract specification in `packages/application/src/ports/QuestionnaireEnginePort.ts`
-- [ ] T010 [P] Define `ContractProgressPort` interface and DTOs per contract specification in `packages/application/src/ports/ContractProgressPort.ts`
-- [ ] T011 [P] Implement `MockContractRepository` in-memory adapter for unit/contract tests in `packages/infrastructure/src/adapters/storage/MockContractRepository.ts`
-- [ ] T012 Implement canonical `QuestionnaireDefinition` domain entity containing the ordered standard questions (Q0–Q11), conditions, validation rules, and dynamic skip-traversal logic in `packages/domain/src/entities/QuestionnaireDefinition.ts`
+- [X] T005 [P] Implement questionnaire domain errors (`ContractNotFoundError`, `UnauthorizedContractAccessError`, `InvalidAnswerError`, `EmptyTitleError`) in `packages/domain/src/errors/DomainErrors.ts`
+- [X] T006 [P] Implement `QuestionOption` value object with tooltips and values in `packages/domain/src/value-objects/QuestionOption.ts`
+- [X] T007 [P] Implement `ConditionRule` value object with operator evaluation logic (`equals`, `greater_than`, `in`) in `packages/domain/src/value-objects/ConditionRule.ts`
+- [X] T008 [P] Implement `AnswerValue` value object encapsulating validated answer payloads in `packages/domain/src/value-objects/AnswerValue.ts`
+- [X] T009 [P] Define `QuestionnaireEnginePort` interface and DTOs per contract specification in `packages/application/src/ports/QuestionnaireEnginePort.ts`
+- [X] T010 [P] Define `ContractProgressPort` interface and DTOs per contract specification in `packages/application/src/ports/ContractProgressPort.ts`
+- [X] T011 [P] Implement `MockContractRepository` in-memory adapter for unit/contract tests in `packages/infrastructure/src/adapters/storage/MockContractRepository.ts`
+- [X] T012 Implement canonical `QuestionnaireDefinition` domain entity containing the ordered standard questions (Q0–Q11), conditions, validation rules, and dynamic skip-traversal logic in `packages/domain/src/entities/QuestionnaireDefinition.ts`
 
 **Checkpoint**: Foundation ready — user story implementation can now begin.
 
@@ -45,18 +45,18 @@
 
 ### Tests for User Story 1 (TDD - Write FIRST, ensure they FAIL) ⚠️
 
-- [ ] T013 [P] [US1] Write failing unit tests for `QuestionnaireDefinition` traversal and required question validation in `packages/domain/tests/QuestionnaireDefinition.test.ts`
-- [ ] T014 [P] [US1] Write failing component tests for `QuestionCard` layout rendering only one question at a time in `apps/web/tests/questionnaire/QuestionCard.test.tsx`
-- [ ] T015 [P] [US1] Write failing component tests for `SummaryReview` completion screen in `apps/web/tests/questionnaire/SummaryReview.test.tsx`
+- [X] T013 [P] [US1] Write failing unit tests for `QuestionnaireDefinition` traversal and required question validation in `packages/domain/tests/QuestionnaireDefinition.test.ts`
+- [X] T014 [P] [US1] Write failing component tests for `QuestionCard` layout rendering only one question at a time in `apps/web/tests/questionnaire/QuestionCard.test.tsx`
+- [X] T015 [P] [US1] Write failing component tests for `SummaryReview` completion screen in `apps/web/tests/questionnaire/SummaryReview.test.tsx`
 
 ### Implementation for User Story 1
 
-- [ ] T016 [US1] Implement `Question` domain entity with validation and visibility checks in `packages/domain/src/entities/Question.ts` (satisfies T013)
-- [ ] T017 [P] [US1] Implement accessible `QuestionCard` component wrapping active prompt and form controls in `apps/web/src/components/questionnaire/QuestionCard.tsx` (satisfies T014)
-- [ ] T018 [P] [US1] Implement `NavigationControls` component with "Siguiente" button, disabled states, and Spanish validation alert (`role="alert"`) in `apps/web/src/components/questionnaire/NavigationControls.tsx`
-- [ ] T019 [US1] Implement `SummaryReview` component displaying all answered questions with "Modificar" links and "Confirmar cuestionario" action in `apps/web/src/components/questionnaire/SummaryReview.tsx` (satisfies T015)
-- [ ] T020 [US1] Implement `QuestionnaireContainer` coordinating step transitions, single-question rendering, and summary view in `apps/web/src/components/questionnaire/QuestionnaireContainer.tsx`
-- [ ] T021 [US1] Wire the host questionnaire page in `apps/web/src/app/(protected)/questionnaire/page.tsx` supporting both `?id=<uuid>` resumption and new contract generation initialization
+- [X] T016 [US1] Implement `Question` domain entity with validation and visibility checks in `packages/domain/src/entities/Question.ts` (satisfies T013)
+- [X] T017 [P] [US1] Implement accessible `QuestionCard` component wrapping active prompt and form controls in `apps/web/src/components/questionnaire/QuestionCard.tsx` (satisfies T014)
+- [X] T018 [P] [US1] Implement `NavigationControls` component with "Siguiente" button, disabled states, and Spanish validation alert (`role="alert"`) in `apps/web/src/components/questionnaire/NavigationControls.tsx`
+- [X] T019 [US1] Implement `SummaryReview` component displaying all answered questions with "Modificar" links and "Confirmar cuestionario" action in `apps/web/src/components/questionnaire/SummaryReview.tsx` (satisfies T015)
+- [X] T020 [US1] Implement `QuestionnaireContainer` coordinating step transitions, single-question rendering, and summary view in `apps/web/src/components/questionnaire/QuestionnaireContainer.tsx`
+- [X] T021 [US1] Wire the host questionnaire page in `apps/web/src/app/(protected)/questionnaire/page.tsx` supporting both `?id=<uuid>` resumption and new contract generation initialization
 
 **Checkpoint**: User Story 1 is fully functional and delivers an independently testable MVP.
 
@@ -70,22 +70,22 @@
 
 ### Tests for User Story 2 (TDD - Write FIRST, ensure they FAIL) ⚠️
 
-- [ ] T022 [P] [US2] Write failing unit tests for `UpdateQuestionnaireProgressUseCase` in `packages/application/tests/UpdateQuestionnaireProgressUseCase.test.ts`
-- [ ] T023 [P] [US2] Write failing contract tests for `ContractProgressPort.updateProgress` and `getContractById` in `packages/infrastructure/tests/contracts/ContractProgressPort.contract.test.ts`
-- [ ] T024 [P] [US2] Write failing integration tests for debounced autosave and mid-session resumption in `apps/web/tests/questionnaire/AutosaveResumption.test.tsx`
+- [X] T022 [P] [US2] Write failing unit tests for `UpdateQuestionnaireProgressUseCase` in `packages/application/tests/UpdateQuestionnaireProgressUseCase.test.ts`
+- [X] T023 [P] [US2] Write failing contract tests for `ContractProgressPort.updateProgress` and `getContractById` in `packages/infrastructure/tests/contracts/ContractProgressPort.contract.test.ts`
+- [X] T024 [P] [US2] Write failing integration tests for debounced autosave and mid-session resumption in `apps/web/tests/questionnaire/AutosaveResumption.test.tsx`
 
 ### Implementation for User Story 2
 
-- [ ] T025 [US2] Update `ContractGeneration` aggregate with `updateProgress` and JSONB answer merging in `packages/domain/src/entities/ContractGeneration.ts`
-- [ ] T026 [US2] Implement `UpdateQuestionnaireProgressUseCase` in `packages/application/src/use-cases/questionnaire/UpdateQuestionnaireProgressUseCase.ts` (satisfies T022)
-- [ ] T027 [US2] Implement `CompleteQuestionnaireUseCase` in `packages/application/src/use-cases/questionnaire/CompleteQuestionnaireUseCase.ts`
-- [ ] T028 [US2] Implement `updateProgress` and `getContractById` in `SupabaseContractRepository` in `packages/infrastructure/src/adapters/storage/SupabaseContractRepository.ts` (satisfies T023)
-- [ ] T029 [P] [US2] Implement API route handler `GET /api/contracts/[id]` in `apps/web/src/app/api/contracts/[id]/route.ts`
-- [ ] T030 [P] [US2] Implement API route handler `PATCH /api/contracts/[id]/progress` in `apps/web/src/app/api/contracts/[id]/progress/route.ts`
-- [ ] T031 [P] [US2] Implement API route handler `POST /api/contracts/[id]/complete` in `apps/web/src/app/api/contracts/[id]/complete/route.ts`
-- [ ] T032 [US2] Implement `useAutosave` hook with 400ms debounce on keystrokes, blur save triggers, and transient local fallback in `apps/web/src/hooks/useAutosave.ts` (satisfies T024)
-- [ ] T033 [US2] Connect `useAutosave` and persisted state restoration into `QuestionnaireContainer.tsx` with an accessible "Guardado" status indicator
-- [ ] T034 [US2] Update dashboard contract card in `apps/web/src/components/dashboard/ContractList.tsx` to link in-progress contracts directly to `/questionnaire?id=<contractId>`
+- [X] T025 [US2] Update `ContractGeneration` aggregate with `updateProgress` and JSONB answer merging in `packages/domain/src/entities/ContractGeneration.ts`
+- [X] T026 [US2] Implement `UpdateQuestionnaireProgressUseCase` in `packages/application/src/use-cases/questionnaire/UpdateQuestionnaireProgressUseCase.ts` (satisfies T022)
+- [X] T027 [US2] Implement `CompleteQuestionnaireUseCase` in `packages/application/src/use-cases/questionnaire/CompleteQuestionnaireUseCase.ts`
+- [X] T028 [US2] Implement `updateProgress` and `getContractById` in `SupabaseContractRepository` in `packages/infrastructure/src/adapters/storage/SupabaseContractRepository.ts` (satisfies T023)
+- [X] T029 [P] [US2] Implement API route handler `GET /api/contracts/[id]` in `apps/web/src/app/api/contracts/[id]/route.ts`
+- [X] T030 [P] [US2] Implement API route handler `PATCH /api/contracts/[id]/progress` in `apps/web/src/app/api/contracts/[id]/progress/route.ts`
+- [X] T031 [P] [US2] Implement API route handler `POST /api/contracts/[id]/complete` in `apps/web/src/app/api/contracts/[id]/complete/route.ts`
+- [X] T032 [US2] Implement `useAutosave` hook with 400ms debounce on keystrokes, blur save triggers, and transient local fallback in `apps/web/src/hooks/useAutosave.ts` (satisfies T024)
+- [X] T033 [US2] Connect `useAutosave` and persisted state restoration into `QuestionnaireContainer.tsx` with an accessible "Guardado" status indicator
+- [X] T034 [US2] Update dashboard contract card in `apps/web/src/components/dashboard/ContractList.tsx` to link in-progress contracts directly to `/questionnaire?id=<contractId>`
 
 **Checkpoint**: User Stories 1 AND 2 work together seamlessly with zero data loss on session interruption.
 
@@ -99,14 +99,14 @@
 
 ### Tests for User Story 3 (TDD - Write FIRST, ensure they FAIL) ⚠️
 
-- [ ] T035 [P] [US3] Write failing unit tests for backward traversal and answer updates in `packages/domain/tests/BidirectionalNavigation.test.ts`
-- [ ] T036 [P] [US3] Write failing component tests for "Anterior" control states in `apps/web/tests/questionnaire/NavigationControls.test.tsx`
+- [X] T035 [P] [US3] Write failing unit tests for backward traversal and answer updates in `packages/domain/tests/BidirectionalNavigation.test.ts`
+- [X] T036 [P] [US3] Write failing component tests for "Anterior" control states in `apps/web/tests/questionnaire/NavigationControls.test.tsx`
 
 ### Implementation for User Story 3
 
-- [ ] T037 [US3] Implement `getPreviousQuestion` and `getNextQuestion` backward/forward traversal algorithms that dynamically skip non-matching conditional question indices in `packages/domain/src/entities/QuestionnaireDefinition.ts` (satisfies T035)
-- [ ] T038 [US3] Update `NavigationControls` component to show "Anterior" button (hidden on Q0, active on Q1–Q11) with visible focus states in `apps/web/src/components/questionnaire/NavigationControls.tsx` (satisfies T036)
-- [ ] T039 [US3] Integrate backward navigation and pre-populated answer editing in `QuestionnaireContainer.tsx`
+- [X] T037 [US3] Implement `getPreviousQuestion` and `getNextQuestion` backward/forward traversal algorithms that dynamically skip non-matching conditional question indices in `packages/domain/src/entities/QuestionnaireDefinition.ts` (satisfies T035)
+- [X] T038 [US3] Update `NavigationControls` component to show "Anterior" button (hidden on Q0, active on Q1–Q11) with visible focus states in `apps/web/src/components/questionnaire/NavigationControls.tsx` (satisfies T036)
+- [X] T039 [US3] Integrate backward navigation and pre-populated answer editing in `QuestionnaireContainer.tsx`
 
 **Checkpoint**: Users can navigate back and forth freely without losing answers.
 
@@ -120,14 +120,14 @@
 
 ### Tests for User Story 4 (TDD - Write FIRST, ensure they FAIL) ⚠️
 
-- [ ] T040 [P] [US4] Write failing component tests for `Tooltip` accessibility and keyboard dismiss in `apps/web/tests/questionnaire/Tooltip.test.tsx`
-- [ ] T041 [P] [US4] Write failing component tests for `ExpandableHelp` disclosure in `apps/web/tests/questionnaire/ExpandableHelp.test.tsx`
+- [X] T040 [P] [US4] Write failing component tests for `Tooltip` accessibility and keyboard dismiss in `apps/web/tests/questionnaire/Tooltip.test.tsx`
+- [X] T041 [P] [US4] Write failing component tests for `ExpandableHelp` disclosure in `apps/web/tests/questionnaire/ExpandableHelp.test.tsx`
 
 ### Implementation for User Story 4
 
-- [ ] T042 [P] [US4] Implement accessible `Tooltip` component using `aria-describedby`, hover/focus triggers, and `Escape` key dismissal in `apps/web/src/components/questionnaire/Tooltip.tsx` (satisfies T040)
-- [ ] T043 [P] [US4] Implement accessible `ExpandableHelp` disclosure component with `aria-expanded`, `aria-controls`, and smooth transition in `apps/web/src/components/questionnaire/ExpandableHelp.tsx` (satisfies T041)
-- [ ] T044 [US4] Integrate `ExpandableHelp` and contextual `Tooltip` into `QuestionCard.tsx` and choice options
+- [X] T042 [P] [US4] Implement accessible `Tooltip` component using `aria-describedby`, hover/focus triggers, and `Escape` key dismissal in `apps/web/src/components/questionnaire/Tooltip.tsx` (satisfies T040)
+- [X] T043 [P] [US4] Implement accessible `ExpandableHelp` disclosure component with `aria-expanded`, `aria-controls`, and smooth transition in `apps/web/src/components/questionnaire/ExpandableHelp.tsx` (satisfies T041)
+- [X] T044 [US4] Integrate `ExpandableHelp` and contextual `Tooltip` into `QuestionCard.tsx` and choice options
 
 **Checkpoint**: Non-lawyer guidance and accessible legal explanations are operational.
 
@@ -141,18 +141,18 @@
 
 ### Tests for User Story 5 (TDD - Write FIRST, ensure they FAIL) ⚠️
 
-- [ ] T045 [P] [US5] Write failing unit tests for contract title validation and empty title rejection in `packages/domain/tests/ContractTitle.test.ts`
-- [ ] T046 [P] [US5] Write failing unit tests for `UpdateTitleUseCase` in `packages/application/tests/UpdateTitleUseCase.test.ts`
-- [ ] T047 [P] [US5] Write failing component tests for `InlineTitleEditor` in `apps/web/tests/questionnaire/InlineTitleEditor.test.tsx`
+- [X] T045 [P] [US5] Write failing unit tests for contract title validation and empty title rejection in `packages/domain/tests/ContractTitle.test.ts`
+- [X] T046 [P] [US5] Write failing unit tests for `UpdateTitleUseCase` in `packages/application/tests/UpdateTitleUseCase.test.ts`
+- [X] T047 [P] [US5] Write failing component tests for `InlineTitleEditor` in `apps/web/tests/questionnaire/InlineTitleEditor.test.tsx`
 
 ### Implementation for User Story 5
 
-- [ ] T048 [US5] Implement `updateTitle` method with non-empty validation in `packages/domain/src/entities/ContractGeneration.ts` (satisfies T045)
-- [ ] T049 [US5] Implement `UpdateTitleUseCase` in `packages/application/src/use-cases/questionnaire/UpdateTitleUseCase.ts` (satisfies T046)
-- [ ] T050 [US5] Implement `updateTitle` and `getNextDefaultTitle` in `SupabaseContractRepository` in `packages/infrastructure/src/adapters/storage/SupabaseContractRepository.ts`
-- [ ] T051 [P] [US5] Implement API route handler `PATCH /api/contracts/[id]/title` in `apps/web/src/app/api/contracts/[id]/title/route.ts`
-- [ ] T052 [P] [US5] Implement accessible `InlineTitleEditor` component with Enter/blur save and empty-value reversion in `apps/web/src/components/questionnaire/InlineTitleEditor.tsx` (satisfies T047)
-- [ ] T053 [US5] Implement `QuestionnaireHeader` hosting `InlineTitleEditor` and "Guardar y salir" action in `apps/web/src/components/questionnaire/QuestionnaireHeader.tsx`
+- [X] T048 [US5] Implement `updateTitle` method with non-empty validation in `packages/domain/src/entities/ContractGeneration.ts` (satisfies T045)
+- [X] T049 [US5] Implement `UpdateTitleUseCase` in `packages/application/src/use-cases/questionnaire/UpdateTitleUseCase.ts` (satisfies T046)
+- [X] T050 [US5] Implement `updateTitle` and `getNextDefaultTitle` in `SupabaseContractRepository` in `packages/infrastructure/src/adapters/storage/SupabaseContractRepository.ts`
+- [X] T051 [P] [US5] Implement API route handler `PATCH /api/contracts/[id]/title` in `apps/web/src/app/api/contracts/[id]/title/route.ts`
+- [X] T052 [P] [US5] Implement accessible `InlineTitleEditor` component with Enter/blur save and empty-value reversion in `apps/web/src/components/questionnaire/InlineTitleEditor.tsx` (satisfies T047)
+- [X] T053 [US5] Implement `QuestionnaireHeader` hosting `InlineTitleEditor` and "Guardar y salir" action in `apps/web/src/components/questionnaire/QuestionnaireHeader.tsx`
 
 **Checkpoint**: Default title assignment and inline editing are verified.
 
@@ -166,20 +166,20 @@
 
 ### Tests for User Story 6 (TDD - Write FIRST, ensure they FAIL) ⚠️
 
-- [ ] T054 [P] [US6] Write failing unit tests for `ConditionRule` operator evaluation in `packages/domain/tests/ConditionRule.test.ts`
-- [ ] T055 [P] [US6] Write failing unit tests for `AnswerPruningService` stripping obsolete answers in `packages/domain/tests/AnswerPruningService.test.ts`
-- [ ] T056 [P] [US6] Write failing component tests for polymorphic question renderers in `apps/web/tests/questionnaire/PolymorphicQuestions.test.tsx`
+- [X] T054 [P] [US6] Write failing unit tests for `ConditionRule` operator evaluation in `packages/domain/tests/ConditionRule.test.ts`
+- [X] T055 [P] [US6] Write failing unit tests for `AnswerPruningService` stripping obsolete answers in `packages/domain/tests/AnswerPruningService.test.ts`
+- [X] T056 [P] [US6] Write failing component tests for polymorphic question renderers in `apps/web/tests/questionnaire/PolymorphicQuestions.test.tsx`
 
 ### Implementation for User Story 6
 
-- [ ] T057 [US6] Implement `ConditionRule` evaluation logic in `packages/domain/src/value-objects/ConditionRule.ts` (satisfies T054)
-- [ ] T058 [US6] Implement `AnswerPruningService` in `packages/domain/src/services/AnswerPruningService.ts` (satisfies T055)
-- [ ] T059 [P] [US6] Implement `OpenTextQuestion` component with character counter and sanitization in `apps/web/src/components/questionnaire/types/OpenTextQuestion.tsx` (satisfies T056)
-- [ ] T060 [P] [US6] Implement `SingleChoiceQuestion` component with accessible radio group in `apps/web/src/components/questionnaire/types/SingleChoiceQuestion.tsx` (satisfies T056)
-- [ ] T061 [P] [US6] Implement `MultipleChoiceQuestion` component with mutually exclusive "No aplica" logic in `apps/web/src/components/questionnaire/types/MultipleChoiceQuestion.tsx` (satisfies T056)
-- [ ] T062 [P] [US6] Implement `CheckboxQuestion` component for boolean toggles in `apps/web/src/components/questionnaire/types/CheckboxQuestion.tsx` (satisfies T056)
-- [ ] T063 [US6] Implement `QuestionRenderer` polymorphic dispatcher mapping `QuestionType` to component in `apps/web/src/components/questionnaire/QuestionRenderer.tsx`
-- [ ] T064 [US6] Integrate `AnswerPruningService` into `UpdateQuestionnaireProgressUseCase.ts` and `QuestionnaireContainer.tsx`
+- [X] T057 [US6] Implement `ConditionRule` evaluation logic in `packages/domain/src/value-objects/ConditionRule.ts` (satisfies T054)
+- [X] T058 [US6] Implement `AnswerPruningService` in `packages/domain/src/services/AnswerPruningService.ts` (satisfies T055)
+- [X] T059 [P] [US6] Implement `OpenTextQuestion` component with character counter and sanitization in `apps/web/src/components/questionnaire/types/OpenTextQuestion.tsx` (satisfies T056)
+- [X] T060 [P] [US6] Implement `SingleChoiceQuestion` component with accessible radio group in `apps/web/src/components/questionnaire/types/SingleChoiceQuestion.tsx` (satisfies T056)
+- [X] T061 [P] [US6] Implement `MultipleChoiceQuestion` component with mutually exclusive "No aplica" logic in `apps/web/src/components/questionnaire/types/MultipleChoiceQuestion.tsx` (satisfies T056)
+- [X] T062 [P] [US6] Implement `CheckboxQuestion` component for boolean toggles in `apps/web/src/components/questionnaire/types/CheckboxQuestion.tsx` (satisfies T056)
+- [X] T063 [US6] Implement `QuestionRenderer` polymorphic dispatcher mapping `QuestionType` to component in `apps/web/src/components/questionnaire/QuestionRenderer.tsx`
+- [X] T064 [US6] Integrate `AnswerPruningService` into `UpdateQuestionnaireProgressUseCase.ts` and `QuestionnaireContainer.tsx`
 
 **Checkpoint**: All 6 user stories are fully implemented and integrated.
 
@@ -189,10 +189,10 @@
 
 **Purpose**: Accessibility audit, network resilience, and end-to-end verification
 
-- [ ] T065 [P] Run automated WCAG 2.1 AA accessibility audit across all question types and summary review using axe-core in `apps/web/tests/a11y/questionnaireA11y.test.tsx`
-- [ ] T066 [P] Implement `NetworkStatusBanner` showing Spanish warning and retry state during connection loss in `apps/web/src/components/questionnaire/NetworkStatusBanner.tsx`
-- [ ] T067 Implement programmatic focus shift to question heading `h2` upon question transition in `apps/web/src/components/questionnaire/QuestionCard.tsx`
-- [ ] T068 Execute full automated and manual verification suite documented in `specs/002-standard-questionnaire/quickstart.md`
+- [X] T065 [P] Run automated WCAG 2.1 AA accessibility audit across all question types and summary review using axe-core in `apps/web/tests/a11y/questionnaireA11y.test.tsx`
+- [X] T066 [P] Implement `NetworkStatusBanner` showing Spanish warning and retry state during connection loss in `apps/web/src/components/questionnaire/NetworkStatusBanner.tsx`
+- [X] T067 Implement programmatic focus shift to question heading `h2` upon question transition in `apps/web/src/components/questionnaire/QuestionCard.tsx`
+- [X] T068 Execute full automated and manual verification suite documented in `specs/002-standard-questionnaire/quickstart.md`
 
 ---
 

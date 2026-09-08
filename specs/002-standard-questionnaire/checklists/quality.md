@@ -10,46 +10,46 @@
 
 ## Requirement Completeness
 
-- [ ] CHK001 Are exact question prompts, input types, and mandatory/optional statuses defined for all 12 standard questions (Q0–Q11)? [Completeness, Spec §FR-003]
-- [ ] CHK002 Are delivery conditions and deadline requirements explicitly distinguished between one-time (Q4a) and recurring (Q4b) modalities? [Completeness, Spec §FR-003.4]
-- [ ] CHK003 Are price adjustment mechanism choices comprehensively specified for contracts exceeding 12 months? [Completeness, Spec §FR-003.7]
-- [ ] CHK004 Are the available dispute resolution mechanisms exhaustively specified? [Completeness, Spec §FR-003.11]
-- [ ] CHK005 Are completion criteria and transition actions defined for the end of the standard questionnaire? [Completeness, Spec §FR-003.11, User Story 1]
+- [x] CHK001 Are exact question prompts, input types, and mandatory/optional statuses defined for all 12 standard questions (Q0–Q11)? [Completeness, Spec §FR-003]
+- [x] CHK002 Are delivery conditions and deadline requirements explicitly distinguished between one-time (Q4a) and recurring (Q4b) modalities? [Completeness, Spec §FR-003.4]
+- [x] CHK003 Are price adjustment mechanism choices comprehensively specified for contracts exceeding 12 months? [Completeness, Spec §FR-003.7]
+- [x] CHK004 Are the available dispute resolution mechanisms exhaustively specified? [Completeness, Spec §FR-003.11]
+- [x] CHK005 Are completion criteria and transition actions defined for the end of the standard questionnaire? [Completeness, Spec §FR-003.11, User Story 1]
 
 ## Requirement Clarity & Measurability
 
-- [ ] CHK006 Is "incremental persistence" quantified with specific event triggers and debounce thresholds for free-text inputs? [Clarity, Spec §FR-010, SC-004]
-- [ ] CHK007 Are character boundaries and input limits explicitly defined for open-ended text fields? [Clarity, Spec §Edge Cases]
-- [ ] CHK008 Is the default title naming algorithm ("Mi Contrato N") mathematically and sequentially unambiguous regarding user-scoped counts? [Clarity, Spec §FR-012, SC-007]
-- [ ] CHK009 Are title validation constraints (rejection of empty/whitespace strings and fallback behavior) clearly defined? [Clarity, Spec §FR-013, Edge Cases]
-- [ ] CHK010 Are the metrics in Success Criteria objectively verifiable without knowledge of internal database schemas? [Measurability, Spec §SC-001–SC-009]
+- [x] CHK006 Is "incremental persistence" quantified with specific event triggers and debounce thresholds for free-text inputs? [Clarity, Spec §FR-010, SC-004]
+- [x] CHK007 Are character boundaries and input limits explicitly defined for open-ended text fields? [Clarity, Spec §Edge Cases]
+- [x] CHK008 Is the default title naming algorithm ("Mi Contrato N") mathematically and sequentially unambiguous regarding user-scoped counts? [Clarity, Spec §FR-012, SC-007]
+- [x] CHK009 Are title validation constraints (rejection of empty/whitespace strings and fallback behavior) clearly defined? [Clarity, Spec §FR-013, Edge Cases]
+- [x] CHK010 Are the metrics in Success Criteria objectively verifiable without knowledge of internal database schemas? [Measurability, Spec §SC-001–SC-009]
 
 ## Requirement Consistency & Alignment
 
-- [ ] CHK011 Is the mutual exclusivity of the "No aplica" option in Question 5 consistently enforced across requirements and data models? [Consistency, Spec §FR-003.5, Clarifications]
-- [ ] CHK012 Do forward and backward navigation requirements align with conditional question visibility rules? [Consistency, Spec §FR-008, FR-014]
-- [ ] CHK013 Are question order and dependency requirements consistent between User Story 1 and Functional Requirements §FR-003? [Consistency, Spec §FR-003, User Story 1]
+- [x] CHK011 Is the mutual exclusivity of the "No aplica" option in Question 5 consistently enforced across requirements and data models? [Consistency, Spec §FR-003.5, Clarifications]
+- [x] CHK012 Do forward and backward navigation requirements align with conditional question visibility rules? [Consistency, Spec §FR-008, FR-014]
+- [x] CHK013 Are question order and dependency requirements consistent between User Story 1 and Functional Requirements §FR-003? [Consistency, Spec §FR-003, User Story 1]
 
 ## Scenario & Edge Case Coverage
 
-- [ ] CHK014 Are state pruning rules explicitly defined when a user modifies a parent answer that invalidates downstream conditional questions? [Edge Case, Spec §FR-014, Edge Cases]
-- [ ] CHK015 Are resilience and recovery requirements specified for network disconnects during forward navigation or autosave? [Edge Case, Spec §Edge Cases]
-- [ ] CHK016 Are debouncing and button state requirements defined to prevent duplicate submissions or skipping on rapid clicks? [Edge Case, Spec §Edge Cases]
-- [ ] CHK017 Are multi-device resumption scenarios addressed regarding authoritative server state vs local transient drafts? [Coverage, Spec §FR-011, Edge Cases]
-- [ ] CHK018 Is input recovery behavior specified when a user refreshes the browser mid-question before clicking "Siguiente"? [Edge Case, Spec §Edge Cases]
+- [x] CHK014 Are state pruning rules explicitly defined when a user modifies a parent answer that invalidates downstream conditional questions? [Edge Case, Spec §FR-014, Edge Cases]
+- [x] CHK015 Are resilience and recovery requirements specified for network disconnects during forward navigation or autosave? [Edge Case, Spec §Edge Cases]
+- [x] CHK016 Are debouncing and button state requirements defined to prevent duplicate submissions or skipping on rapid clicks? [Edge Case, Spec §Edge Cases]
+- [x] CHK017 Are multi-device resumption scenarios addressed regarding authoritative server state vs local transient drafts? [Coverage, Spec §FR-011, Edge Cases]
+- [x] CHK018 Is input recovery behavior specified when a user refreshes the browser mid-question before clicking "Siguiente"? [Edge Case, Spec §Edge Cases]
 
 ## Accessibility & Localization Quality (WCAG 2.1 AA & Spanish UI)
 
-- [ ] CHK019 Are keyboard navigation interactions (focus rings, `Tab`, `Enter`, `Space`) specified for all question types and controls? [Accessibility, Spec §FR-017]
-- [ ] CHK020 Are accessible disclosure states (`aria-expanded`, `aria-controls`) explicitly defined for the "¿Por qué te preguntamos esto?" component? [Accessibility, Spec §FR-007, FR-017]
-- [ ] CHK021 Are tooltip hover and keyboard focus popover semantics (`aria-describedby`) specified for legal term explanations? [Accessibility, Spec §FR-006, FR-017]
-- [ ] CHK022 Are programmatic focus management rules specified when transitioning between questions to ensure screen reader notification? [Accessibility, Spec §FR-017, Research §4]
-- [ ] CHK023 Is the mandate for 100% Spanish user-facing copy (prompts, options, tooltips, validation alerts) rigorously specified without English copy exceptions? [Localization, Spec §FR-018]
+- [x] CHK019 Are keyboard navigation interactions (focus rings, `Tab`, `Enter`, `Space`) specified for all question types and controls? [Accessibility, Spec §FR-017]
+- [x] CHK020 Are accessible disclosure states (`aria-expanded`, `aria-controls`) explicitly defined for the "¿Por qué te preguntamos esto?" component? [Accessibility, Spec §FR-007, FR-017]
+- [x] CHK021 Are tooltip hover and keyboard focus popover semantics (`aria-describedby`) specified for legal term explanations? [Accessibility, Spec §FR-006, FR-017]
+- [x] CHK022 Are programmatic focus management rules specified when transitioning between questions to ensure screen reader notification? [Accessibility, Spec §FR-017, Research §4]
+- [x] CHK023 Is the mandate for 100% Spanish user-facing copy (prompts, options, tooltips, validation alerts) rigorously specified without English copy exceptions? [Localization, Spec §FR-018]
 
 ## Architecture, Boundaries & Extensibility
 
-- [ ] CHK024 Does the specification decouple question schema definitions from the rendering engine to permit adding new question types without engine modification? [Extensibility, Spec §FR-004, FR-005]
-- [ ] CHK025 Are out-of-scope boundaries (progress bars, LLM dynamic questions, legal validation) explicitly documented to prevent feature creep? [Scope Boundary, Spec §FR-016]
+- [x] CHK024 Does the specification decouple question schema definitions from the rendering engine to permit adding new question types without engine modification? [Extensibility, Spec §FR-004, FR-005]
+- [x] CHK025 Are out-of-scope boundaries (progress bars, LLM dynamic questions, legal validation) explicitly documented to prevent feature creep? [Scope Boundary, Spec §FR-016]
 
 ## Notes
 
