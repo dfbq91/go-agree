@@ -2,6 +2,14 @@ export * from './errors/DomainErrors.js';
 export * from './value-objects/Email.js';
 export * from './value-objects/UserId.js';
 export * from './value-objects/ContractId.js';
+export * from './value-objects/QuestionOption.js';
+export * from './value-objects/ConditionRule.js';
+export * from './value-objects/AnswerValue.js';
 export * from './entities/UserAccount.js';
 export * from './entities/UserSession.js';
 export * from './entities/ContractGeneration.js';
+export * from './entities/Question.js';
+export * from './entities/QuestionnaireDefinition.js';
+export * from './services/AnswerPruningService.js';
+
+

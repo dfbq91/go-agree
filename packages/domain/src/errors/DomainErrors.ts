@@ -50,3 +50,40 @@ export class UnauthorizedAccessError extends DomainAuthError {
     this.name = 'UnauthorizedAccessError';
   }
 }
+
+export class QuestionnaireDomainError extends Error {
+  constructor(message: string, public readonly code: string) {
+    super(message);
+    this.name = 'QuestionnaireDomainError';
+    Object.setPrototypeOf(this, new.target.prototype);
+  }
+}
+
+export class ContractNotFoundError extends QuestionnaireDomainError {
+  constructor(contractId: string) {
+    super(`Contract generation with ID ${contractId} not found`, 'CONTRACT_NOT_FOUND');
+    this.name = 'ContractNotFoundError';
+  }
+}
+
+export class UnauthorizedContractAccessError extends QuestionnaireDomainError {
+  constructor(contractId: string, userId: string) {
+    super(`User ${userId} does not have permission to access contract ${contractId}`, 'UNAUTHORIZED_ACCESS');
+    this.name = 'UnauthorizedContractAccessError';
+  }
+}
+
+export class InvalidAnswerError extends QuestionnaireDomainError {
+  constructor(questionId: string, reason: string) {
+    super(`Invalid answer for question ${questionId}: ${reason}`, 'INVALID_ANSWER');
+    this.name = 'InvalidAnswerError';
+  }
+}
+
+export class EmptyTitleError extends QuestionnaireDomainError {
+  constructor() {
+    super('Contract title cannot be empty or whitespace only', 'EMPTY_TITLE');
+    this.name = 'EmptyTitleError';
+  }
+}
+

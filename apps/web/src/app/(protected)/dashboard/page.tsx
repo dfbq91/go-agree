@@ -6,6 +6,8 @@ import { getServerContractRepository } from '@/lib/contracts';
 import { ListUserContractsUseCase } from '@go-agree/application';
 import { ContractList } from '@/components/dashboard/ContractList';
 
+export const dynamic = 'force-dynamic';
+
 export default async function DashboardPage() {
   let contracts: any[] = [];
 

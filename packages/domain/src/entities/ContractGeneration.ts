@@ -1,6 +1,7 @@
 import { ContractId } from '../value-objects/ContractId.js';
 import { UserId } from '../value-objects/UserId.js';
-import { DomainAuthError } from '../errors/DomainErrors.js';
+import { DomainAuthError, EmptyTitleError } from '../errors/DomainErrors.js';
+import type { QuestionnaireDefinition } from './QuestionnaireDefinition.js';
 
 export type ContractStatus = 'in_progress' | 'completed';
 
@@ -18,8 +19,8 @@ export interface ContractGenerationProps {
 export class ContractGeneration {
   readonly id: ContractId;
   readonly userId: UserId;
-  readonly title: string;
   readonly createdAt: Date;
+  private _title: string;
   private _status: ContractStatus;
   private _currentQuestionIndex: number;
   private _answers: Record<string, unknown>;
@@ -28,7 +29,7 @@ export class ContractGeneration {
   constructor(props: ContractGenerationProps) {
     this.id = props.id;
     this.userId = props.userId;
-    this.title = props.title;
+    this._title = props.title;
     this._status = props.status;
     this._currentQuestionIndex = props.currentQuestionIndex;
     this._answers = props.answers;
@@ -54,6 +55,10 @@ export class ContractGeneration {
       createdAt: now,
       updatedAt: now,
     });
+  }
+
+  get title(): string {
+    return this._title;
   }
 
   get status(): ContractStatus {
@@ -90,6 +95,18 @@ export class ContractGeneration {
     this._currentQuestionIndex = questionIndex;
     this._answers = { ...this._answers, ...answers };
     this._updatedAt = now;
+  }
+
+  updateTitle(newTitle: string, now: Date = new Date()): void {
+    if (!newTitle || newTitle.trim().length === 0) {
+      throw new EmptyTitleError();
+    }
+    this._title = newTitle.trim();
+    this._updatedAt = now;
+  }
+
+  pruneObsoleteAnswers(questionnaire: QuestionnaireDefinition): void {
+    this._answers = questionnaire.pruneObsoleteAnswers(this._answers);
   }
 
   markCompleted(now: Date = new Date()): void {

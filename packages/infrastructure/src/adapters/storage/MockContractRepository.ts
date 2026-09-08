@@ -1,10 +1,19 @@
 import type {
   ContractRepositoryPort,
+  ContractProgressPort,
   ContractGenerationDTO,
   ContractGenerationSummaryDTO,
+  UpdateProgressInput,
+  UpdateTitleInput,
+  CompleteQuestionnaireInput,
 } from '@go-agree/application';
+import {
+  ContractNotFoundError,
+  UnauthorizedContractAccessError,
+  EmptyTitleError,
+} from '@go-agree/domain';
 
-export class MockContractRepository implements ContractRepositoryPort {
+export class MockContractRepository implements ContractRepositoryPort, ContractProgressPort {
   private contracts: Map<string, ContractGenerationDTO> = new Map();
 
   async listByUserId(userId: string): Promise<ContractGenerationSummaryDTO[]> {
@@ -29,12 +38,17 @@ export class MockContractRepository implements ContractRepositoryPort {
     if (!contract || contract.userId !== userId) {
       return null;
     }
-    return contract;
+    return { ...contract, answers: { ...contract.answers } };
+  }
+
+  async getContractById(contractId: string, userId: string): Promise<ContractGenerationDTO | null> {
+    return this.getByIdAndUserId(contractId, userId);
   }
 
   async save(contract: ContractGenerationDTO): Promise<void> {
     this.contracts.set(contract.id, {
       ...contract,
+      answers: { ...contract.answers },
       updatedAt: new Date(),
     });
   }
@@ -45,10 +59,84 @@ export class MockContractRepository implements ContractRepositoryPort {
     const now = new Date();
     const created: ContractGenerationDTO = {
       ...contract,
+      answers: { ...contract.answers },
       createdAt: now,
       updatedAt: now,
     };
     this.contracts.set(contract.id, created);
-    return created;
+    return { ...created, answers: { ...created.answers } };
+  }
+
+  async updateProgress(input: UpdateProgressInput): Promise<ContractGenerationDTO> {
+    const contract = this.contracts.get(input.contractId);
+    if (!contract) {
+      throw new ContractNotFoundError(input.contractId);
+    }
+    if (contract.userId !== input.userId) {
+      throw new UnauthorizedContractAccessError(input.contractId, input.userId);
+    }
+
+    const updated: ContractGenerationDTO = {
+      ...contract,
+      currentQuestionIndex: input.questionIndex,
+      answers: { ...contract.answers, ...input.answers },
+      updatedAt: new Date(),
+    };
+
+    this.contracts.set(input.contractId, updated);
+    return { ...updated, answers: { ...updated.answers } };
+  }
+
+  async updateTitle(input: UpdateTitleInput): Promise<ContractGenerationDTO> {
+    if (!input.title || input.title.trim().length === 0) {
+      throw new EmptyTitleError();
+    }
+
+    const contract = this.contracts.get(input.contractId);
+    if (!contract) {
+      throw new ContractNotFoundError(input.contractId);
+    }
+    if (contract.userId !== input.userId) {
+      throw new UnauthorizedContractAccessError(input.contractId, input.userId);
+    }
+
+    const updated: ContractGenerationDTO = {
+      ...contract,
+      title: input.title.trim(),
+      updatedAt: new Date(),
+    };
+
+    this.contracts.set(input.contractId, updated);
+    return { ...updated, answers: { ...updated.answers } };
+  }
+
+  async completeQuestionnaire(input: CompleteQuestionnaireInput): Promise<ContractGenerationDTO> {
+    const contract = this.contracts.get(input.contractId);
+    if (!contract) {
+      throw new ContractNotFoundError(input.contractId);
+    }
+    if (contract.userId !== input.userId) {
+      throw new UnauthorizedContractAccessError(input.contractId, input.userId);
+    }
+
+    const updated: ContractGenerationDTO = {
+      ...contract,
+      status: 'completed',
+      updatedAt: new Date(),
+    };
+
+    this.contracts.set(input.contractId, updated);
+    return { ...updated, answers: { ...updated.answers } };
+  }
+
+  async getNextDefaultTitle(userId: string): Promise<string> {
+    let count = 0;
+    for (const contract of this.contracts.values()) {
+      if (contract.userId === userId) {
+        count++;
+      }
+    }
+    return `Mi Contrato ${count + 1}`;
   }
 }
+

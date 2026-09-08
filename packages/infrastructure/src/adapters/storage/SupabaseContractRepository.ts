@@ -1,10 +1,19 @@
 import type {
   ContractRepositoryPort,
+  ContractProgressPort,
   ContractGenerationDTO,
   ContractGenerationSummaryDTO,
+  UpdateProgressInput,
+  UpdateTitleInput,
+  CompleteQuestionnaireInput,
 } from '@go-agree/application';
+import {
+  ContractNotFoundError,
+  UnauthorizedContractAccessError,
+  EmptyTitleError,
+} from '@go-agree/domain';
 
-export class SupabaseContractRepository implements ContractRepositoryPort {
+export class SupabaseContractRepository implements ContractRepositoryPort, ContractProgressPort {
   constructor(private readonly supabase: any) {}
 
   async listByUserId(userId: string): Promise<ContractGenerationSummaryDTO[]> {
@@ -29,14 +38,22 @@ export class SupabaseContractRepository implements ContractRepositoryPort {
   }
 
   async getByIdAndUserId(id: string, userId: string): Promise<ContractGenerationDTO | null> {
-    const { data, error } = await this.supabase
+    const query = this.supabase
       .from('contract_generations')
       .select('*')
       .eq('id', id)
-      .eq('user_id', userId)
-      .single();
+      .eq('user_id', userId);
+
+    const { data, error } =
+      typeof (query as any).maybeSingle === 'function'
+        ? await (query as any).maybeSingle()
+        : await query.single();
 
     if (error || !data) {
+      return null;
+    }
+
+    if (data.user_id !== userId) {
       return null;
     }
 
@@ -50,6 +67,10 @@ export class SupabaseContractRepository implements ContractRepositoryPort {
       createdAt: new Date(data.created_at),
       updatedAt: new Date(data.updated_at),
     };
+  }
+
+  async getContractById(contractId: string, userId: string): Promise<ContractGenerationDTO | null> {
+    return this.getByIdAndUserId(contractId, userId);
   }
 
   async save(contract: ContractGenerationDTO): Promise<void> {
@@ -74,7 +95,7 @@ export class SupabaseContractRepository implements ContractRepositoryPort {
     contract: Omit<ContractGenerationDTO, 'createdAt' | 'updatedAt'>
   ): Promise<ContractGenerationDTO> {
     const now = new Date().toISOString();
-    const { data, error } = await this.supabase
+    const query = this.supabase
       .from('contract_generations')
       .insert({
         id: contract.id,
@@ -86,8 +107,12 @@ export class SupabaseContractRepository implements ContractRepositoryPort {
         created_at: now,
         updated_at: now,
       })
-      .select('*')
-      .single();
+      .select('*');
+
+    const { data, error } =
+      typeof (query as any).maybeSingle === 'function'
+        ? await (query as any).maybeSingle()
+        : await query.single();
 
     if (error || !data) {
       throw new Error(`Failed to create contract: ${error?.message || 'Unknown error'}`);
@@ -103,5 +128,151 @@ export class SupabaseContractRepository implements ContractRepositoryPort {
       createdAt: new Date(data.created_at),
       updatedAt: new Date(data.updated_at),
     };
+  }
+
+  async updateProgress(input: UpdateProgressInput): Promise<ContractGenerationDTO> {
+    const existing = await this.getByIdAndUserId(input.contractId, input.userId);
+    if (!existing) {
+      throw new ContractNotFoundError(input.contractId);
+    }
+
+    const mergedAnswers = {
+      ...(existing.answers || {}),
+      ...input.answers,
+    };
+    const now = new Date().toISOString();
+
+    const query = this.supabase
+      .from('contract_generations')
+      .update({
+        current_question_index: input.questionIndex,
+        answers: mergedAnswers,
+        updated_at: now,
+      })
+      .eq('id', input.contractId)
+      .eq('user_id', input.userId)
+      .select('*');
+
+    const { data, error } =
+      typeof (query as any).maybeSingle === 'function'
+        ? await (query as any).maybeSingle()
+        : await query.single();
+
+    if (error) {
+      throw new Error(`Failed to update progress: ${error.message}`);
+    }
+    if (!data) {
+      throw new ContractNotFoundError(input.contractId);
+    }
+
+    return {
+      id: data.id,
+      userId: data.user_id,
+      title: data.title,
+      status: data.status,
+      currentQuestionIndex: data.current_question_index,
+      answers: data.answers || {},
+      createdAt: new Date(data.created_at),
+      updatedAt: new Date(data.updated_at),
+    };
+  }
+
+  async updateTitle(input: UpdateTitleInput): Promise<ContractGenerationDTO> {
+    if (!input.title || input.title.trim().length === 0) {
+      throw new EmptyTitleError();
+    }
+
+    const existing = await this.getByIdAndUserId(input.contractId, input.userId);
+    if (!existing) {
+      throw new ContractNotFoundError(input.contractId);
+    }
+
+    const now = new Date().toISOString();
+    const query = this.supabase
+      .from('contract_generations')
+      .update({
+        title: input.title.trim(),
+        updated_at: now,
+      })
+      .eq('id', input.contractId)
+      .eq('user_id', input.userId)
+      .select('*');
+
+    const { data, error } =
+      typeof (query as any).maybeSingle === 'function'
+        ? await (query as any).maybeSingle()
+        : await query.single();
+
+    if (error) {
+      throw new Error(`Failed to update title: ${error.message}`);
+    }
+    if (!data) {
+      throw new ContractNotFoundError(input.contractId);
+    }
+
+    return {
+      id: data.id,
+      userId: data.user_id,
+      title: data.title,
+      status: data.status,
+      currentQuestionIndex: data.current_question_index,
+      answers: data.answers || {},
+      createdAt: new Date(data.created_at),
+      updatedAt: new Date(data.updated_at),
+    };
+  }
+
+  async completeQuestionnaire(input: CompleteQuestionnaireInput): Promise<ContractGenerationDTO> {
+    const existing = await this.getByIdAndUserId(input.contractId, input.userId);
+    if (!existing) {
+      throw new ContractNotFoundError(input.contractId);
+    }
+
+    const now = new Date().toISOString();
+    const query = this.supabase
+      .from('contract_generations')
+      .update({
+        status: 'completed',
+        updated_at: now,
+      })
+      .eq('id', input.contractId)
+      .eq('user_id', input.userId)
+      .select('*');
+
+    const { data, error } =
+      typeof (query as any).maybeSingle === 'function'
+        ? await (query as any).maybeSingle()
+        : await query.single();
+
+    if (error) {
+      throw new Error(`Failed to complete questionnaire: ${error.message}`);
+    }
+    if (!data) {
+      throw new ContractNotFoundError(input.contractId);
+    }
+
+    return {
+      id: data.id,
+      userId: data.user_id,
+      title: data.title,
+      status: data.status,
+      currentQuestionIndex: data.current_question_index,
+      answers: data.answers || {},
+      createdAt: new Date(data.created_at),
+      updatedAt: new Date(data.updated_at),
+    };
+  }
+
+  async getNextDefaultTitle(userId: string): Promise<string> {
+    const { count, error } = await this.supabase
+      .from('contract_generations')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', userId);
+
+    if (error) {
+      return 'Mi Contrato 1';
+    }
+
+    return `Mi Contrato ${(count || 0) + 1}`;
   }
 }

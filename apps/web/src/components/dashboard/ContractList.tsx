@@ -37,17 +37,17 @@ export function ContractCard({ contract }: { contract: ContractGenerationSummary
       <div className="mt-4 pt-4 border-t border-gray-100 flex justify-end">
         {isInProgress ? (
           <Link
-            href={`/questionnaire?contractId=${contract.id}`}
+            href={`/questionnaire?id=${contract.id}`}
             className="inline-flex items-center text-sm font-medium text-primary-600 hover:text-primary-700 focus:outline-none focus:underline"
           >
             {es.dashboard.resumeDraft} →
           </Link>
         ) : (
           <Link
-            href={`/questionnaire?contractId=${contract.id}`}
+            href={`/questionnaire?id=${contract.id}&mode=summary`}
             className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-gray-900 focus:outline-none focus:underline"
           >
-            {es.dashboard.viewDocument} →
+            {es.dashboard.viewSummary} →
           </Link>
         )}
       </div>

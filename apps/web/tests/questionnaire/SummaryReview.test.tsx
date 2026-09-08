@@ -1,0 +1,150 @@
+import { describe, it, expect, vi } from 'vitest';
+import React from 'react';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { SummaryReview } from '../../src/components/questionnaire/SummaryReview';
+import type { QuestionDTO } from '@go-agree/application';
+
+describe('SummaryReview Component', () => {
+  const mockQuestions: QuestionDTO[] = [
+    {
+      id: 'q0_description',
+      order: 0,
+      prompt: 'Describe el bien o servicio que necesitas',
+      type: 'open_text',
+      isRequired: true,
+    },
+    {
+      id: 'q1_legal_personality',
+      order: 1,
+      prompt: '¿Eres persona natural o persona jurídica?',
+      type: 'single_choice',
+      isRequired: true,
+      options: [
+        { id: 'opt_1', label: 'Persona natural', value: 'individual' },
+        { id: 'opt_2', label: 'Persona jurídica', value: 'legal_entity' },
+      ],
+    },
+  ];
+
+  const mockAnswers: Record<string, unknown> = {
+    q0_description: 'Servicio de desarrollo de software',
+    q1_legal_personality: 'individual',
+  };
+
+  it('renders summary review with questions and user answers', () => {
+    render(
+      <SummaryReview
+        questions={mockQuestions}
+        answers={mockAnswers}
+        onEdit={vi.fn()}
+        onConfirm={vi.fn()}
+      />
+    );
+
+    expect(screen.getByText(/Resumen de Respuestas/i)).toBeDefined();
+    expect(screen.getByText('Describe el bien o servicio que necesitas')).toBeDefined();
+    expect(screen.getByText('Servicio de desarrollo de software')).toBeDefined();
+    expect(screen.getByText('¿Eres persona natural o persona jurídica?')).toBeDefined();
+    expect(screen.getByText('Persona natural')).toBeDefined();
+  });
+
+  it('calls onEdit when clicking Modificar on a specific question', () => {
+    const onEdit = vi.fn();
+    render(
+      <SummaryReview
+        questions={mockQuestions}
+        answers={mockAnswers}
+        onEdit={onEdit}
+        onConfirm={vi.fn()}
+      />
+    );
+
+    const editButtons = screen.getAllByRole('button', { name: /Modificar/i });
+    expect(editButtons.length).toBe(2);
+
+    fireEvent.click(editButtons[0]);
+    expect(onEdit).toHaveBeenCalledWith('q0_description');
+  });
+
+  it('calls onConfirm when clicking Confirmar cuestionario', () => {
+    const onConfirm = vi.fn();
+    render(
+      <SummaryReview
+        questions={mockQuestions}
+        answers={mockAnswers}
+        onEdit={vi.fn()}
+        onConfirm={onConfirm}
+      />
+    );
+
+    const confirmButton = screen.getByRole('button', { name: /Confirmar/i });
+    fireEvent.click(confirmButton);
+    expect(onConfirm).toHaveBeenCalled();
+  });
+
+  it('renders Spanish titles instead of technical question IDs', () => {
+    render(
+      <SummaryReview
+        questions={mockQuestions}
+        answers={mockAnswers}
+        onEdit={vi.fn()}
+        onConfirm={vi.fn()}
+      />
+    );
+
+    // Should display Spanish title "Descripción del bien o servicio" and "Personalidad jurídica"
+    expect(screen.getByText('Descripción del bien o servicio')).toBeDefined();
+    expect(screen.getByText('Personalidad jurídica')).toBeDefined();
+    // Should NOT display raw IDs as badges
+    expect(screen.queryByText('q0_description')).toBeNull();
+    expect(screen.queryByText('q1_legal_personality')).toBeNull();
+  });
+
+  it('displays custom specification detail for other options', () => {
+    const questionsWithOther: QuestionDTO[] = [
+      {
+        id: 'q8_termination_notice',
+        order: 10,
+        prompt: 'Define el plazo de preaviso',
+        type: 'single_choice',
+        isRequired: true,
+        options: [
+          { id: 'opt_1', label: '30 días calendario', value: 'days_30' },
+          { id: 'opt_other', label: 'Otro plazo a especificar', value: 'other' },
+        ],
+      },
+    ];
+
+    const answersWithOther = {
+      q8_termination_notice: {
+        selection: 'other',
+        customValue: '45 días calendario',
+      },
+    };
+
+    render(
+      <SummaryReview
+        questions={questionsWithOther}
+        answers={answersWithOther}
+        onEdit={vi.fn()}
+        onConfirm={vi.fn()}
+      />
+    );
+
+    expect(screen.getByText('Otro plazo a especificar: 45 días calendario')).toBeDefined();
+  });
+
+  it('renders "Volver al panel" when isCompleted is true', () => {
+    render(
+      <SummaryReview
+        questions={mockQuestions}
+        answers={mockAnswers}
+        onEdit={vi.fn()}
+        onConfirm={vi.fn()}
+        isCompleted={true}
+      />
+    );
+
+    expect(screen.getByRole('button', { name: /Volver al panel/i })).toBeDefined();
+  });
+});
