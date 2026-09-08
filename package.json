@@ -1,0 +1,22 @@
+{
+  "name": "go-agree",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@10.30.3",
+  "scripts": {
+    "dev": "pnpm --filter @go-agree/web dev",
+    "build": "pnpm -r run build",
+    "test": "pnpm -r run test",
+    "lint": "pnpm -r run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
+    "db:push": "pnpm --filter @go-agree/infrastructure run db:push"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  },
+  "pnpm": {
+    "overrides": {
+      "electron-to-chromium": "1.5.343"
+    }
+  }
+}
