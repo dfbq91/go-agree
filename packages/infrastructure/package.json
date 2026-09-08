@@ -1,0 +1,29 @@
+{
+  "name": "@go-agree/infrastructure",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "test": "vitest run",
+    "test:contract": "vitest run tests/contracts",
+    "db:push": "npx supabase db push"
+  },
+  "dependencies": {
+    "@go-agree/domain": "workspace:*",
+    "@go-agree/application": "workspace:*",
+    "@supabase/supabase-js": "^2.43.4",
+    "@supabase/ssr": "^0.3.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "vitest": "^1.6.0"
+  }
+}
