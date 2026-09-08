@@ -1,0 +1,219 @@
+openapi: 3.0.3
+info:
+  title: go-agree Standard Questionnaire API
+  description: HTTP API for incremental persistence, question traversal, title updates, and completion of the Standard Questionnaire.
+  version: 1.0.0
+
+paths:
+  /api/contracts/{id}:
+    get:
+      summary: Retrieve contract generation and active questionnaire state
+      description: Returns the user's contract generation record, recorded answers, and current question pointer.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Contract generation state retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractGenerationResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+  /api/contracts/{id}/progress:
+    patch:
+      summary: Incremental autosave of questionnaire answers and position
+      description: Persists updated answers and updates the active question index for the user's contract generation.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProgressRequest'
+      responses:
+        '200':
+          description: Progress persisted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractGenerationResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+
+  /api/contracts/{id}/title:
+    patch:
+      summary: Update contract generation title
+      description: Renames the contract generation. Rejects empty or whitespace-only titles.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTitleRequest'
+      responses:
+        '200':
+          description: Title updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractGenerationResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+
+  /api/contracts/{id}/complete:
+    post:
+      summary: Complete standard questionnaire phase
+      description: Finalizes the baseline questionnaire, setting status to 'completed' and preparing for dynamic analysis.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Questionnaire completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractGenerationResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+
+components:
+  schemas:
+    ContractGenerationResponse:
+      type: object
+      required:
+        - id
+        - userId
+        - title
+        - status
+        - currentQuestionIndex
+        - answers
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        title:
+          type: string
+          example: 'Mi Contrato 1'
+        status:
+          type: string
+          enum: [in_progress, completed]
+        currentQuestionIndex:
+          type: integer
+          minimum: 0
+        answers:
+          type: object
+          additionalProperties: true
+        updatedAt:
+          type: string
+          format: date-time
+
+    UpdateProgressRequest:
+      type: object
+      required:
+        - questionIndex
+        - answers
+      properties:
+        questionIndex:
+          type: integer
+          minimum: 0
+        answers:
+          type: object
+          additionalProperties: true
+
+    UpdateTitleRequest:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 255
+          example: 'Contrato de Servicios TI 2026'
+
+    ErrorResponse:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          example: 'VALIDATION_ERROR'
+        message:
+          type: string
+          example: 'El título del contrato no puede estar vacío'
+
+  responses:
+    UnauthorizedError:
+      description: Unauthenticated request (session missing or expired)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    ForbiddenError:
+      description: User does not own the requested contract generation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    NotFoundError:
+      description: Contract generation record not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    ValidationError:
+      description: Request payload failed business validation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
