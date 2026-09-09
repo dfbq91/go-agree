@@ -1,0 +1,4 @@
+declare principles for clean code, clean code architecture and domain driven design (when it applies), responsive design, accesibility and minimal dependencies (justify           │
+│   dependencies installation). Use pnpm. Make sure follow SOLID principles. Test driven development should be first before coding. Every feature require a spec before creating code.  Do not       │
+│   change spec whitout touching code. Spec and code must be sinchnized always.  English in code: variable names, functions, comments, commits. name of the product: go-agree. User interface is in  │
+│   spanish

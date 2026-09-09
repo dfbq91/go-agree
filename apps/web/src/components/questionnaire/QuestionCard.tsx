@@ -4,6 +4,7 @@ import { es } from '../../locales/es';
 import { Tooltip } from './Tooltip';
 import { ExpandableHelp } from './ExpandableHelp';
 import { QuestionRenderer } from './QuestionRenderer';
+import { QuestionGuidance } from './QuestionGuidance';
 
 export interface QuestionCardProps {
   question: QuestionDTO;
@@ -30,6 +31,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   const prompt = tQuestion.prompt || question.prompt;
   const helpText = tQuestion.helpText || question.helpText;
   const questionTooltip = tQuestion.tooltip || question.tooltip;
+  const guidance = tQuestion.guidance;
 
   return (
     <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-6 sm:p-8">
@@ -73,6 +75,14 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         )}
       </div>
 
+      {/* Visual Recommendations & Guidance Panel */}
+      {guidance && (
+        <QuestionGuidance
+          guidance={guidance}
+          onSelectExample={(exampleText) => onChange(exampleText)}
+        />
+      )}
+
       {/* Polymorphic Question Form Controls */}
       <div className="space-y-4">
         <QuestionRenderer
@@ -83,6 +93,25 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
           error={error}
         />
       </div>
+
+      {/* Contractor Scope Limitation Notice */}
+      {question.id === 'q0_party_role' && value === 'contractor' && (
+        <div
+          role="region"
+          aria-label="Aviso de disponibilidad para contratistas"
+          className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-xl text-amber-900 text-xs sm:text-sm flex items-start gap-3 shadow-2xs animate-fade-in"
+        >
+          <span className="text-xl flex-shrink-0" aria-hidden="true">⚠️</span>
+          <div>
+            <h3 className="font-semibold text-amber-950">
+              {es.questionnaire.contractorNotice.title}
+            </h3>
+            <p className="mt-1 text-amber-900 leading-relaxed">
+              {es.questionnaire.contractorNotice.message}
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Validation Error Alert */}
       {error && (

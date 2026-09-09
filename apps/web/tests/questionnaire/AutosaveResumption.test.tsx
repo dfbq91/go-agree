@@ -19,7 +19,7 @@ describe('Autosave and Resumption Integration', () => {
         initialTitle="Mi Contrato 1"
         initialQuestionIndex={1}
         initialAnswers={{
-          q0_description: 'Servicio de diseño UX/UI',
+          q0_party_role: 'client',
         }}
       />
     );
@@ -38,8 +38,11 @@ describe('Autosave and Resumption Integration', () => {
       <QuestionnaireContainer
         contractId="contract-123"
         initialTitle="Mi Contrato 1"
-        initialQuestionIndex={0}
-        initialAnswers={{}}
+        initialQuestionIndex={2}
+        initialAnswers={{
+          q0_party_role: 'client',
+          q1_legal_personality: 'individual',
+        }}
         onSaveProgress={onSaveProgress}
       />
     );
@@ -55,8 +58,10 @@ describe('Autosave and Resumption Integration', () => {
       vi.advanceTimersByTime(400);
     });
 
-    expect(onSaveProgress).toHaveBeenCalledWith(0, {
-      q0_description: 'Desarrollo de software',
+    expect(onSaveProgress).toHaveBeenCalledWith(2, {
+      q0_party_role: 'client',
+      q1_legal_personality: 'individual',
+      q2_description_conditions: 'Desarrollo de software',
     });
   });
 
@@ -67,18 +72,17 @@ describe('Autosave and Resumption Integration', () => {
       <QuestionnaireContainer
         contractId="contract-123"
         initialTitle="Mi Contrato 1"
-        initialQuestionIndex={1}
-        initialAnswers={{ q0_description: 'Desarrollo' }}
+        initialQuestionIndex={0}
+        initialAnswers={{}}
         onSaveProgress={onSaveProgress}
       />
     );
 
-    const radio = screen.getByLabelText('Persona natural');
+    const radio = screen.getByLabelText('Contratante');
     fireEvent.click(radio);
 
-    expect(onSaveProgress).toHaveBeenCalledWith(1, {
-      q0_description: 'Desarrollo',
-      q1_legal_personality: 'individual',
+    expect(onSaveProgress).toHaveBeenCalledWith(0, {
+      q0_party_role: 'client',
     });
   });
 });

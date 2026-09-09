@@ -1,0 +1,21 @@
+Specify the Identity and User Accounts context of go-agree.
+
+Objective
+
+Allow a person to register and log in so they can create, save, and resume contract generations.
+
+Scope
+Registration and login with email/password.
+Login with Google ("Continue with Google").
+Session persistence: an authenticated user remains identified across visits until they log out or the token expires.
+Every contract generation (answers, questionnaire state, and final document) is associated with the user who created it.
+Protected routes: the questionnaire and dashboard are only accessible to authenticated users; the landing page is public.
+Out of Scope
+Multiple roles or permissions.
+Enterprise authentication (SSO/SAML).
+Advanced password recovery beyond what Supabase Auth provides natively.
+Two-factor authentication (2FA).
+Acceptance Criteria
+A new user can register with email/password or with Google and is taken to the dashboard in an authenticated state.
+A user who closes the browser and returns later remains authenticated (or can log in again) and can see their previous contract generations.
+An unauthenticated user who attempts to access the questionnaire or dashboard is redirected to the login page.

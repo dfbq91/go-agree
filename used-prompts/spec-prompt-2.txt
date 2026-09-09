@@ -1,0 +1,35 @@
+Specify the context for the go-agree Standard Questionnaire.
+
+Objective: capture, through a one-question-at-a-time flow, the baseline information required for any contract before moving on to the LLM's dynamic analysis.
+
+Scope:
+
+The first question is always: "Describe the good or service you need" (open-ended response).
+A fixed set of standard questions asked to every user, in the following logical order:
+Are you an individual or a legal entity? (Show a tooltip briefly explaining what an individual and a legal entity are.)
+Under what conditions do you require the requested good/service to be delivered? (For example, for a food product, a minimum remaining shelf life before expiration.)
+What is the location of the contract (exact address)?
+Is the good or service being contracted for a one-time delivery or is it recurring over time?
+If one-time: delivery timeframe. If recurring: required duration.
+If a service provider is being contracted: Specify whether the provider will employ people or use vehicles (tooltip: this is important for defining additional obligations required by law).
+How would a breach by the provider affect you?
+If the contract lasts more than 12 months: define the price increase mechanism (renegotiation, CPI, minimum wage, or another mechanism that can be specified).
+Define the termination notice period that the provider must give.
+Specify whether there will be automatic renewal or a fixed termination date.
+If there is automatic renewal: define the notice period required to prevent renewal.
+Define any additional grounds for early termination of the contract/business, beyond those established by law.
+Dispute resolution mechanism (tribunal/court, etc.).
+Supported question types: checkbox, single selection, multiple selection, open text — the design must allow new question types to be added without rewriting the questionnaire engine.
+Some answer options may include a tooltip explaining their meaning.
+Each question may have an optional hidden "Why are we asking you this?" field that the user can voluntarily expand.
+Navigation: the user can move forward, go back, and modify previously provided answers before finishing.
+Incremental persistence: each answer is saved as soon as it is provided; the user can close the questionnaire and resume exactly where they left off.
+When starting a new generation, it is assigned a default title ("My Contract 1," "My Contract 2," ...) that the user can edit.
+
+Out of scope: progress bar, LLM-generated dynamic questions (these are covered in another context), and legal validation of the answer content.
+
+Acceptance criteria:
+
+A user sees only one question at a time and can move forward/backward without losing previous answers.
+Closing the session midway through the questionnaire and returning later restores exactly the answers provided up to that point.
+Changing a previously provided answer updates the saved state of that contract generation.

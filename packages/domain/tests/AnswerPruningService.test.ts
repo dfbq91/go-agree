@@ -9,30 +9,31 @@ describe('AnswerPruningService', () => {
   it('prunes obsolete child answers when parent question answer changes', () => {
     // Originally recurring with duration > 12m and price adjustment selected
     const originalAnswers: Record<string, unknown> = {
-      q0_description: 'Servicio de vigilancia privada',
+      q0_party_role: 'client',
       q1_legal_personality: 'legal_entity',
-      q2_delivery_conditions: 'Estándares de seguridad',
-      q3_location: 'Edificio Central, Medellín',
-      q4_modality: 'recurring',
-      q4b_recurring_duration: '>12',
+      q2_description_conditions: 'Estándares de seguridad',
+      q3_domicile: 'Edificio Central, Medellín',
+      q4_breach_impact: 'Parálisis operativa',
+      q5_modality: 'recurring',
+      q5b_recurring_duration: '>12',
       q7_price_adjustment: 'cpi',
     };
 
     // User navigates back and switches to one_time
     const updatedAnswers = {
       ...originalAnswers,
-      q4_modality: 'one_time',
-      q4a_delivery_timeframe: '15 días',
+      q5_modality: 'one_time',
+      q5a_delivery_timeframe: '15 días',
     };
 
     const pruned = pruningService.prune(updatedAnswers);
 
-    expect(pruned.q4_modality).toBe('one_time');
-    expect(pruned.q4a_delivery_timeframe).toBe('15 días');
-    expect(pruned.q0_description).toBe('Servicio de vigilancia privada');
+    expect(pruned.q5_modality).toBe('one_time');
+    expect(pruned.q5a_delivery_timeframe).toBe('15 días');
+    expect(pruned.q0_party_role).toBe('client');
 
     // Obsolete child answers must be stripped
-    expect(pruned.q4b_recurring_duration).toBeUndefined();
+    expect(pruned.q5b_recurring_duration).toBeUndefined();
     expect(pruned.q7_price_adjustment).toBeUndefined();
   });
 
@@ -51,5 +52,26 @@ describe('AnswerPruningService', () => {
 
     expect(pruned.q9_renewal).toBe('fixed_term');
     expect(pruned.q9a_renewal_notice).toBeUndefined();
+  });
+
+  it('prunes all client answers when switching role to contractor', () => {
+    const originalAnswers: Record<string, unknown> = {
+      q0_party_role: 'client',
+      q1_legal_personality: 'individual',
+      q2_description_conditions: 'Servicio de diseño',
+      q3_domicile: 'Cali',
+    };
+
+    const updatedAnswers = {
+      ...originalAnswers,
+      q0_party_role: 'contractor',
+    };
+
+    const pruned = pruningService.prune(updatedAnswers);
+
+    expect(pruned.q0_party_role).toBe('contractor');
+    expect(pruned.q1_legal_personality).toBeUndefined();
+    expect(pruned.q2_description_conditions).toBeUndefined();
+    expect(pruned.q3_domicile).toBeUndefined();
   });
 });

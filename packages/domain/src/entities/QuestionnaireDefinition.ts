@@ -20,6 +20,9 @@ export class QuestionnaireDefinition {
   }
 
   getVisibleQuestions(answers: Record<string, unknown>): Question[] {
+    if (answers['q0_party_role'] && answers['q0_party_role'] !== 'client') {
+      return this.questions.filter((q) => q.id === 'q0_party_role');
+    }
     return this.questions.filter((q) => q.isVisible(answers));
   }
 
@@ -57,9 +60,15 @@ export class QuestionnaireDefinition {
 
   pruneObsoleteAnswers(answers: Record<string, unknown>): Record<string, unknown> {
     const pruned: Record<string, unknown> = { ...answers };
-    for (const question of this.questions) {
-      if (!question.isVisible(pruned)) {
-        delete pruned[question.id];
+    let changed = true;
+    while (changed) {
+      changed = false;
+      const visibleIds = new Set(this.getVisibleQuestions(pruned).map((q) => q.id));
+      for (const question of this.questions) {
+        if (question.id in pruned && !visibleIds.has(question.id)) {
+          delete pruned[question.id];
+          changed = true;
+        }
       }
     }
     return pruned;
@@ -68,13 +77,29 @@ export class QuestionnaireDefinition {
   static createStandard(): QuestionnaireDefinition {
     const questions: Question[] = [
       new Question({
-        id: 'q0_description',
+        id: 'q0_party_role',
         order: 0,
-        prompt: 'Describe el bien o servicio que necesitas',
-        type: 'open_text',
+        prompt: 'Indica si eres contratante o contratista',
+        type: 'single_choice',
         isRequired: true,
         helpText:
-          'Esta descripción inicial nos permite identificar la naturaleza de la relación contractual y preparar las cláusulas técnicas y operativas más adecuadas.',
+          'Define tu posición contractual en el acuerdo para estructurar adecuadamente las facultades, obligaciones y derechos de cada parte.',
+        options: [
+          new QuestionOption({
+            id: 'opt_client',
+            label: 'Contratante',
+            value: 'client',
+            tooltip:
+              'Parte que encarga la ejecución de la obra o prestación del servicio y se compromete al pago del precio convenido.',
+          }),
+          new QuestionOption({
+            id: 'opt_contractor',
+            label: 'Contratista',
+            value: 'contractor',
+            tooltip:
+              'Parte encargada de suministrar el bien, ejecutar la obra o prestar el servicio profesional bajo su propia autonomía técnica.',
+          }),
+        ],
       }),
       new Question({
         id: 'q1_legal_personality',
@@ -101,26 +126,35 @@ export class QuestionnaireDefinition {
         ],
       }),
       new Question({
-        id: 'q2_delivery_conditions',
+        id: 'q2_description_conditions',
         order: 2,
-        prompt: '¿Bajo qué condiciones requieres que se entregue el bien o servicio solicitado?',
+        prompt: 'Describe el bien o servicio que necesitas y en qué condiciones lo requieres',
         type: 'open_text',
         isRequired: true,
         helpText:
-          'Establecer criterios de aceptación claros previene disputas sobre calidad y define cuándo se entiende cumplida la obligación de entrega.',
+          'Esta descripción inicial nos permite identificar la naturaleza del contrato y servirá como base para que nuestro asistente inteligente formule preguntas complementarias que precisen el alcance del acuerdo.',
       }),
       new Question({
-        id: 'q3_location',
+        id: 'q3_domicile',
         order: 3,
-        prompt: '¿Cuál es la ubicación del contrato (dirección exacta)?',
+        prompt: 'Define el domicilio del contrato',
         type: 'open_text',
         isRequired: true,
         helpText:
-          'Fija el lugar geográfico donde se cumplirán las obligaciones y ayuda a determinar la jurisdicción territorial aplicable.',
+          'Fija el lugar geográfico y domicilio legal donde se cumplirán las obligaciones y ayuda a determinar la jurisdicción territorial aplicable.',
       }),
       new Question({
-        id: 'q4_modality',
+        id: 'q4_breach_impact',
         order: 4,
+        prompt: '¿De qué manera te afectaría un incumplimiento por parte del proveedor?',
+        type: 'open_text',
+        isRequired: true,
+        helpText:
+          'Ayuda a calibrar las cláusulas penales pecuniarias y la estimación anticipada de perjuicios e indemnizaciones.',
+      }),
+      new Question({
+        id: 'q5_modality',
+        order: 5,
         prompt:
           '¿El bien o servicio se contrata para una entrega única o es periódico/recurrente en el tiempo?',
         type: 'single_choice',
@@ -144,22 +178,22 @@ export class QuestionnaireDefinition {
         ],
       }),
       new Question({
-        id: 'q4a_delivery_timeframe',
-        order: 5,
+        id: 'q5a_delivery_timeframe',
+        order: 6,
         prompt: 'Plazo o fecha de entrega requerida',
         type: 'open_text',
         isRequired: true,
         helpText:
           'Indica el límite temporal máximo para la entrega definitiva del bien o servicio contratado.',
         condition: new ConditionRule({
-          dependsOnQuestionId: 'q4_modality',
+          dependsOnQuestionId: 'q5_modality',
           operator: 'equals',
           expectedValue: 'one_time',
         }),
       }),
       new Question({
-        id: 'q4b_recurring_duration',
-        order: 6,
+        id: 'q5b_recurring_duration',
+        order: 7,
         prompt: 'Duración requerida del contrato',
         type: 'single_choice',
         isRequired: true,
@@ -181,14 +215,14 @@ export class QuestionnaireDefinition {
           }),
         ],
         condition: new ConditionRule({
-          dependsOnQuestionId: 'q4_modality',
+          dependsOnQuestionId: 'q5_modality',
           operator: 'equals',
           expectedValue: 'recurring',
         }),
       }),
       new Question({
-        id: 'q5_service_profile',
-        order: 7,
+        id: 'q6_service_profile',
+        order: 8,
         prompt:
           'Si se contrata a un proveedor de servicios: Especifica si el proveedor empleará personal o utilizará vehículos',
         type: 'multiple_choice',
@@ -219,15 +253,6 @@ export class QuestionnaireDefinition {
               'El contrato es de compraventa o el proveedor presta el servicio de forma directa sin personal ni vehículos.',
           }),
         ],
-      }),
-      new Question({
-        id: 'q6_breach_impact',
-        order: 8,
-        prompt: '¿De qué manera te afectaría un incumplimiento por parte del proveedor?',
-        type: 'open_text',
-        isRequired: true,
-        helpText:
-          'Ayuda a calibrar las cláusulas penales pecuniarias y la estimación anticipada de perjuicios e indemnizaciones.',
       }),
       new Question({
         id: 'q7_price_adjustment',
@@ -267,7 +292,7 @@ export class QuestionnaireDefinition {
           }),
         ],
         condition: new ConditionRule({
-          dependsOnQuestionId: 'q4b_recurring_duration',
+          dependsOnQuestionId: 'q5b_recurring_duration',
           operator: 'equals',
           expectedValue: '>12',
         }),

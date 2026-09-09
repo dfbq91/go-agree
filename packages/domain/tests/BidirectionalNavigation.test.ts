@@ -7,22 +7,23 @@ describe('Bidirectional Navigation & Answer Modification', () => {
   it('skips non-matching conditional questions in both forward and backward traversal', () => {
     // With recurring modality
     const recurringAnswers: Record<string, unknown> = {
-      q0_description: 'Servicio recurrente',
+      q0_party_role: 'client',
       q1_legal_personality: 'individual',
-      q2_delivery_conditions: 'Condiciones',
-      q3_location: 'Bogotá',
-      q4_modality: 'recurring',
+      q2_description_conditions: 'Condiciones',
+      q3_domicile: 'Bogotá',
+      q4_breach_impact: 'Impacto',
+      q5_modality: 'recurring',
     };
 
-    const q4 = questionnaire.questions.find((q) => q.id === 'q4_modality')!;
-    const nextAfterQ4 = questionnaire.getNextQuestion(q4.id, recurringAnswers);
+    const q5 = questionnaire.questions.find((q) => q.id === 'q5_modality')!;
+    const nextAfterQ5 = questionnaire.getNextQuestion(q5.id, recurringAnswers);
 
-    // Q4a should be skipped; next must be Q4b
-    expect(nextAfterQ4?.id).toBe('q4b_recurring_duration');
+    // Q5a should be skipped; next must be Q5b
+    expect(nextAfterQ5?.id).toBe('q5b_recurring_duration');
 
-    // Stepping backwards from Q4b must return to Q4
-    const prevFromQ4b = questionnaire.getPreviousQuestion(nextAfterQ4!.id, recurringAnswers);
-    expect(prevFromQ4b?.id).toBe('q4_modality');
+    // Stepping backwards from Q5b must return to Q5
+    const prevFromQ5b = questionnaire.getPreviousQuestion(nextAfterQ5!.id, recurringAnswers);
+    expect(prevFromQ5b?.id).toBe('q5_modality');
   });
 
   it('returns null when trying to step previous from the first question', () => {
@@ -35,21 +36,21 @@ describe('Bidirectional Navigation & Answer Modification', () => {
 
   it('preserves non-dependent answers when modifying a previous answer', () => {
     const answers: Record<string, unknown> = {
-      q0_description: 'Descripción inicial',
+      q0_party_role: 'client',
       q1_legal_personality: 'individual',
-      q2_delivery_conditions: 'Condición A',
-      q3_location: 'Calle 100 # 15-20',
+      q2_description_conditions: 'Condición A',
+      q3_domicile: 'Calle 100 # 15-20',
     };
 
-    // User navigates back and modifies Q3 location
+    // User navigates back and modifies Q3 domicile
     const updatedAnswers = {
       ...answers,
-      q3_location: 'Carrera 7 # 72-10',
+      q3_domicile: 'Carrera 7 # 72-10',
     };
 
-    expect(updatedAnswers.q0_description).toBe('Descripción inicial');
+    expect(updatedAnswers.q0_party_role).toBe('client');
     expect(updatedAnswers.q1_legal_personality).toBe('individual');
-    expect(updatedAnswers.q2_delivery_conditions).toBe('Condición A');
-    expect(updatedAnswers.q3_location).toBe('Carrera 7 # 72-10');
+    expect(updatedAnswers.q2_description_conditions).toBe('Condición A');
+    expect(updatedAnswers.q3_domicile).toBe('Carrera 7 # 72-10');
   });
 });

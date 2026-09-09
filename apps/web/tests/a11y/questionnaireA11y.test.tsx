@@ -183,6 +183,48 @@ describe('Questionnaire WCAG 2.1 AA Accessibility Audit (axe-core)', () => {
     expect(results.violations).toEqual([]);
   });
 
+  it('QuestionCard with QuestionGuidance passes accessibility audit', async () => {
+    const mockGuidanceQuestion: QuestionDTO = {
+      id: 'q2_description_conditions',
+      order: 2,
+      prompt: 'Describe el bien o servicio que necesitas y en qué condiciones lo requieres',
+      type: 'open_text',
+      isRequired: true,
+    };
+    const { container } = render(
+      <QuestionCard
+        question={mockGuidanceQuestion}
+        value="Servicio de desarrollo"
+        onChange={vi.fn()}
+      />
+    );
+    const results = await axe.run(container, axeOptions);
+    expect(results.violations).toEqual([]);
+  });
+
+  it('QuestionCard with contractor alert notice passes accessibility audit', async () => {
+    const mockRoleQuestion: QuestionDTO = {
+      id: 'q0_party_role',
+      order: 0,
+      prompt: 'Indica si eres contratante o contratista',
+      type: 'single_choice',
+      isRequired: true,
+      options: [
+        { id: 'opt_1', label: 'Contratante', value: 'client' },
+        { id: 'opt_2', label: 'Contratista', value: 'contractor' },
+      ],
+    };
+    const { container } = render(
+      <QuestionCard
+        question={mockRoleQuestion}
+        value="contractor"
+        onChange={vi.fn()}
+      />
+    );
+    const results = await axe.run(container, axeOptions);
+    expect(results.violations).toEqual([]);
+  });
+
   it('QuestionnaireContainer initial state passes accessibility audit', async () => {
     const { container } = render(
       <QuestionnaireContainer

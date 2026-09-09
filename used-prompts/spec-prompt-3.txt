@@ -1,0 +1,44 @@
+Especifica el contexto de Análisis LLM y Preguntas Dinámicas de go-agree.
+
+Objetivo: una vez respondidas las preguntas estándar (y en rondas
+sucesivas), analizar las respuestas del usuario para generar preguntas
+adicionales específicas al contrato que se está construyendo, hasta reunir
+la información suficiente para redactar el documento final.
+
+Alcance:
+- El análisis se dispara automáticamente tras cada bloque de respuestas
+  relevante (no requiere acción manual adicional del usuario más allá de
+  responder).
+- El resultado del análisis es un conjunto de preguntas dinámicas nuevas,
+  del mismo catálogo de tipos que las estándar (checkbox, selección única,
+  selección múltiple, texto abierto).
+- El LLM debe cubrir al menos, cuando aplique: cuánto está dispuesto a
+  pagar el usuario, si habrá cargos adicionales (ej. costos de transporte
+  o combustible asociados a la entrega), y cualquier otra pregunta que
+  el modelo considere relevante dado el contexto ya capturado.
+- El total esperado de preguntas (estándar + dinámicas) para un contrato
+  puede ir de aproximadamente 30 a 80.
+- Cada pregunta dinámica puede incluir una justificación ("¿Por qué te
+  preguntamos esto?") derivada del razonamiento del modelo sobre por qué
+  esa pregunta es relevante para este contrato en particular.
+- Mientras se ejecuta el análisis, se muestra un modal de carga con
+  mensajes rotativos y amigables, por ejemplo: "Estamos analizando tus
+  respuestas para hacerte las preguntas correctas para lo que necesitas.",
+  "Estamos trabajando para ti. Ya volvemos.", "Analizando riesgos,
+  garantías, pólizas, condiciones y muchas cosas más. Ya estamos en eso."
+- El acceso al modelo de análisis se modela como un puerto de dominio
+  (independiente del proveedor concreto de LLM), de forma que la
+  implementación inicial (modelo open source propio) pueda sustituirse
+  después por otro proveedor sin cambiar esta especificación funcional.
+
+Fuera de alcance: tiempo máximo de respuesta del análisis (no es relevante
+para el MVP), explicabilidad detallada más allá del texto de justificación
+por pregunta, entrenamiento o ajuste fino de modelos.
+
+Criterios de aceptación:
+- Tras completar las preguntas estándar, el usuario ve el modal de carga y
+  luego recibe preguntas dinámicas coherentes con lo que describió.
+- Las preguntas dinámicas se presentan con el mismo mecanismo de una
+  pregunta a la vez que las estándar, y también son editables/persistidas.
+- Cada pregunta dinámica puede mostrar, si el usuario lo despliega, una
+  razón específica de por qué se le pregunta eso.

@@ -20,9 +20,9 @@ export class UpdateQuestionnaireProgressUseCase {
   ) {}
 
   async execute(request: UpdateQuestionnaireProgressRequest): Promise<ContractGenerationDTO> {
-    const q0 = request.answers['q0_description'];
+    const q0 = request.answers['q0_party_role'] ?? request.answers['q0_description'];
     if (q0 !== undefined && (typeof q0 !== 'string' || q0.trim().length === 0)) {
-      throw new InvalidAnswerError('q0_description', 'La primera pregunta es requerida.');
+      throw new InvalidAnswerError('q0_party_role', 'La primera pregunta es requerida.');
     }
 
     if (
@@ -33,9 +33,9 @@ export class UpdateQuestionnaireProgressUseCase {
         request.contractId,
         request.userId
       );
-      const existingQ0 = existing?.answers?.['q0_description'];
+      const existingQ0 = existing?.answers?.['q0_party_role'] ?? existing?.answers?.['q0_description'];
       if (!existingQ0 || (typeof existingQ0 === 'string' && existingQ0.trim().length === 0)) {
-        throw new InvalidAnswerError('q0_description', 'La primera pregunta es requerida.');
+        throw new InvalidAnswerError('q0_party_role', 'La primera pregunta es requerida.');
       }
     }
 

@@ -7,11 +7,15 @@ import type { QuestionDTO } from '@go-agree/application';
 describe('SummaryReview Component', () => {
   const mockQuestions: QuestionDTO[] = [
     {
-      id: 'q0_description',
+      id: 'q0_party_role',
       order: 0,
-      prompt: 'Describe el bien o servicio que necesitas',
-      type: 'open_text',
+      prompt: 'Indica si eres contratante o contratista',
+      type: 'single_choice',
       isRequired: true,
+      options: [
+        { id: 'opt_1', label: 'Contratante', value: 'client' },
+        { id: 'opt_2', label: 'Contratista', value: 'contractor' },
+      ],
     },
     {
       id: 'q1_legal_personality',
@@ -24,11 +28,19 @@ describe('SummaryReview Component', () => {
         { id: 'opt_2', label: 'Persona jurídica', value: 'legal_entity' },
       ],
     },
+    {
+      id: 'q2_description_conditions',
+      order: 2,
+      prompt: 'Describe el bien o servicio que necesitas y en qué condiciones lo requieres',
+      type: 'open_text',
+      isRequired: true,
+    },
   ];
 
   const mockAnswers: Record<string, unknown> = {
-    q0_description: 'Servicio de desarrollo de software',
+    q0_party_role: 'client',
     q1_legal_personality: 'individual',
+    q2_description_conditions: 'Servicio de desarrollo de software',
   };
 
   it('renders summary review with questions and user answers', () => {
@@ -42,10 +54,12 @@ describe('SummaryReview Component', () => {
     );
 
     expect(screen.getByText(/Resumen de Respuestas/i)).toBeDefined();
-    expect(screen.getByText('Describe el bien o servicio que necesitas')).toBeDefined();
-    expect(screen.getByText('Servicio de desarrollo de software')).toBeDefined();
+    expect(screen.getByText('Indica si eres contratante o contratista')).toBeDefined();
+    expect(screen.getByText('Contratante')).toBeDefined();
     expect(screen.getByText('¿Eres persona natural o persona jurídica?')).toBeDefined();
     expect(screen.getByText('Persona natural')).toBeDefined();
+    expect(screen.getByText('Describe el bien o servicio que necesitas y en qué condiciones lo requieres')).toBeDefined();
+    expect(screen.getByText('Servicio de desarrollo de software')).toBeDefined();
   });
 
   it('calls onEdit when clicking Modificar on a specific question', () => {
@@ -60,10 +74,10 @@ describe('SummaryReview Component', () => {
     );
 
     const editButtons = screen.getAllByRole('button', { name: /Modificar/i });
-    expect(editButtons.length).toBe(2);
+    expect(editButtons.length).toBe(3);
 
     fireEvent.click(editButtons[0]);
-    expect(onEdit).toHaveBeenCalledWith('q0_description');
+    expect(onEdit).toHaveBeenCalledWith('q0_party_role');
   });
 
   it('calls onConfirm when clicking Confirmar cuestionario', () => {
@@ -92,12 +106,14 @@ describe('SummaryReview Component', () => {
       />
     );
 
-    // Should display Spanish title "Descripción del bien o servicio" and "Personalidad jurídica"
-    expect(screen.getByText('Descripción del bien o servicio')).toBeDefined();
+    // Should display Spanish titles from es.ts
+    expect(screen.getByText('Rol en el contrato')).toBeDefined();
     expect(screen.getByText('Personalidad jurídica')).toBeDefined();
+    expect(screen.getByText('Descripción y condiciones del bien o servicio')).toBeDefined();
     // Should NOT display raw IDs as badges
-    expect(screen.queryByText('q0_description')).toBeNull();
+    expect(screen.queryByText('q0_party_role')).toBeNull();
     expect(screen.queryByText('q1_legal_personality')).toBeNull();
+    expect(screen.queryByText('q2_description_conditions')).toBeNull();
   });
 
   it('displays custom specification detail for other options', () => {

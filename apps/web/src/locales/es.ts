@@ -1,7 +1,7 @@
 export const es = {
   brand: {
     name: 'go-agree',
-    tagline: 'Generación inteligente y segura de contratos legales',
+    tagline: 'Generación inteligente y segura de contratos legales para Colombia',
   },
   nav: {
     login: 'Iniciar sesión',
@@ -96,17 +96,42 @@ export const es = {
       backToDraft: 'Volver a la última pregunta',
       backToDashboard: 'Volver al panel',
     },
+    contractorNotice: {
+      title: 'Flujo para contratistas en desarrollo',
+      message:
+        'Actualmente la generación de contratos está habilitada únicamente para la parte contratante. El alcance para contratistas se considerará en una posterior iteración. Para continuar con la creación del contrato, por favor selecciona "Contratante".',
+      error:
+        'Por favor selecciona "Contratante" para continuar con este cuestionario. El flujo para contratistas estará disponible próximamente.',
+    },
+    guidanceAction: {
+      useExample: 'Usar como plantilla',
+      viewExample: 'Ver ejemplo',
+      hideExample: 'Ocultar ejemplo',
+    },
     questions: {
-      q0_description: {
-        title: 'Descripción del bien o servicio',
-        prompt: 'Describe el bien o servicio que necesitas',
-        placeholder: 'Ej. Servicios de desarrollo de software para plataforma web de comercio electrónico...',
-        helpText: 'Esta descripción inicial nos permite identificar la naturaleza de la relación contractual y preparar las cláusulas técnicas y operativas más adecuadas.',
+      q0_party_role: {
+        title: 'Rol en el contrato',
+        prompt: 'Indica si eres contratante o contratista',
+        helpText:
+          'Define tu posición contractual en el acuerdo para estructurar adecuadamente las facultades, obligaciones y derechos de cada parte.',
+        options: {
+          client: {
+            label: 'Contratante',
+            tooltip:
+              'Parte que encarga la ejecución de la obra o prestación del servicio y se compromete al pago del precio convenido.',
+          },
+          contractor: {
+            label: 'Contratista',
+            tooltip:
+              'Parte encargada de suministrar el bien, ejecutar la obra o prestar el servicio profesional bajo su propia autonomía técnica.',
+          },
+        },
       },
       q1_legal_personality: {
         title: 'Personalidad jurídica',
         prompt: '¿Eres persona natural o persona jurídica?',
-        helpText: 'Determina tu capacidad legal, régimen tributario aplicable y el tipo de representación requerida para celebrar el contrato.',
+        helpText:
+          'Determina tu capacidad legal, régimen tributario aplicable y el tipo de representación requerida para celebrar el contrato.',
         options: {
           individual: {
             label: 'Persona natural',
@@ -114,23 +139,97 @@ export const es = {
           },
           legal_entity: {
             label: 'Persona jurídica',
-            tooltip: 'Empresa, sociedad o entidad ficticia legalmente constituida capaz de ejercer derechos y contraer obligaciones civiles y comerciales.',
+            tooltip:
+              'Empresa, sociedad o entidad ficticia legalmente constituida capaz de ejercer derechos y contraer obligaciones civiles y comerciales.',
           },
         },
       },
-      q2_delivery_conditions: {
-        title: 'Condiciones de entrega',
-        prompt: '¿Bajo qué condiciones requieres que se entregue el bien o servicio solicitado?',
-        placeholder: 'Ej. Vida útil mínima de 12 meses para productos perecederos, entregas en empaque sellado, o estándares técnicos específicos...',
-        helpText: 'Establecer criterios de aceptación claros previene disputas sobre calidad y define cuándo se entiende cumplida la obligación de entrega.',
+      q2_description_conditions: {
+        title: 'Descripción y condiciones del bien o servicio',
+        prompt: 'Describe el bien o servicio que necesitas y en qué condiciones lo requieres',
+        placeholder:
+          'Ej. Servicios de desarrollo de software para plataforma web de comercio electrónico, entregado en 90 días calendario y bajo metodología ágil...',
+        helpText:
+          'Esta descripción inicial nos permite identificar la naturaleza del contrato y servirá como base para que nuestro asistente inteligente formule preguntas complementarias que precisen el alcance del acuerdo.',
+        guidance: {
+          title: 'Recomendaciones para describir el bien o servicio',
+          badge: '🤖 Base para análisis del Asistente de IA',
+          context:
+            'Esta descripción es fundamental porque se enviará como prompt hacia nuestro modelo de IA para que genere preguntas adicionales orientadas a especificar el alcance de tu contrato de la mejor manera.',
+          tips: [
+            {
+              icon: '📦',
+              title: 'Detalla el objeto',
+              text: 'Especifica qué bien o servicio requieres con exactitud (especificaciones técnicas, actividades concretas, entregables o alcances).',
+            },
+            {
+              icon: '⏱️',
+              title: 'Condiciones de entrega y plazos',
+              text: 'Indica tiempos esperados de entrega, frecuencia de avances, modalidades (remota o presencial) o lugares clave de prestación.',
+            },
+            {
+              icon: '🎯',
+              title: 'Criterios de calidad y aceptación',
+              text: 'Define cómo evaluarás que el bien o servicio cumple con tus expectativas (pruebas de recepción, empaque sellado, garantías mínimas o estándares técnicos).',
+            },
+          ],
+          examples: [
+            {
+              label: 'Ejemplo de Servicio',
+              text: 'Contratación de servicios de desarrollo de software para una aplicación web y móvil de e-commerce en React y Node.js, incluyendo pasarela de pagos integrada, panel administrativo, entrega en 3 hitos durante 90 días calendario y soporte técnico posentrega por 3 meses.',
+            },
+            {
+              label: 'Ejemplo de Bien',
+              text: 'Suministro e instalación de 30 estaciones de trabajo ergonómicas modulares en melamina de 18mm con estructura metálica y sillas ejecutivas regulables, entregadas en la sede corporativa en Bogotá en un plazo máximo de 20 días hábiles con garantía técnica de 1 año.',
+            },
+          ],
+        },
       },
-      q3_location: {
-        title: 'Ubicación del contrato',
-        prompt: '¿Cuál es la ubicación del contrato (dirección exacta)?',
+      q3_domicile: {
+        title: 'Domicilio del contrato',
+        prompt: 'Define el domicilio del contrato',
         placeholder: 'Ej. Calle 100 # 15-20, Oficina 501, Bogotá D.C., Colombia',
-        helpText: 'Fija el lugar geográfico donde se cumplirán las obligaciones y ayuda a determinar la jurisdicción territorial aplicable.',
+        helpText:
+          'Fija el lugar geográfico y domicilio legal donde se cumplirán las obligaciones y ayuda a determinar la jurisdicción territorial aplicable.',
       },
-      q4_modality: {
+      q4_breach_impact: {
+        title: 'Impacto por incumplimiento',
+        prompt: 'Cuéntanos, ¿cómo crees que te verías afectado si el proveedor incumple el contrato?',
+        placeholder:
+          'Ej. Parálisis operativa, pérdida directa de ingresos comerciales, sanciones de clientes terceros o daño reputacional...',
+        helpText:
+          'Ayuda a calibrar las cláusulas penales pecuniarias y la estimación anticipada de perjuicios e indemnizaciones.',
+        guidance: {
+          title: 'Recomendaciones para evaluar el impacto de un incumplimiento',
+          badge: '⚖️ Calibración de Cláusulas Penales',
+          context:
+            'Tu respuesta permitirá determinar el rigor y valor de las cláusulas penales pecuniarias y las pólizas de seguro necesarias para proteger tu negocio.',
+          tips: [
+            {
+              icon: '🛑',
+              title: 'Impacto operativo',
+              text: '¿Se interrumpirían actividades indispensables, procesos productivos clave o la atención a tus propios clientes?',
+            },
+            {
+              icon: '💸',
+              title: 'Pérdidas económicas directas',
+              text: '¿Generaría pérdidas directas de ventas, lucro cesante, gastos de contingencia para contratar un reemplazo urgente o penalidades con terceros?',
+            },
+            {
+              icon: '🛡️',
+              title: 'Riesgo legal y reputacional',
+              text: '¿Podrías enfrentar multas regulatorias o pérdida de confianza y credibilidad de tus usuarios en el mercado?',
+            },
+          ],
+          examples: [
+            {
+              label: 'Ejemplo de impacto operativo y financiero',
+              text: 'Un retraso superior a 15 días en la entrega detendría el lanzamiento de nuestra campaña anual, ocasionando pérdidas estimadas de ingresos comerciales y sobrecostos por tener que contratar personal de contingencia.',
+            },
+          ],
+        },
+      },
+      q5_modality: {
         title: 'Modalidad de entrega',
         prompt: '¿El bien o servicio se contrata para una entrega única o es periódico/recurrente en el tiempo?',
         helpText: 'Distingue entre contratos de ejecución instantánea y contratos de tracto sucesivo, lo cual impacta causales de terminación y pagos.',
@@ -145,13 +244,13 @@ export const es = {
           },
         },
       },
-      q4a_delivery_timeframe: {
+      q5a_delivery_timeframe: {
         title: 'Plazo de entrega',
         prompt: 'Plazo o fecha de entrega requerida',
         placeholder: 'Ej. 30 días calendario contados a partir de la firma del contrato...',
         helpText: 'Indica el límite temporal máximo para la entrega definitiva del bien o servicio contratado.',
       },
-      q4b_recurring_duration: {
+      q5b_recurring_duration: {
         title: 'Duración del contrato',
         prompt: 'Duración requerida del contrato',
         helpText: 'La duración determina si aplican normas especiales de ajuste de precio o estabilidad contractual.',
@@ -166,7 +265,7 @@ export const es = {
           },
         },
       },
-      q5_service_profile: {
+      q6_service_profile: {
         title: 'Perfil del servicio',
         prompt: 'Si se contrata a un proveedor de servicios: Especifica si el proveedor empleará personal o utilizará vehículos',
         tooltip: 'Esto es importante para definir obligaciones adicionales exigidas por la ley, como afiliaciones a seguridad social y pólizas de responsabilidad civil.',
@@ -185,12 +284,6 @@ export const es = {
             tooltip: 'El contrato es de compraventa o el proveedor presta el servicio de forma directa sin personal ni vehículos.',
           },
         },
-      },
-      q6_breach_impact: {
-        title: 'Impacto por incumplimiento',
-        prompt: '¿De qué manera te afectaría un incumplimiento por parte del proveedor?',
-        placeholder: 'Ej. Parálisis operativa, pérdida directa de ingresos comerciales, sanciones de terceros o daño reputacional...',
-        helpText: 'Ayuda a calibrar las cláusulas penales pecuniarias y la estimación anticipada de perjuicios e indemnizaciones.',
       },
       q7_price_adjustment: {
         title: 'Ajuste de precio',

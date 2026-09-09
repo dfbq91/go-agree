@@ -100,4 +100,95 @@ describe('QuestionCard Component', () => {
     const nextHeading = screen.getByRole('heading', { name: '¿Eres persona natural o persona jurídica?' });
     expect(document.activeElement).toBe(nextHeading);
   });
+
+  it('renders QuestionGuidance panel when question has guidance in dictionary', () => {
+    const mockGuidanceQuestion: QuestionDTO = {
+      id: 'q2_description_conditions',
+      order: 2,
+      prompt: 'Describe el bien o servicio que necesitas y en qué condiciones lo requieres',
+      type: 'open_text',
+      isRequired: true,
+    };
+
+    render(
+      <QuestionCard
+        question={mockGuidanceQuestion}
+        value=""
+        onChange={vi.fn()}
+      />
+    );
+
+    expect(screen.getByText('Recomendaciones para describir el bien o servicio')).toBeDefined();
+    expect(screen.getByText(/Base para análisis del Asistente de IA/i)).toBeDefined();
+    expect(screen.getByText('Detalla el objeto')).toBeDefined();
+    expect(screen.getByText('Condiciones de entrega y plazos')).toBeDefined();
+    expect(screen.getByText('Criterios de calidad y aceptación')).toBeDefined();
+  });
+
+  it('allows clicking an example in QuestionGuidance and using it as template', () => {
+    const onChange = vi.fn();
+    const mockGuidanceQuestion: QuestionDTO = {
+      id: 'q2_description_conditions',
+      order: 2,
+      prompt: 'Describe el bien o servicio que necesitas y en qué condiciones lo requieres',
+      type: 'open_text',
+      isRequired: true,
+    };
+
+    render(
+      <QuestionCard
+        question={mockGuidanceQuestion}
+        value=""
+        onChange={onChange}
+      />
+    );
+
+    // Click on example pill
+    const exampleButton = screen.getByRole('button', { name: /Ejemplo de Servicio/i });
+    fireEvent.click(exampleButton);
+
+    // Example content should be visible
+    expect(screen.getByText(/Contratación de servicios de desarrollo de software/i)).toBeDefined();
+
+    // Click "Usar como plantilla"
+    const useTemplateButton = screen.getByRole('button', { name: /Usar como plantilla/i });
+    fireEvent.click(useTemplateButton);
+
+    expect(onChange).toHaveBeenCalledWith(expect.stringContaining('Contratación de servicios de desarrollo de software'));
+  });
+
+  it('renders contractor notice alert when contractor role is selected', () => {
+    const mockPartyRoleQuestion: QuestionDTO = {
+      id: 'q0_party_role',
+      order: 0,
+      prompt: 'Indica si eres contratante o contratista',
+      type: 'single_choice',
+      isRequired: true,
+      options: [
+        { id: 'opt_1', label: 'Contratante', value: 'client' },
+        { id: 'opt_2', label: 'Contratista', value: 'contractor' },
+      ],
+    };
+
+    const { rerender } = render(
+      <QuestionCard
+        question={mockPartyRoleQuestion}
+        value="client"
+        onChange={vi.fn()}
+      />
+    );
+
+    expect(screen.queryByText('Flujo para contratistas en desarrollo')).toBeNull();
+
+    rerender(
+      <QuestionCard
+        question={mockPartyRoleQuestion}
+        value="contractor"
+        onChange={vi.fn()}
+      />
+    );
+
+    expect(screen.getByText('Flujo para contratistas en desarrollo')).toBeDefined();
+    expect(screen.getByText(/Actualmente la generación de contratos está habilitada únicamente para la parte contratante/i)).toBeDefined();
+  });
 });

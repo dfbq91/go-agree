@@ -104,6 +104,11 @@ export const QuestionnaireContainer: React.FC<QuestionnaireContainerProps> = ({
       return;
     }
 
+    if (currentQuestion.id === 'q0_party_role' && answer === 'contractor') {
+      setError(es.questionnaire.contractorNotice.error);
+      return;
+    }
+
     setError(undefined);
 
     if (safeIndex >= visibleQuestions.length - 1) {
@@ -150,6 +155,11 @@ export const QuestionnaireContainer: React.FC<QuestionnaireContainerProps> = ({
 
     if (!validation.isValid) {
       setError(validation.error || es.questionnaire.requiredField);
+      return;
+    }
+
+    if (currentQuestion.id === 'q0_party_role' && answer === 'contractor') {
+      setError(es.questionnaire.contractorNotice.error);
       return;
     }
 

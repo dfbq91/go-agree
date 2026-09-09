@@ -7,12 +7,26 @@ describe('QuestionnaireDefinition', () => {
     const questionnaire = QuestionnaireDefinition.createStandard();
     expect(questionnaire.id).toBe('standard_questionnaire_v1');
     expect(questionnaire.version).toBe('1.0.0');
-    expect(questionnaire.questions.length).toBeGreaterThanOrEqual(12);
+    expect(questionnaire.questions.length).toBeGreaterThanOrEqual(14);
 
-    const q0 = questionnaire.questions.find((q) => q.id === 'q0_description');
+    const q0 = questionnaire.questions.find((q) => q.id === 'q0_party_role');
     expect(q0).toBeDefined();
-    expect(q0?.prompt).toBe('Describe el bien o servicio que necesitas');
+    expect(q0?.prompt).toBe('Indica si eres contratante o contratista');
     expect(q0?.isRequired).toBe(true);
+
+    const q1 = questionnaire.questions.find((q) => q.id === 'q1_legal_personality');
+    expect(q1).toBeDefined();
+    expect(q1?.isRequired).toBe(true);
+
+    const q2 = questionnaire.questions.find((q) => q.id === 'q2_description_conditions');
+    expect(q2).toBeDefined();
+    expect(q2?.isRequired).toBe(true);
+
+    const q3 = questionnaire.questions.find((q) => q.id === 'q3_domicile');
+    expect(q3).toBeDefined();
+
+    const q4 = questionnaire.questions.find((q) => q.id === 'q4_breach_impact');
+    expect(q4).toBeDefined();
   });
 
   it('evaluates visible questions correctly based on answers', () => {
@@ -21,28 +35,33 @@ describe('QuestionnaireDefinition', () => {
     const initialVisible = questionnaire.getVisibleQuestions(emptyAnswers);
 
     // Conditional questions should not be visible initially
-    expect(initialVisible.some((q) => q.id === 'q4a_delivery_timeframe')).toBe(false);
-    expect(initialVisible.some((q) => q.id === 'q4b_recurring_duration')).toBe(false);
+    expect(initialVisible.some((q) => q.id === 'q5a_delivery_timeframe')).toBe(false);
+    expect(initialVisible.some((q) => q.id === 'q5b_recurring_duration')).toBe(false);
     expect(initialVisible.some((q) => q.id === 'q7_price_adjustment')).toBe(false);
     expect(initialVisible.some((q) => q.id === 'q9a_renewal_notice')).toBe(false);
 
-    // With one_time modality
-    const oneTimeAnswers = { q4_modality: 'one_time' };
-    const oneTimeVisible = questionnaire.getVisibleQuestions(oneTimeAnswers);
-    expect(oneTimeVisible.some((q) => q.id === 'q4a_delivery_timeframe')).toBe(true);
-    expect(oneTimeVisible.some((q) => q.id === 'q4b_recurring_duration')).toBe(false);
+    // If contractor is selected, only question 0 is visible
+    const contractorVisible = questionnaire.getVisibleQuestions({ q0_party_role: 'contractor' });
+    expect(contractorVisible.length).toBe(1);
+    expect(contractorVisible[0].id).toBe('q0_party_role');
 
-    // With recurring modality > 12m
-    const recurringAnswers = { q4_modality: 'recurring', q4b_recurring_duration: '>12' };
+    // With client and one_time modality
+    const oneTimeAnswers = { q0_party_role: 'client', q5_modality: 'one_time' };
+    const oneTimeVisible = questionnaire.getVisibleQuestions(oneTimeAnswers);
+    expect(oneTimeVisible.some((q) => q.id === 'q5a_delivery_timeframe')).toBe(true);
+    expect(oneTimeVisible.some((q) => q.id === 'q5b_recurring_duration')).toBe(false);
+
+    // With client and recurring modality > 12m
+    const recurringAnswers = { q0_party_role: 'client', q5_modality: 'recurring', q5b_recurring_duration: '>12' };
     const recurringVisible = questionnaire.getVisibleQuestions(recurringAnswers);
-    expect(recurringVisible.some((q) => q.id === 'q4a_delivery_timeframe')).toBe(false);
-    expect(recurringVisible.some((q) => q.id === 'q4b_recurring_duration')).toBe(true);
+    expect(recurringVisible.some((q) => q.id === 'q5a_delivery_timeframe')).toBe(false);
+    expect(recurringVisible.some((q) => q.id === 'q5b_recurring_duration')).toBe(true);
     expect(recurringVisible.some((q) => q.id === 'q7_price_adjustment')).toBe(true);
   });
 
   it('navigates next and previous sequentially among visible questions', () => {
     const questionnaire = QuestionnaireDefinition.createStandard();
-    const answers = { q4_modality: 'one_time' };
+    const answers = { q0_party_role: 'client', q5_modality: 'one_time' };
     const visible = questionnaire.getVisibleQuestions(answers);
 
     const first = visible[0];
