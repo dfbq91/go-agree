@@ -17,10 +17,13 @@
     "db:push": "npx supabase db push"
   },
   "dependencies": {
-    "@go-agree/domain": "workspace:*",
+    "@ai-sdk/google": "^4.0.67",
     "@go-agree/application": "workspace:*",
+    "@go-agree/domain": "workspace:*",
+    "@supabase/ssr": "^0.3.0",
     "@supabase/supabase-js": "^2.43.4",
-    "@supabase/ssr": "^0.3.0"
+    "ai": "^7.0.97",
+    "zod": "^4.6.1"
   },
   "devDependencies": {
     "typescript": "^5.4.5",
