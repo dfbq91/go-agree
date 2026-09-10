@@ -12,9 +12,10 @@ import {
   UnauthorizedContractAccessError,
   EmptyTitleError,
 } from '@go-agree/domain';
+import type { SupabaseClient } from '@supabase/supabase-js';
 
 export class SupabaseContractRepository implements ContractRepositoryPort, ContractProgressPort {
-  constructor(private readonly supabase: any) {}
+  constructor(private readonly supabase: SupabaseClient) {}
 
   async listByUserId(userId: string): Promise<ContractGenerationSummaryDTO[]> {
     const { data, error } = await this.supabase

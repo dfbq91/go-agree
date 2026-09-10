@@ -1,4 +1,5 @@
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
+import { QuestionnaireDefinition } from '@go-agree/domain';
 import type {
     GenerateQuestionsInput,
     GenerateQuestionsOutput,
@@ -31,6 +32,78 @@ const dynamicQuestionSchema = z.object({
 const dynamicQuestionsPayloadSchema = z.object({
   questions: z.array(dynamicQuestionSchema).length(5).describe('Exactamente 5 preguntas de profundización'),
 });
+
+function formatQuestionnaireTranscript(answers: Record<string, unknown>): string {
+  const questionnaire = QuestionnaireDefinition.createStandard();
+  const lines: string[] = [];
+
+  for (const question of questionnaire.questions) {
+    if (!(question.id in answers)) {
+      continue;
+    }
+
+    const val = answers[question.id];
+    if (val === undefined || val === null || val === '') {
+      continue;
+    }
+
+    let humanReadableAnswer = '';
+
+    if (question.type === 'single_choice') {
+      let selection = '';
+      let customValue = '';
+      if (typeof val === 'object' && val !== null && 'selection' in val) {
+        selection = String((val as any).selection || '');
+        customValue = String((val as any).customValue || '');
+      } else if (typeof val === 'string') {
+        if (val.startsWith('other:')) {
+          selection = 'other';
+          customValue = val.replace(/^other:\s*/, '');
+        } else {
+          selection = val;
+        }
+      }
+      const opt = question.options?.find((o) => o.value === selection);
+      const label = opt ? opt.label : selection;
+      humanReadableAnswer = customValue ? `${label} (Especificado: "${customValue}")` : label;
+    } else if (question.type === 'multiple_choice' && Array.isArray(val)) {
+      const selectedLabels = val.map((item) => {
+        let selection = '';
+        let customValue = '';
+        if (typeof item === 'object' && item !== null && 'selection' in item) {
+          selection = String((item as any).selection || '');
+          customValue = String((item as any).customValue || '');
+        } else if (typeof item === 'string') {
+          if (item.startsWith('other:')) {
+            selection = 'other';
+            customValue = item.replace(/^other:\s*/, '');
+          } else {
+            selection = item;
+          }
+        }
+        const opt = question.options?.find((o) => o.value === selection);
+        const label = opt ? opt.label : selection;
+        return customValue ? `${label} (Especificado: "${customValue}")` : label;
+      });
+      humanReadableAnswer = selectedLabels.join(', ');
+    } else if (typeof val === 'boolean') {
+      humanReadableAnswer = val ? 'Sí / Marcado' : 'No / Desmarcado';
+    } else {
+      humanReadableAnswer = String(val);
+    }
+
+    lines.push(`- **Pregunta**: "${question.prompt}"\n  **Respuesta**: ${humanReadableAnswer}`);
+  }
+
+  // Si hay alguna respuesta no listada en el cuestionario estándar, la agregamos
+  for (const [key, val] of Object.entries(answers)) {
+    if (!questionnaire.questions.some((q) => q.id === key) && val !== undefined && val !== null && val !== '') {
+      lines.push(`- **Pregunta / Campo adicional (${key})**:\n  **Respuesta**: ${JSON.stringify(val)}`);
+    }
+  }
+
+  return lines.length > 0 ? lines.join('\n\n') : 'No se han registrado respuestas previas.';
+}
 
 /**
  * Instancia de modelo de Vercel AI SDK.
@@ -76,10 +149,11 @@ Tu objetivo NO es redactar el contrato final todavía. Tu misión es analizar la
    - Entregables tangibles, plazos de revisión y criterios de aceptación o rechazo.
    - Responsabilidades operativas, garantías, niveles de servicio (SLA) o custodia.
    - Confidencialidad, propiedad intelectual o exclusividad (si aplica al objeto contratado).
-3. NO repitas aspectos ya respondidos en el cuestionario estándar (como el domicilio contractual, tipo de persona natural/jurídica, duración inicial o preaviso de terminación).
+   - Otros.
+3. NO repitas aspectos ya respondidos en el cuestionario estándar (como el domicilio contractual, tipo de persona natural/jurídica, duración inicial o preaviso de terminación, entre otros).
 
 ### Reglas Estrictas para la Formulación de Preguntas:
-1. Debes formular EXACTAMENTE 5 preguntas. Ni más, ni menos.
+1. Debes formular 5 preguntas..
 2. El lenguaje debe ser profesional, cercano, en español claro y comprensible para cualquier persona o empresario sin formación jurídica.
 3. Tipos de pregunta admitidos:
    - 'single_choice': Para decisiones donde solo una opción es válida. Incluye tantas opciones coherentes como sean necesarias para cubrir el escenario de negocio.
@@ -93,11 +167,15 @@ Tu objetivo NO es redactar el contrato final todavía. Tu misión es analizar la
    - Explica de forma concreta y en 1 o 2 frases por qué esta información es indispensable para estructurar las cláusulas del contrato y evitar futuros conflictos legales o económicos.
 6. Asigna identificadores semánticos y descriptivos a cada pregunta (ejemplo: "dyn_payment_milestones", "dyn_additional_expenses", "dyn_ip_rights").`;
 
-    const userMessage = `A continuación se presentan las respuestas actuales suministradas por el usuario en el cuestionario de ingreso:
-${JSON.stringify(input.answers, null, 2)}
+    const transcript = formatQuestionnaireTranscript(input.answers);
 
-Analiza estas respuestas y genera las 5 preguntas de profundización más pertinentes para este negocio.`;
+    const userMessage = `A continuación se presentan las preguntas formuladas en el cuestionario de ingreso y las respuestas suministradas por el usuario hasta el momento:
 
+${transcript}
+
+Con base en esta transcripción, analiza la naturaleza de la operación, detecta los riesgos y vacíos comerciales no abordados todavía, y formula exactamente las 5 preguntas de profundización más pertinentes para blindar este acuerdo en Colombia.`;
+
+    console.info('AiQuestionAnalysisAdapter: Generating questions with the following input:', { systemPrompt, userMessage });
     const response = await this.generateTextFn({
       model: this.model,
       output: Output.object({ schema: dynamicQuestionsPayloadSchema }),
