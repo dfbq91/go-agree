@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { QuestionnaireDefinition } from '@go-agree/domain';
 import type { QuestionDTO } from '@go-agree/application';
 import { QuestionCard } from './QuestionCard';
@@ -8,7 +8,7 @@ import { QuestionnaireHeader } from './QuestionnaireHeader';
 import { NetworkStatusBanner } from './NetworkStatusBanner';
 import { es } from '../../locales/es';
 
-import { useAutosave } from '../../hooks/useAutosave';
+export type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
 
 export interface QuestionnaireContainerProps {
   contractId: string;
@@ -42,31 +42,28 @@ export const QuestionnaireContainer: React.FC<QuestionnaireContainerProps> = ({
   const [error, setError] = useState<string | undefined>(undefined);
   const [title, setTitle] = useState<string>(initialTitle);
   const [isCompleting, setIsCompleting] = useState<boolean>(false);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle');
 
-  // Compute visible questions based on current answers
+  // Temporizador para resetear "Guardado" a "idle" tras 2 segundos
+  useEffect(() => {
+    if (saveStatus === 'saved') {
+      const timer = setTimeout(() => {
+        setSaveStatus('idle');
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [saveStatus]);
+
+  // Calcular las preguntas visibles según las respuestas actuales
   const visibleQuestions = useMemo(() => {
     return questionnaire.getVisibleQuestions(answers);
   }, [questionnaire, answers]);
 
-  // Ensure index is within visible range
   const safeIndex = Math.min(Math.max(0, currentIndex), Math.max(0, visibleQuestions.length - 1));
   const currentQuestion = visibleQuestions[safeIndex];
 
-  const {
-    saveStatus,
-    triggerAutosave,
-    saveDirectly,
-    flush,
-  } = useAutosave<{ index: number; answers: Record<string, unknown> }>({
-    onSave: async ({ index, answers: toSave }) => {
-      if (onSaveProgress) {
-        await onSaveProgress(index, toSave);
-      }
-    },
-    debounceMs: 400,
-    localFallbackKey: `draft_contract_${contractId}`,
-  });
-
+  // 1. handleAnswerChange: SOLO actualiza la memoria local de React
   const handleAnswerChange = (val: unknown) => {
     if (!currentQuestion) return;
     setError(undefined);
@@ -76,25 +73,13 @@ export const QuestionnaireContainer: React.FC<QuestionnaireContainerProps> = ({
       [currentQuestion.id]: val,
     };
 
-    // Prune obsolete answers if conditions changed
     const pruned = questionnaire.pruneObsoleteAnswers(updatedAnswers);
     setAnswers(pruned);
-
-    // If choice question, save immediately
-    if (currentQuestion.type === 'single_choice' || currentQuestion.type === 'checkbox') {
-      saveDirectly({ index: safeIndex, answers: pruned });
-    } else {
-      // Debounce autosave for text input (400ms)
-      triggerAutosave({ index: safeIndex, answers: pruned });
-    }
   };
 
-  const handleBlur = () => {
-    flush();
-  };
-
-  const handleNext = () => {
-    if (!currentQuestion) return;
+  // 2. handleNext: Realiza el guardado de forma exclusiva al dar clic en Siguiente
+  const handleNext = async () => {
+    if (!currentQuestion || isSaving) return;
 
     const answer = answers[currentQuestion.id];
     const validation = currentQuestion.validate(answer);
@@ -111,18 +96,35 @@ export const QuestionnaireContainer: React.FC<QuestionnaireContainerProps> = ({
 
     setError(undefined);
 
-    if (safeIndex >= visibleQuestions.length - 1) {
+    const isLast = safeIndex >= visibleQuestions.length - 1;
+    const nextIndex = isLast ? safeIndex : safeIndex + 1;
+
+    // Persistencia exclusiva en "Siguiente"
+    if (onSaveProgress) {
+      setIsSaving(true);
+      setSaveStatus('saving');
+      try {
+        await onSaveProgress(nextIndex, answers);
+        setSaveStatus('saved');
+      } catch (err) {
+        setSaveStatus('error');
+        setError('Error al guardar tu respuesta. Por favor intenta de nuevo.');
+        return; // DETENCIÓN: No avanza si falló el guardado
+      } finally {
+        setIsSaving(false);
+      }
+    }
+
+    if (isLast) {
       setIsReviewing(true);
       setIsEditingFromSummary(false);
-      saveDirectly({ index: safeIndex, answers });
     } else {
-      const nextIndex = safeIndex + 1;
       setCurrentIndex(nextIndex);
       setIsEditingFromSummary(false);
-      saveDirectly({ index: nextIndex, answers });
     }
   };
 
+  // 3. handlePrevious: Navegación simple hacia atrás (sin guardar)
   const handlePrevious = () => {
     setError(undefined);
     if (isReviewing) {
@@ -134,7 +136,6 @@ export const QuestionnaireContainer: React.FC<QuestionnaireContainerProps> = ({
       const prevIndex = safeIndex - 1;
       setCurrentIndex(prevIndex);
       setIsEditingFromSummary(false);
-      saveDirectly({ index: prevIndex, answers });
     }
   };
 
@@ -147,8 +148,9 @@ export const QuestionnaireContainer: React.FC<QuestionnaireContainerProps> = ({
     }
   };
 
-  const handleUpdateAndReturnToSummary = () => {
-    if (!currentQuestion) return;
+  // 4. Actualizar respuesta cuando viene desde la pantalla de Resumen
+  const handleUpdateAndReturnToSummary = async () => {
+    if (!currentQuestion || isSaving) return;
 
     const answer = answers[currentQuestion.id];
     const validation = currentQuestion.validate(answer);
@@ -164,7 +166,22 @@ export const QuestionnaireContainer: React.FC<QuestionnaireContainerProps> = ({
     }
 
     setError(undefined);
-    saveDirectly({ index: safeIndex, answers });
+
+    if (onSaveProgress) {
+      setIsSaving(true);
+      setSaveStatus('saving');
+      try {
+        await onSaveProgress(safeIndex, answers);
+        setSaveStatus('saved');
+      } catch (err) {
+        setSaveStatus('error');
+        setError('Error al guardar tu respuesta. Por favor intenta de nuevo.');
+        return;
+      } finally {
+        setIsSaving(false);
+      }
+    }
+
     setIsReviewing(true);
     setIsEditingFromSummary(false);
   };
@@ -180,7 +197,6 @@ export const QuestionnaireContainer: React.FC<QuestionnaireContainerProps> = ({
     }
   };
 
-  // Title editing handler
   const handleTitleSave = async (newTitle: string) => {
     setTitle(newTitle);
     if (onSaveTitle) {
@@ -190,7 +206,7 @@ export const QuestionnaireContainer: React.FC<QuestionnaireContainerProps> = ({
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
-      {/* Header with Title and Autosave Status */}
+      {/* Cabecera con título y estado visual de guardado */}
       <QuestionnaireHeader
         title={title}
         saveStatus={saveStatus}
@@ -199,10 +215,10 @@ export const QuestionnaireContainer: React.FC<QuestionnaireContainerProps> = ({
 
       <NetworkStatusBanner
         hasError={saveStatus === 'error'}
-        onRetry={handleBlur}
+        onRetry={handleNext}
       />
 
-      {/* Main Questionnaire Flow */}
+      {/* Flujo Principal del Cuestionario */}
       {isReviewing ? (
         <SummaryReview
           questions={visibleQuestions.map((q) => q.toJSON() as QuestionDTO)}
@@ -219,7 +235,6 @@ export const QuestionnaireContainer: React.FC<QuestionnaireContainerProps> = ({
               question={currentQuestion.toJSON() as QuestionDTO}
               value={answers[currentQuestion.id]}
               onChange={handleAnswerChange}
-              onBlur={handleBlur}
               error={error}
             />
 
@@ -229,6 +244,7 @@ export const QuestionnaireContainer: React.FC<QuestionnaireContainerProps> = ({
               onNext={handleNext}
               onPrevious={handlePrevious}
               error={error}
+              isLoading={isSaving}
               isEditingFromSummary={isEditingFromSummary}
               onUpdateAnswer={handleUpdateAndReturnToSummary}
             />

@@ -31,41 +31,32 @@ describe('Autosave and Resumption Integration', () => {
     expect(screen.getByRole('button', { name: /Anterior/i })).toBeDefined();
   });
 
-  it('debounces text input autosave by 400ms and triggers onSaveProgress', async () => {
+  it('does NOT trigger onSaveProgress while typing or selecting choices', async () => {
     const onSaveProgress = vi.fn().mockResolvedValue(undefined);
 
     render(
       <QuestionnaireContainer
         contractId="contract-123"
         initialTitle="Mi Contrato 1"
-        initialQuestionIndex={2}
-        initialAnswers={{
-          q0_party_role: 'client',
-          q1_legal_personality: 'individual',
-        }}
+        initialQuestionIndex={0}
+        initialAnswers={{}}
         onSaveProgress={onSaveProgress}
       />
     );
 
-    const textarea = screen.getByRole('textbox');
-    fireEvent.change(textarea, { target: { value: 'Desarrollo de software' } });
+    // 1. Select a radio choice
+    const radio = screen.getByLabelText('Contratante');
+    fireEvent.click(radio);
 
-    // Immediately before 400ms, should not have saved text yet
-    expect(onSaveProgress).not.toHaveBeenCalled();
-
-    // Advance 400ms
+    // 2. Advance timers (por si hubiera algún debounce)
     act(() => {
-      vi.advanceTimersByTime(400);
+      vi.advanceTimersByTime(1000);
     });
 
-    expect(onSaveProgress).toHaveBeenCalledWith(2, {
-      q0_party_role: 'client',
-      q1_legal_personality: 'individual',
-      q2_description_conditions: 'Desarrollo de software',
-    });
+    expect(onSaveProgress).not.toHaveBeenCalled();
   });
 
-  it('triggers immediate autosave on choice selection', () => {
+  it('triggers onSaveProgress ONLY when clicking the Siguiente button', async () => {
     const onSaveProgress = vi.fn().mockResolvedValue(undefined);
 
     render(
@@ -80,9 +71,47 @@ describe('Autosave and Resumption Integration', () => {
 
     const radio = screen.getByLabelText('Contratante');
     fireEvent.click(radio);
+    expect(onSaveProgress).not.toHaveBeenCalled();
 
-    expect(onSaveProgress).toHaveBeenCalledWith(0, {
+    const nextButton = screen.getByRole('button', { name: /Siguiente/i });
+    await act(async () => {
+      fireEvent.click(nextButton);
+    });
+
+    expect(onSaveProgress).toHaveBeenCalledTimes(1);
+    expect(onSaveProgress).toHaveBeenCalledWith(1, {
       q0_party_role: 'client',
     });
+  });
+
+  it('prevents advancing and displays error when onSaveProgress fails', async () => {
+    const onSaveProgress = vi.fn().mockRejectedValue(new Error('Network error'));
+
+    render(
+      <QuestionnaireContainer
+        contractId="contract-123"
+        initialTitle="Mi Contrato 1"
+        initialQuestionIndex={0}
+        initialAnswers={{}}
+        onSaveProgress={onSaveProgress}
+      />
+    );
+
+    const radio = screen.getByLabelText('Contratante');
+    fireEvent.click(radio);
+
+    const nextButton = screen.getByRole('button', { name: /Siguiente/i });
+    await act(async () => {
+      fireEvent.click(nextButton);
+    });
+
+    expect(
+      screen.getByRole('heading', { name: 'Indica si eres contratante o contratista' })
+    ).toBeDefined();
+
+    // Debe mostrar una alerta accesible de error
+    const alerts = screen.getAllByRole('alert');
+    expect(alerts.length).toBeGreaterThan(0);
+    expect(alerts[0].textContent).toContain('guardar');
   });
 });
