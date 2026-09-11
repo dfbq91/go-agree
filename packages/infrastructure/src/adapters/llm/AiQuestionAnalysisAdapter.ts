@@ -1,4 +1,3 @@
-import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { QuestionnaireDefinition } from '@go-agree/domain';
 import type {
     GenerateQuestionsInput,
@@ -8,8 +7,6 @@ import type {
 } from '@go-agree/application';
 import { generateText, Output, type LanguageModel } from 'ai';
 import { z } from 'zod';
-
-declare const process: { env: Record<string, string | undefined> };
 
 const dynamicQuestionOptionSchema = z.object({
   id: z.string().describe('Identificador único de la opción, ej. opt_advance_payment'),
@@ -106,14 +103,11 @@ function formatQuestionnaireTranscript(answers: Record<string, unknown>): string
 }
 
 /**
- * Instancia de modelo de Vercel AI SDK.
- * Puede ser de Google, OpenAI, Anthropic, Mistral o cualquier otro compatible.
- * Si no se especifica, por defecto inicializará Gemini con las variables de entorno.
+ * Configuración para el adaptador de IA agnóstico.
+ * Recibe directamente una instancia de LanguageModel de Vercel AI SDK.
  */
 export interface AiAdapterConfig {
-  model?: LanguageModel;
-  apiKey?: string;
-  modelName?: string;
+  model: LanguageModel;
   generateTextFn?: typeof generateText;
 }
 
@@ -121,19 +115,12 @@ export class AiQuestionAnalysisAdapter implements LlmQuestionAnalysisPort {
   private readonly model: LanguageModel;
   private readonly generateTextFn: typeof generateText;
 
-  constructor(config: AiAdapterConfig = {}) {
-    this.generateTextFn = config.generateTextFn || generateText;
-
-    if (config.model) {
-      // Si nos inyectan un modelo específico (OpenAI, Mistral, Anthropic, etc.), lo usamos
-      this.model = config.model;
-    } else {
-      // Por defecto inicializamos con Google Gemini
-      const apiKey = config.apiKey || (typeof process !== 'undefined' ? process.env.GOOGLE_GENERATIVE_AI_API_KEY : '') || '';
-      const modelName = config.modelName || (typeof process !== 'undefined' ? process.env.GEMINI_MODEL_NAME : 'gemini-2.0-flash-lite') || 'gemini-2.0-flash-lite';
-      const google = createGoogleGenerativeAI({ apiKey });
-      this.model = google(modelName);
+  constructor(config: AiAdapterConfig) {
+    if (!config || !config.model) {
+      throw new Error('AiQuestionAnalysisAdapter requires a valid LanguageModel instance.');
     }
+    this.model = config.model;
+    this.generateTextFn = config.generateTextFn || generateText;
   }
 
   async generateQuestions(input: GenerateQuestionsInput): Promise<GenerateQuestionsOutput> {

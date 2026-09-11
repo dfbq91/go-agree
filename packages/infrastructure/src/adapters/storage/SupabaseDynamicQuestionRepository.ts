@@ -15,13 +15,13 @@ export interface DynamicQuestionRow {
   stage: number;
   question_key: string;
   prompt: string;
-  type: string;
+  type: QuestionType;
   order_index: number;
   is_required: boolean;
   help_text: string | null;
   tooltip: string | null;
-  options: unknown | null;
-  condition: unknown | null;
+  options: QuestionOptionDTO[] | null;
+  condition: ConditionRuleDTO | null;
   created_at: string;
 }
 

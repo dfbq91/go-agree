@@ -1,5 +1,4 @@
 import { createBrowserClient, createServerClient, type CookieOptions } from '@supabase/ssr';
-import type { SupabaseClient } from '@supabase/supabase-js';
 
 export interface CookieMethods {
   get: (name: string) => string | undefined;

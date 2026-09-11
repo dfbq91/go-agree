@@ -11,6 +11,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@ai-sdk/google": "^4.0.67",
     "@go-agree/application": "workspace:*",
     "@go-agree/domain": "workspace:*",
     "@go-agree/infrastructure": "workspace:*",

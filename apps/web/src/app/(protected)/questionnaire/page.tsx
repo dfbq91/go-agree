@@ -2,6 +2,8 @@ import React from 'react';
 import { redirect } from 'next/navigation';
 import { getServerAuthAdapter } from '@/lib/auth';
 import { getServerContractRepository } from '@/lib/contracts';
+import { getServerDynamicQuestionRepository } from '@/lib/analysis';
+import type { QuestionDTO } from '@go-agree/application';
 import { QuestionnaireClientPage } from '@/components/questionnaire/QuestionnaireClientPage';
 
 interface QuestionnairePageProps {
@@ -43,6 +45,21 @@ export default async function QuestionnairePage({ searchParams }: QuestionnaireP
   const isCompleted = contract.status === 'completed';
   const shouldReview = isCompleted || searchParams.mode === 'summary';
 
+  const dynamicRepo = getServerDynamicQuestionRepository();
+  const existingDynamic = await dynamicRepo.getQuestionsByContractId(contract.id, session.userId);
+
+  const initialDynamicQuestions: QuestionDTO[] = existingDynamic.map((q) => ({
+    id: q.questionKey,
+    order: q.orderIndex,
+    prompt: q.prompt,
+    type: q.type,
+    isRequired: q.isRequired,
+    helpText: q.helpText,
+    tooltip: q.tooltip,
+    options: q.options,
+    condition: q.condition,
+  }));
+
   return (
     <QuestionnaireClientPage
       contractId={contract.id}
@@ -51,6 +68,7 @@ export default async function QuestionnairePage({ searchParams }: QuestionnaireP
       initialQuestionIndex={contract.currentQuestionIndex}
       initialIsReviewing={shouldReview}
       isCompleted={isCompleted}
+      initialDynamicQuestions={initialDynamicQuestions}
     />
   );
 }

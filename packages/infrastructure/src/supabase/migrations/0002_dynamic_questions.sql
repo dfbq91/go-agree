@@ -32,20 +32,35 @@ CREATE INDEX IF NOT EXISTS idx_dynamic_questions_user_id
 -- 4. Habilitar Row Level Security (RLS) - Seguridad Multi-inquilino
 ALTER TABLE public.contract_dynamic_questions ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Users can only read own dynamic questions" ON public.contract_dynamic_questions;
 CREATE POLICY "Users can only read own dynamic questions"
     ON public.contract_dynamic_questions FOR SELECT
     TO authenticated
     USING (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Users can only insert own dynamic questions" ON public.contract_dynamic_questions;
 CREATE POLICY "Users can only insert own dynamic questions"
     ON public.contract_dynamic_questions FOR INSERT
     TO authenticated
     WITH CHECK (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Users can only delete own dynamic questions" ON public.contract_dynamic_questions;
 CREATE POLICY "Users can only delete own dynamic questions"
     ON public.contract_dynamic_questions FOR DELETE
     TO authenticated
     USING (auth.uid() = user_id);
 
 -- 5. Publicación en Supabase Realtime (Permite que el front reciba notificaciones push)
-ALTER PUBLICATION supabase_realtime ADD TABLE public.contract_dynamic_questions;
+ALTER TABLE public.contract_dynamic_questions REPLICA IDENTITY FULL;
+
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_publication_tables 
+        WHERE pubname = 'supabase_realtime' 
+        AND schemaname = 'public' 
+        AND tablename = 'contract_dynamic_questions'
+    ) THEN
+        ALTER PUBLICATION supabase_realtime ADD TABLE public.contract_dynamic_questions;
+    END IF;
+END $$;

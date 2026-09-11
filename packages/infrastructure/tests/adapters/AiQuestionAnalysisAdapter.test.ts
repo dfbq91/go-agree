@@ -102,4 +102,10 @@ describe('AiQuestionAnalysisAdapter (Unified Vercel AI SDK Adapter)', () => {
       })
     ).rejects.toThrow('AI Provider Quota Exceeded');
   });
+
+  it('throws an error if model is not provided', () => {
+    expect(() => new AiQuestionAnalysisAdapter({} as any)).toThrow(
+      'AiQuestionAnalysisAdapter requires a valid LanguageModel instance.'
+    );
+  });
 });

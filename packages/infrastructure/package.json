@@ -17,7 +17,6 @@
     "db:push": "npx supabase db push"
   },
   "dependencies": {
-    "@ai-sdk/google": "^4.0.67",
     "@go-agree/application": "workspace:*",
     "@go-agree/domain": "workspace:*",
     "@supabase/ssr": "^0.3.0",
