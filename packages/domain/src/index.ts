@@ -11,5 +11,5 @@ export * from './entities/ContractGeneration.js';
 export * from './entities/Question.js';
 export * from './entities/QuestionnaireDefinition.js';
 export * from './services/AnswerPruningService.js';
-
-
+export * from './entities/PricingConfig.js';
+export * from './services/PricingCalculatorService.js';

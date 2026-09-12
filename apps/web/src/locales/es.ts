@@ -383,6 +383,90 @@ export const es = {
       },
     },
   },
+  landing: {
+    nav: {
+      howItWorks: 'Cómo funciona',
+      pricing: 'Precios',
+      openMenuAria: 'Abrir menú de navegación',
+      closeMenuAria: 'Cerrar menú de navegación',
+    },
+    hero: {
+      badge: '✨ Crea acuerdos legales claros y confiables',
+      title: 'Crea contratos a tu medida respondiendo un cuestionario guiado',
+      subtitle:
+        'Olvídate de formatos genéricos y confusos. go-agree analiza tus necesidades paso a paso para generar un acuerdo legal personalizado y listo para descargar.',
+      freeTrialBadge: '🎁 3 contratos gratis sin tarjeta de crédito',
+      ctaPrimary: 'Comenzar gratis',
+      ctaSecondary: 'Iniciar sesión',
+      ctaDashboard: 'Ir a mis contratos',
+      contractCountNote: 'Regístrate hoy y redacta tus primeros 3 contratos totalmente gratis.',
+    },
+    howItWorks: {
+      tagline: 'Proceso simple y transparente',
+      title: 'Cómo funciona go-agree',
+      subtitle:
+        'Tres sencillos pasos para obtener un contrato legal ajustado a la realidad de tu acuerdo.',
+      steps: {
+        step1: {
+          badge: 'Paso 1',
+          title: 'Responde preguntas guiadas',
+          description:
+            'Completa un cuestionario interactivo con lenguaje claro sobre las partes, el objeto, condiciones de entrega, pagos y resolución de controversias.',
+        },
+        step2: {
+          badge: 'Paso 2',
+          title: 'Análisis inteligente del acuerdo',
+          description:
+            'El sistema analiza automáticamente tus respuestas para formular preguntas adicionales específicas y calibrar cláusulas de protección personalizadas.',
+        },
+        step3: {
+          badge: 'Paso 3',
+          title: 'Descarga inmediata en Word o PDF',
+          description:
+            'Genera el documento definitivo y descárgalo de inmediato en formato Word editable (.docx) o en PDF listo para imprimir y compartir.',
+        },
+      },
+    },
+    pricing: {
+      tagline: 'Precios transparentes y sin sorpresas',
+      title: 'Un plan diseñado para respaldar tus acuerdos',
+      subtitle:
+        'Acceso completo e ilimitado para generar contratos profesionales cuando los necesites.',
+      freeTrialBanner: {
+        badge: 'Prueba gratuita',
+        title: '3 contratos gratis incluidos',
+        description:
+          'Crea tu cuenta sin costo y genera tus primeros 3 contratos completos antes de suscribirte. Sin tarjeta de crédito requerida.',
+      },
+      billingCycle: {
+        label: 'Frecuencia de facturación',
+        monthly: 'Facturación mensual',
+        annual: 'Facturación anual',
+        saveBadge: 'Ahorra 20%',
+      },
+      period: {
+        monthly: 'mes',
+        billedMonthly: 'Facturación mensual sin compromiso a largo plazo',
+        billedAnnually: 'Facturado anualmente a {annualTotal} / año',
+      },
+      cta: 'Comenzar ahora',
+      featuresTitle: 'Todo lo que incluye el Plan Pro:',
+      features: [
+        'Generación ilimitada de contratos legales',
+        'Cuestionario guiado pregunta a pregunta',
+        'Análisis inteligente para preguntas de alcance específico',
+        'Descarga directa en formato Word (.docx) y PDF',
+        'Autoguardado incremental y reanudación de borradores',
+        'Historial de contratos creados y acceso permanente',
+      ],
+    },
+    footer: {
+      brandTagline: 'Generación inteligente y segura de contratos legales.',
+      legalDisclaimer:
+        'Aviso legal: go-agree es una herramienta tecnológica automatizada para la redacción y generación de borradores de contratos. No constituye una firma de abogados, no presta asesoría jurídica personalizada ni sustituye la consulta con un profesional del derecho.',
+      rightsReserved: 'Todos los derechos reservados.',
+    },
+  },
 } as const;
 
 export type LocalizationDictionary = typeof es;

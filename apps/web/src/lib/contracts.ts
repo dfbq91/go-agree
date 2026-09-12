@@ -74,7 +74,7 @@ export function getServerContractRepository(): ContractRepositoryPort {
         },
       });
 
-      return new SupabaseContractRepository(client);
+      return new SupabaseContractRepository(client as any);
     }
   }
 

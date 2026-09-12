@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
+import type { QuestionDTO } from '@go-agree/application';
 import { QuestionnaireContainer } from './QuestionnaireContainer';
 
 export interface QuestionnaireClientPageProps {
@@ -11,6 +12,7 @@ export interface QuestionnaireClientPageProps {
   initialQuestionIndex: number;
   initialIsReviewing?: boolean;
   isCompleted?: boolean;
+  initialDynamicQuestions?: QuestionDTO[];
 }
 
 export const QuestionnaireClientPage: React.FC<QuestionnaireClientPageProps> = ({
@@ -20,6 +22,7 @@ export const QuestionnaireClientPage: React.FC<QuestionnaireClientPageProps> = (
   initialQuestionIndex,
   initialIsReviewing = false,
   isCompleted = false,
+  initialDynamicQuestions = [],
 }) => {
   const router = useRouter();
 
@@ -82,6 +85,7 @@ export const QuestionnaireClientPage: React.FC<QuestionnaireClientPageProps> = (
       initialQuestionIndex={initialQuestionIndex}
       initialIsReviewing={initialIsReviewing}
       isCompleted={isCompleted}
+      initialDynamicQuestions={initialDynamicQuestions}
       onSaveProgress={handleSaveProgress}
       onSaveTitle={handleSaveTitle}
       onComplete={handleComplete}
