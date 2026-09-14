@@ -1,4 +1,4 @@
-import { CountryPricingRegistry } from '@go-agree/domain';
+import { CountryPricingRegistry, getFreeContractLimit } from '@go-agree/domain';
 import { getServerAuthAdapter } from '@/lib/auth';
 import { HeroSection } from '@/components/landing/HeroSection';
 import { HowItWorksSection } from '@/components/landing/HowItWorksSection';
@@ -19,6 +19,7 @@ export default async function HomePage() {
   }
 
   const pricingPlan = CountryPricingRegistry.getPlanForCountry('CO');
+  const freeContractsLimit = getFreeContractLimit();
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -27,7 +28,7 @@ export default async function HomePage() {
 
       {/* Main Content Area */}
       <main id="main-content" className="flex-1">
-        <HeroSection isAuthenticated={isAuthenticated} freeContractsCount={3} />
+        <HeroSection isAuthenticated={isAuthenticated} freeContractsCount={freeContractsLimit} />
         <HowItWorksSection />
         <PricingSection
           plan={pricingPlan}

@@ -49,4 +49,14 @@ describe('HeroSection Component', () => {
       screen.queryByRole('link', { name: es.landing.hero.ctaPrimary })
     ).toBeNull();
   });
+
+  it('renders dynamic free contracts badge and note when custom freeContractsCount is provided', () => {
+    render(<HeroSection isAuthenticated={false} freeContractsCount={5} />);
+
+    expect(screen.getByText('🎁 5 contratos gratis sin tarjeta de crédito')).toBeDefined();
+    expect(
+      screen.getByText('Regístrate hoy y redacta tus primeros 5 contratos totalmente gratis.')
+    ).toBeDefined();
+  });
 });
+

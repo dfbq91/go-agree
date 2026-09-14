@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { getServerAuthAdapter } from '@/lib/auth';
 import { getServerContractRepository } from '@/lib/contracts';
 import { getServerDynamicQuestionRepository } from '@/lib/analysis';
+import { getServerSubscriptionStatus } from '@/lib/subscription';
 import type { QuestionDTO } from '@go-agree/application';
 import { QuestionnaireClientPage } from '@/components/questionnaire/QuestionnaireClientPage';
 
@@ -27,6 +28,12 @@ export default async function QuestionnairePage({ searchParams }: QuestionnaireP
   }
 
   if (!contract) {
+    // Verify subscription quota before creating a new contract
+    const subStatus = await getServerSubscriptionStatus(session.userId);
+    if (!subStatus.canGenerateContract) {
+      redirect('/dashboard');
+    }
+
     // Create new contract generation draft
     const existing = await contractRepo.listByUserId(session.userId);
     const defaultTitle = `Mi Contrato ${existing.length + 1}`;

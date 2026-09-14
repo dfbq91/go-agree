@@ -7,6 +7,7 @@ export interface SummaryReviewProps {
   answers: Record<string, unknown>;
   onEdit: (questionId: string) => void;
   onConfirm: () => void;
+  onBackToDashboard?: () => void;
   isSubmitting?: boolean;
   isCompleted?: boolean;
 }
@@ -16,6 +17,7 @@ export const SummaryReview: React.FC<SummaryReviewProps> = ({
   answers,
   onEdit,
   onConfirm,
+onBackToDashboard,
   isSubmitting = false,
   isCompleted = false,
 }) => {
@@ -131,7 +133,13 @@ export const SummaryReview: React.FC<SummaryReviewProps> = ({
       <div className="mt-8 pt-6 border-t border-gray-100 flex justify-end">
         <button
           type="button"
-          onClick={onConfirm}
+          onClick={() => {
+            if (isCompleted && onBackToDashboard) {
+              onBackToDashboard();
+            } else {
+              onConfirm();
+            }
+          }}
           disabled={isSubmitting}
           className="w-full sm:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
         >

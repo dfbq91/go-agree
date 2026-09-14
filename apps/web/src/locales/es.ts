@@ -1,3 +1,7 @@
+import { getFreeContractLimit } from '@go-agree/domain';
+
+const defaultLimit = getFreeContractLimit();
+
 export const es = {
   brand: {
     name: 'go-agree',
@@ -395,11 +399,14 @@ export const es = {
       title: 'Crea contratos a tu medida respondiendo un cuestionario guiado',
       subtitle:
         'Olvídate de formatos genéricos y confusos. go-agree analiza tus necesidades paso a paso para generar un acuerdo legal personalizado y listo para descargar.',
-      freeTrialBadge: '🎁 3 contratos gratis sin tarjeta de crédito',
+      freeTrialBadge: `🎁 ${defaultLimit} contratos gratis sin tarjeta de crédito`,
+      formatFreeTrialBadge: (count: number) => `🎁 ${count} contratos gratis sin tarjeta de crédito`,
       ctaPrimary: 'Comenzar gratis',
       ctaSecondary: 'Iniciar sesión',
       ctaDashboard: 'Ir a mis contratos',
-      contractCountNote: 'Regístrate hoy y redacta tus primeros 3 contratos totalmente gratis.',
+      contractCountNote: `Regístrate hoy y redacta tus primeros ${defaultLimit} contratos totalmente gratis.`,
+      formatContractCountNote: (count: number) =>
+        `Regístrate hoy y redacta tus primeros ${count} contratos totalmente gratis.`,
     },
     howItWorks: {
       tagline: 'Proceso simple y transparente',
@@ -434,9 +441,12 @@ export const es = {
         'Acceso completo e ilimitado para generar contratos profesionales cuando los necesites.',
       freeTrialBanner: {
         badge: 'Prueba gratuita',
-        title: '3 contratos gratis incluidos',
+        title: `${defaultLimit} contratos gratis incluidos`,
+        formatTitle: (count: number) => `${count} contratos gratis incluidos`,
         description:
-          'Crea tu cuenta sin costo y genera tus primeros 3 contratos completos antes de suscribirte. Sin tarjeta de crédito requerida.',
+          `Crea tu cuenta sin costo y genera tus primeros ${defaultLimit} contratos completos antes de suscribirte. Sin tarjeta de crédito requerida.`,
+        formatDescription: (count: number) =>
+          `Crea tu cuenta sin costo y genera tus primeros ${count} contratos completos antes de suscribirte. Sin tarjeta de crédito requerida.`,
       },
       billingCycle: {
         label: 'Frecuencia de facturación',
@@ -465,6 +475,60 @@ export const es = {
       legalDisclaimer:
         'Aviso legal: go-agree es una herramienta tecnológica automatizada para la redacción y generación de borradores de contratos. No constituye una firma de abogados, no presta asesoría jurídica personalizada ni sustituye la consulta con un profesional del derecho.',
       rightsReserved: 'Todos los derechos reservados.',
+    },
+  },
+  plans: {
+    free: 'Plan Gratuito',
+    pro: 'Plan Pro',
+    quotaMeter: '{used} de {max} contratos generados ({remaining} restantes)',
+    quotaAvailable: '{count} disponibles',
+    quotaExhausted: `Has utilizado tus ${defaultLimit} contratos gratuitos`,
+    formatQuotaExhausted: (count: number) => `Has utilizado tus ${count} contratos gratuitos`,
+    unlimitedAccess: 'Acceso Pro: Contratos ilimitados',
+    upgradeButton: 'Comprar Plan Pro',
+    upgradeModalTitle: 'Límite de contratos gratuitos alcanzado',
+    upgradeModalDescription:
+      `Has generado tus ${defaultLimit} contratos gratuitos. Para continuar creando contratos ilimitados y acceder a todas las funciones profesionales, adquiere el Plan Pro.`,
+    formatUpgradeModalDescription: (count: number) =>
+      `Has generado tus ${count} contratos gratuitos. Para continuar creando contratos ilimitados y acceder a todas las funciones profesionales, adquiere el Plan Pro.`,
+    upgradeModalCta: 'Comprar Plan Pro',
+    upgradeModalClose: 'Seguir revisando mis contratos',
+  },
+  checkout: {
+    title: 'Adquiere tu Plan Pro',
+    subtitle: 'Selecciona tu ciclo de facturación y método de pago preferido.',
+    providerSectionTitle: 'Pasarela de pago',
+    providerSectionSubtitle: 'Selecciona tu pasarela de pago para continuar:',
+    payButton: 'Pagar con {provider}',
+    processing: 'Procesando pago...',
+    duplicateWarning:
+      'Ya tienes un Plan Pro activo o una transacción en curso. No es necesario realizar un nuevo pago.',
+    noProvidersForCountry:
+      'No hay pasarelas de pago disponibles actualmente para tu país ({country}).',
+    errors: {
+      alreadyActive: 'Tu cuenta ya cuenta con una suscripción activa a Plan Pro.',
+      checkoutFailed: 'No fue posible iniciar la sesión de pago. Por favor intenta de nuevo.',
+    },
+  },
+  paymentResult: {
+    approvedTitle: '¡Pago exitoso!',
+    approvedSubtitle: 'Tu Plan Pro está activo. Ya puedes generar contratos sin límites.',
+    pendingTitle: 'Pago en proceso de verificación',
+    pendingSubtitle:
+      'Tu entidad financiera está procesando la transacción. Esto puede tomar unos momentos.',
+    rejectedTitle: 'Pago no completado',
+    rejectedSubtitle: 'La transacción no pudo ser aprobada por tu entidad financiera.',
+    verifyStatusButton: 'Verificar estado',
+    verifying: 'Verificando...',
+    retryButton: 'Reintentar pago',
+    backToDashboard: 'Ir al panel',
+    referenceLabel: 'Referencia:',
+    reasons: {
+      insufficientFunds: 'Fondos insuficientes en la cuenta.',
+      declinedByBank: 'Transacción declinada por la entidad financiera.',
+      expired: 'El tiempo límite para completar la transacción ha expirado.',
+      duplicate: 'El pago fue identificado como duplicado y no fue aceptado.',
+      generic: 'Ocurrió un error al procesar la transacción.',
     },
   },
 } as const;

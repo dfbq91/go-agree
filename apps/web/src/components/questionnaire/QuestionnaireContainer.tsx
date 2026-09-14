@@ -307,7 +307,17 @@ export const QuestionnaireContainer: React.FC<
     setIsEditingFromSummary(false);
   };
 
+  const handleBackToDashboard = () => {
+    if (typeof window !== 'undefined') {
+      window.location.href = '/dashboard';
+    }
+  };
+
   const handleConfirmSummary = async () => {
+    if (isCompleted) {
+      handleBackToDashboard();
+      return;
+    }
     if (onComplete) {
       setIsCompleting(true);
       try {
@@ -346,6 +356,7 @@ export const QuestionnaireContainer: React.FC<
           answers={answers}
           onEdit={handleEditFromSummary}
           onConfirm={handleConfirmSummary}
+          onBackToDashboard={handleBackToDashboard}
           isSubmitting={isCompleting}
           isCompleted={isCompleted}
         />

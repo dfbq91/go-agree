@@ -46,10 +46,14 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
             <span>{es.landing.pricing.freeTrialBanner.badge}</span>
           </div>
           <h3 className="text-xl font-bold text-emerald-950">
-            {es.landing.pricing.freeTrialBanner.title}
+            {plan.freeContractsIncluded !== undefined && es.landing.pricing.freeTrialBanner.formatTitle
+              ? es.landing.pricing.freeTrialBanner.formatTitle(plan.freeContractsIncluded)
+              : es.landing.pricing.freeTrialBanner.title}
           </h3>
           <p className="mt-2 text-sm text-emerald-800 leading-relaxed">
-            {es.landing.pricing.freeTrialBanner.description}
+            {plan.freeContractsIncluded !== undefined && es.landing.pricing.freeTrialBanner.formatDescription
+              ? es.landing.pricing.freeTrialBanner.formatDescription(plan.freeContractsIncluded)
+              : es.landing.pricing.freeTrialBanner.description}
           </p>
         </div>
 

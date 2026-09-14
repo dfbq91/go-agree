@@ -163,4 +163,26 @@ describe('SummaryReview Component', () => {
 
     expect(screen.getByRole('button', { name: /Volver al panel/i })).toBeDefined();
   });
+
+  it('calls onBackToDashboard and does not call onConfirm when clicking "Volver al panel"', () => {
+    const onConfirmMock = vi.fn();
+    const onBackToDashboardMock = vi.fn();
+
+    render(
+      <SummaryReview
+        questions={mockQuestions}
+        answers={mockAnswers}
+        onEdit={vi.fn()}
+        onConfirm={onConfirmMock}
+        onBackToDashboard={onBackToDashboardMock}
+        isCompleted={true}
+      />
+    );
+
+    const button = screen.getByRole('button', { name: /Volver al panel/i });
+    button.click();
+
+    expect(onBackToDashboardMock).toHaveBeenCalledTimes(1);
+    expect(onConfirmMock).not.toHaveBeenCalled();
+  });
 });

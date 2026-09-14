@@ -9,7 +9,18 @@ export interface HeroSectionProps {
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
   isAuthenticated,
+  freeContractsCount,
 }) => {
+  const trialBadge =
+    freeContractsCount !== undefined && es.landing.hero.formatFreeTrialBadge
+      ? es.landing.hero.formatFreeTrialBadge(freeContractsCount)
+      : es.landing.hero.freeTrialBadge;
+
+  const countNote =
+    freeContractsCount !== undefined && es.landing.hero.formatContractCountNote
+      ? es.landing.hero.formatContractCountNote(freeContractsCount)
+      : es.landing.hero.contractCountNote;
+
   return (
     <section
       aria-labelledby="hero-heading"
@@ -36,7 +47,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
         {/* Free Trial Callout Badge */}
         <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-medium shadow-sm">
-          <span>{es.landing.hero.freeTrialBadge}</span>
+          <span>{trialBadge}</span>
         </div>
 
         {/* Call to Actions */}
@@ -69,7 +80,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         {/* Subtext Note */}
         {!isAuthenticated && (
           <p className="mt-4 text-xs sm:text-sm text-gray-500">
-            {es.landing.hero.contractCountNote}
+            {countNote}
           </p>
         )}
       </div>

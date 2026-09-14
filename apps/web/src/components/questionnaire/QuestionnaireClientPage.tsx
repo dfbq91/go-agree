@@ -61,6 +61,15 @@ export const QuestionnaireClientPage: React.FC<QuestionnaireClientPageProps> = (
   };
 
   const handleComplete = async () => {
+    if (isCompleted) {
+      if (typeof window !== 'undefined') {
+        window.location.href = '/dashboard';
+      } else {
+        router.push('/dashboard');
+      }
+      return;
+    }
+
     try {
       const res = await fetch(`/api/contracts/${contractId}/complete`, {
         method: 'POST',
@@ -69,8 +78,12 @@ export const QuestionnaireClientPage: React.FC<QuestionnaireClientPageProps> = (
         const data = await res.json().catch(() => ({}));
         throw new Error(data.message || 'Failed to complete questionnaire');
       }
-      router.refresh();
-      router.push('/dashboard');
+      if (typeof window !== 'undefined') {
+        window.location.href = '/dashboard';
+      } else {
+        router.refresh();
+        router.push('/dashboard');
+      }
     } catch (err) {
       console.error('Failed to complete questionnaire:', err);
       throw err;

@@ -100,4 +100,26 @@ describe('PricingSection Component', () => {
     const section = container.querySelector('section#precios');
     expect(section).not.toBeNull();
   });
+
+  it('renders dynamic free contracts banner when plan defines custom freeContractsIncluded', () => {
+    const customPlan = {
+      ...COLOMBIA_PRICING_PLAN,
+      freeContractsIncluded: 7,
+    };
+
+    render(
+      <PricingSection
+        plan={customPlan}
+        isAuthenticated={false}
+      />
+    );
+
+    expect(screen.getByText('7 contratos gratis incluidos')).toBeDefined();
+    expect(
+      screen.getByText(
+        'Crea tu cuenta sin costo y genera tus primeros 7 contratos completos antes de suscribirte. Sin tarjeta de crédito requerida.'
+      )
+    ).toBeDefined();
+  });
 });
+

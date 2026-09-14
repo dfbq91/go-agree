@@ -1,15 +1,29 @@
 import React from 'react';
-import Link from 'next/link';
 import { es } from '@/locales/es';
 import { getServerAuthAdapter } from '@/lib/auth';
 import { getServerContractRepository } from '@/lib/contracts';
-import { ListUserContractsUseCase } from '@go-agree/application';
+import { getServerSubscriptionStatus } from '@/lib/subscription';
+import { ListUserContractsUseCase, type SubscriptionStatusResult } from '@go-agree/application';
+import { getFreeContractLimit } from '@go-agree/domain';
 import { ContractList } from '@/components/dashboard/ContractList';
+import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
 
 export const dynamic = 'force-dynamic';
 
 export default async function DashboardPage() {
   let contracts: any[] = [];
+  const defaultFreeLimit = getFreeContractLimit();
+  let subscription: SubscriptionStatusResult = {
+    planType: 'free',
+    status: 'active',
+    freeContractsUsed: 0,
+    freeContractsLimit: defaultFreeLimit,
+    remainingQuota: defaultFreeLimit,
+    canGenerateContract: true,
+    canInitiateCheckout: true,
+    expiresAt: null,
+    currentPeriodBillingCycle: null,
+  };
 
   try {
     const authAdapter = getServerAuthAdapter();
@@ -19,6 +33,8 @@ export default async function DashboardPage() {
       const contractRepo = getServerContractRepository();
       const listUseCase = new ListUserContractsUseCase(contractRepo);
       contracts = await listUseCase.execute(session.userId);
+
+      subscription = await getServerSubscriptionStatus(session.userId);
     }
   } catch {
     contracts = [];
@@ -26,15 +42,7 @@ export default async function DashboardPage() {
 
   return (
     <div>
-      <div className="flex justify-between items-center pb-6 border-b border-gray-200">
-        <h1 className="text-2xl font-bold text-gray-900">{es.dashboard.title}</h1>
-        <Link
-          href="/questionnaire"
-          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
-        >
-          {es.dashboard.newContractButton}
-        </Link>
-      </div>
+      <DashboardHeader subscription={subscription} />
 
       <div className="mt-8">
         <ContractList contracts={contracts} />
