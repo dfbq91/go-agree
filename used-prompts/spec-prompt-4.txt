@@ -1,0 +1,24 @@
+As a contracting party of Go-Agree, I want to be able to purchase a plan/package so that I can continue generating contracts, using Wompi as the payment gateway, allowing the business to monetize the service once the 3 free contracts have been used.
+
+This feature introduces real-money payments through Wompi (a Colombian payment gateway backed by Bancolombia), covering both the one-time payment flow (PSE, credit/debit card, Nequi) and the foundation for future recurring payments, without coupling the rest of the application to the payment provider.
+
+Handle all applicable scenarios, including displaying in the dashboard whether the user has a Pro or Free plan. If the user has the Free plan, the dashboard must show how many contracts they have generated and how many they have remaining.
+
+When the customer completes a payment and the notification is received through the webhook, the successful payment must be reflected in the user experience, with an option to redirect the user back to the dashboard.
+
+The system must also handle payments that are still in progress when the user is redirected back to Go-Agree before the bank has confirmed the transaction. The payment status must change to Approved once the corresponding webhook notification is received.
+
+The rejected payment scenario must also be handled, including displaying or determining the rejection reason and providing an option to retry the payment using a new payment reference. A failed reference must never be reused.
+
+Duplicate payments must be prevented. Likewise, if Wompi sends the same webhook event more than once, subsequent processing of the same event must be a no-op (idempotent processing).
+
+The system must handle the case where the user closes the payment window before completing the transaction. If they return later, they must be able to start a new payment attempt.
+
+The system must also handle edge cases such as:
+
+* Two payments being accidentally initiated or completed.
+* Double-clicks on the payment action.
+* The payment flow being opened in two browser tabs.
+* A webhook amount that does not match the expected payment amount.
+* Changes to Wompi sandbox/API keys.
+* Any other relevant payment, webhook, concurrency, idempotency, or consistency scenarios.
