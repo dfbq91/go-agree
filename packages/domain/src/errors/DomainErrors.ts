@@ -1,3 +1,5 @@
+import { getFreeContractLimit } from '../entities/FreeQuotaConfig.js';
+
 /**
  * Domain-specific typed errors (Principle I: Explicit typed domain errors)
  */
@@ -86,4 +88,51 @@ export class EmptyTitleError extends QuestionnaireDomainError {
     this.name = 'EmptyTitleError';
   }
 }
+
+export class PaymentDomainError extends Error {
+  constructor(message: string, public readonly code: string) {
+    super(message);
+    this.name = 'PaymentDomainError';
+    Object.setPrototypeOf(this, new.target.prototype);
+  }
+}
+
+export class FreeQuotaExceededError extends PaymentDomainError {
+  constructor(limit: number = getFreeContractLimit()) {
+    super(`Has alcanzado el límite de ${limit} contratos gratuitos. Actualiza a Plan Pro para continuar.`, 'FREE_QUOTA_EXCEEDED');
+    this.name = 'FreeQuotaExceededError';
+  }
+}
+
+export class ActiveSubscriptionExistsError extends PaymentDomainError {
+  constructor() {
+    super('Ya cuentas con una suscripción activa a Plan Pro.', 'ACTIVE_SUBSCRIPTION_EXISTS');
+    this.name = 'ActiveSubscriptionExistsError';
+  }
+}
+
+export class InvalidPaymentTransactionError extends PaymentDomainError {
+  constructor(reason: string) {
+    super(`Transacción de pago inválida: ${reason}`, 'INVALID_PAYMENT_TRANSACTION');
+    this.name = 'InvalidPaymentTransactionError';
+  }
+}
+
+export class PaymentTamperError extends PaymentDomainError {
+  constructor(reason: string) {
+    super(`Fallo de verificación de integridad en el pago: ${reason}`, 'PAYMENT_TAMPER_DETECTED');
+    this.name = 'PaymentTamperError';
+  }
+}
+
+export class UnsupportedPaymentProviderError extends PaymentDomainError {
+  constructor(providerId: string, countryCode: string) {
+    super(
+      `El proveedor de pago "${providerId}" no está disponible para el país "${countryCode}".`,
+      'UNSUPPORTED_PAYMENT_PROVIDER'
+    );
+    this.name = 'UnsupportedPaymentProviderError';
+  }
+}
+
 

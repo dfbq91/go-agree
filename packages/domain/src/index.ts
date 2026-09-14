@@ -13,3 +13,10 @@ export * from './entities/QuestionnaireDefinition.js';
 export * from './services/AnswerPruningService.js';
 export * from './entities/PricingConfig.js';
 export * from './services/PricingCalculatorService.js';
+export * from './entities/PaymentProviderInfo.js';
+export * from './entities/PaymentProviderRegistry.js';
+export * from './services/PaymentReferenceService.js';
+export * from './entities/FreeQuotaConfig.js';
+export * from './entities/UserSubscription.js';
+export * from './entities/PaymentTransaction.js';
+

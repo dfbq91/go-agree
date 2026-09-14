@@ -3,10 +3,12 @@
  * @description Pure domain service for calculating pricing totals, discounts, and formatted currency outputs.
  */
 
-import type {
-  BillingCycle,
-  CurrencyConfig,
-  PricingPlanConfig,
+import {
+  type BillingCycle,
+  type CurrencyConfig,
+  type PricingPlanConfig,
+  type CountryCode,
+  getLocaleForCountry,
 } from '../entities/PricingConfig.js';
 
 export interface DisplayPriceDetails {
@@ -31,10 +33,16 @@ export class PricingCalculatorService {
    * Formats a monetary number into a localized string with thousands separator and currency code.
    * Example for COP: 49000 -> "$ 49.000 COP"
    */
-  static formatPrice(amount: number, currency: CurrencyConfig): string {
-    const formattedNumber = new Intl.NumberFormat('es-CO', {
-      maximumFractionDigits: 0,
-      minimumFractionDigits: 0,
+  static formatPrice(
+    amount: number,
+    currency: CurrencyConfig,
+    countryCode?: CountryCode
+  ): string {
+    const locale = getLocaleForCountry(countryCode);
+    const hasDecimals = amount % 1 !== 0;
+    const formattedNumber = new Intl.NumberFormat(locale, {
+      maximumFractionDigits: hasDecimals ? 2 : 0,
+      minimumFractionDigits: hasDecimals ? 2 : 0,
     }).format(amount);
 
     if (currency.position === 'prefix') {
@@ -51,7 +59,11 @@ export class PricingCalculatorService {
     cycle: BillingCycle
   ): DisplayPriceDetails {
     if (cycle === 'monthly') {
-      const formatted = this.formatPrice(plan.monthlyPrice, plan.currency);
+      const formatted = this.formatPrice(
+        plan.monthlyPrice,
+        plan.currency,
+        plan.countryCode
+      );
       return {
         amount: plan.monthlyPrice,
         formatted,
@@ -60,8 +72,16 @@ export class PricingCalculatorService {
       };
     }
 
-    const formatted = this.formatPrice(plan.annualMonthlyPrice, plan.currency);
-    const totalAnnualFormatted = this.formatPrice(plan.annualTotal, plan.currency);
+    const formatted = this.formatPrice(
+      plan.annualMonthlyPrice,
+      plan.currency,
+      plan.countryCode
+    );
+    const totalAnnualFormatted = this.formatPrice(
+      plan.annualTotal,
+      plan.currency,
+      plan.countryCode
+    );
     return {
       amount: plan.annualMonthlyPrice,
       formatted,

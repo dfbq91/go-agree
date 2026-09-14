@@ -3,6 +3,8 @@
  * @description Domain entity and registry for Pricing configuration, supporting multi-country and multi-currency pricing models.
  */
 
+import { getFreeContractLimit } from './FreeQuotaConfig.js';
+
 export type CountryCode = 'CO' | 'MX' | 'ES' | 'US' | string;
 
 export type BillingCycle = 'monthly' | 'annual';
@@ -72,7 +74,7 @@ export const COLOMBIA_PRICING_PLAN: PricingPlanConfig = {
   annualMonthlyPrice: 39000,
   annualTotal: 468000,
   annualDiscountPercent: 20,
-  freeContractsIncluded: 3,
+  freeContractsIncluded: getFreeContractLimit(),
   features: [
     'Generación ilimitada de contratos legales',
     'Cuestionario guiado pregunta a pregunta',
@@ -100,11 +102,17 @@ export class CountryPricingRegistry {
   }
 
   static getPlanForCountry(countryCode?: CountryCode): PricingPlanConfig {
-    if (!countryCode) {
-      return this.plans.get(this.defaultCountry)!;
+    const raw = !countryCode
+      ? this.plans.get(this.defaultCountry)!
+      : (this.plans.get(countryCode.toUpperCase()) ?? this.plans.get(this.defaultCountry)!);
+
+    if (raw.id === 'pro') {
+      return {
+        ...raw,
+        freeContractsIncluded: getFreeContractLimit(),
+      };
     }
-    const normalized = countryCode.toUpperCase();
-    return this.plans.get(normalized) ?? this.plans.get(this.defaultCountry)!;
+    return raw;
   }
 
   static getSupportedCountries(): CountryCode[] {
@@ -116,3 +124,18 @@ export class CountryPricingRegistry {
     this.plans.set('CO', COLOMBIA_PRICING_PLAN);
   }
 }
+
+export function getLocaleForCountry(countryCode?: CountryCode): string {
+  if (!countryCode) return 'es-CO';
+  const map: Record<string, string> = {
+    CO: 'es-CO',
+    MX: 'es-MX',
+    ES: 'es-ES',
+    US: 'en-US',
+    CL: 'es-CL',
+    PE: 'es-PE',
+    AR: 'es-AR',
+  };
+  return map[countryCode.toUpperCase()] || 'es-CO';
+}
+

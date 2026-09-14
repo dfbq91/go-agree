@@ -3,6 +3,7 @@ import {
   CountryPricingRegistry,
   COLOMBIA_PRICING_PLAN,
   validatePricingPlanConfig,
+  getLocaleForCountry,
   type PricingPlanConfig,
 } from '../src/entities/PricingConfig.js';
 import { PricingCalculatorService } from '../src/services/PricingCalculatorService.js';
@@ -165,5 +166,49 @@ describe('PricingConfig & CountryPricingRegistry Domain Tests', () => {
       expect(details.savingsText).toBe('Ahorra 20%');
       expect(details.billingSummary).toMatch(/468[.,]000/);
     });
+
+    it('resolves proper locales per country and falls back to es-CO', () => {
+      expect(getLocaleForCountry('CO')).toBe('es-CO');
+      expect(getLocaleForCountry('mx')).toBe('es-MX');
+      expect(getLocaleForCountry('ES')).toBe('es-ES');
+      expect(getLocaleForCountry('US')).toBe('en-US');
+      expect(getLocaleForCountry('UNKNOWN')).toBe('es-CO');
+      expect(getLocaleForCountry(undefined)).toBe('es-CO');
+    });
+
+    it('formats foreign currencies with appropriate locale and decimals', () => {
+      const usdCurrency = { symbol: '$', code: 'USD', position: 'prefix' as const };
+      const formatted = PricingCalculatorService.formatPrice(19.99, usdCurrency, 'US');
+      expect(formatted).toBe('$ 19.99 USD');
+
+      const eurCurrency = { symbol: '€', code: 'EUR', position: 'suffix' as const };
+      const formattedEur = PricingCalculatorService.formatPrice(29.5, eurCurrency, 'ES');
+      expect(formattedEur).toContain('29,50 € EUR');
+    });
+
+    it('calculates display price for custom country pricing plan', () => {
+      const mxPlan: PricingPlanConfig = {
+        id: 'pro-mx',
+        name: 'Plan Pro MX',
+        tagline: 'Acceso total México',
+        countryCode: 'MX',
+        currency: { symbol: '$', code: 'MXN', position: 'prefix' },
+        monthlyPrice: 299,
+        annualMonthlyPrice: 239,
+        annualTotal: 2868,
+        annualDiscountPercent: 20,
+        freeContractsIncluded: 3,
+        features: ['F1', 'F2', 'F3'],
+        cta: { label: 'Comenzar', href: '/register' },
+      };
+
+      const monthlyDetails = PricingCalculatorService.getDisplayPrice(mxPlan, 'monthly');
+      expect(monthlyDetails.formatted).toContain('299 MXN');
+
+      const annualDetails = PricingCalculatorService.getDisplayPrice(mxPlan, 'annual');
+      expect(annualDetails.formatted).toContain('239 MXN');
+      expect(annualDetails.totalAnnualFormatted).toContain('2,868 MXN');
+    });
   });
 });
+
