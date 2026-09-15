@@ -12,6 +12,9 @@
   },
   "scripts": {
     "build": "tsc -b",
+    "lint": "biome lint .",
+    "format": "biome format --write .",
+    "check": "biome check --write .",
     "test": "vitest run",
     "test:contract": "vitest run tests/contracts",
     "db:push": "npx supabase db push"
@@ -22,6 +25,8 @@
     "@supabase/ssr": "^0.3.0",
     "@supabase/supabase-js": "^2.43.4",
     "ai": "^7.0.97",
+    "pino": "^9.5.0",
+    "pino-pretty": "^13.0.0",
     "zod": "^4.6.1"
   },
   "devDependencies": {

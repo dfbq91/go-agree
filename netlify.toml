@@ -3,7 +3,7 @@
   publish = "apps/web/.next"
 
 [build.environment]
-  NODE_VERSION = "20"
+  NODE_VERSION = "24"
   PNPM_VERSION = "10.30.3"
   PNPM_FLAGS = "--shamefully-hoist"
 

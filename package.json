@@ -7,11 +7,13 @@
     "dev": "pnpm --filter @go-agree/web dev",
     "build": "pnpm -r run build",
     "test": "pnpm -r run test",
-    "lint": "pnpm -r run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
+    "lint": "biome lint .",
+    "format": "biome format --write .",
+    "check": "biome check --write .",
     "db:push": "pnpm --filter @go-agree/infrastructure run db:push"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.9.4",
     "typescript": "^5.4.5"
   },
   "pnpm": {

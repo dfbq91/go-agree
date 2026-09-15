@@ -12,3 +12,8 @@ export * from './adapters/storage/SupabasePaymentRepository.js';
 export * from './adapters/payment/WompiPaymentGatewayAdapter.js';
 export * from './adapters/payment/PaymentGatewayResolver.js';
 export * from './supabase/client.js';
+export * from './logging/correlation-storage.js';
+export * from './logging/pino-logger.adapter.js';
+export * from './logging/transport.js';
+export * from './logging/log-sanitizer.js';
+export * from './logging/config.js';
