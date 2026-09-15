@@ -3,11 +3,8 @@
  * @description Domain registry for Payment Providers, supporting multi-provider lookups and country-based filtering.
  */
 
+import type { PaymentProviderId, PaymentProviderInfo } from './PaymentProviderInfo.js';
 import type { CountryCode } from './PricingConfig.js';
-import type {
-  PaymentProviderId,
-  PaymentProviderInfo,
-} from './PaymentProviderInfo.js';
 
 export const DEFAULT_COLOMBIA_WOMPI_PROVIDER: PaymentProviderInfo = {
   id: 'wompi',
@@ -26,21 +23,21 @@ export class PaymentProviderRegistry {
 
   static getProvidersForCountry(countryCode: CountryCode = 'CO'): PaymentProviderInfo[] {
     const normalized = countryCode.toUpperCase();
-    return Array.from(this.providers.values()).filter(provider =>
-      provider.supportedCountries.map(c => c.toUpperCase()).includes(normalized)
+    return Array.from(PaymentProviderRegistry.providers.values()).filter((provider) =>
+      provider.supportedCountries.map((c) => c.toUpperCase()).includes(normalized)
     );
   }
 
   static getProvider(id: PaymentProviderId): PaymentProviderInfo | undefined {
-    return this.providers.get(id);
+    return PaymentProviderRegistry.providers.get(id);
   }
 
   static registerProvider(provider: PaymentProviderInfo): void {
-    this.providers.set(provider.id, provider);
+    PaymentProviderRegistry.providers.set(provider.id, provider);
   }
 
   static resetToDefaults(): void {
-    this.providers.clear();
-    this.providers.set('wompi', DEFAULT_COLOMBIA_WOMPI_PROVIDER);
+    PaymentProviderRegistry.providers.clear();
+    PaymentProviderRegistry.providers.set('wompi', DEFAULT_COLOMBIA_WOMPI_PROVIDER);
   }
 }

@@ -1,31 +1,39 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { POST } from '../../src/app/api/contracts/[id]/complete/route';
 
-const mockGetContractById = vi.fn();
-const mockCompleteQuestionnaire = vi.fn();
-const mockGetByUserId = vi.fn();
-const mockIncrementFreeContractCount = vi.fn();
-const mockRevalidatePath = vi.fn();
+const {
+  mockGetContractById,
+  mockCompleteQuestionnaire,
+  mockGetByUserId,
+  mockIncrementFreeContractCount,
+  mockRevalidatePath,
+} = vi.hoisted(() => ({
+  mockGetContractById: vi.fn(),
+  mockCompleteQuestionnaire: vi.fn(),
+  mockGetByUserId: vi.fn(),
+  mockIncrementFreeContractCount: vi.fn(),
+  mockRevalidatePath: vi.fn(),
+}));
 
 vi.mock('next/cache', () => ({
   revalidatePath: (...args: any[]) => mockRevalidatePath(...args),
 }));
 
 vi.mock('@/lib/auth', () => ({
-  getServerAuthAdapter: () => ({
+  getServerAuthAdapter: vi.fn().mockResolvedValue({
     getCurrentSession: vi.fn().mockResolvedValue({ userId: 'user-123' }),
   }),
 }));
 
 vi.mock('@/lib/contracts', () => ({
-  getServerContractRepository: () => ({
+  getServerContractRepository: vi.fn().mockResolvedValue({
     getContractById: mockGetContractById,
     completeQuestionnaire: mockCompleteQuestionnaire,
   }),
 }));
 
 vi.mock('@/lib/subscription', () => ({
-  getServerSubscriptionRepository: () => ({
+  getServerSubscriptionRepository: vi.fn().mockResolvedValue({
     getByUserId: mockGetByUserId,
     incrementFreeContractCount: mockIncrementFreeContractCount,
   }),
@@ -77,7 +85,7 @@ describe('POST /api/contracts/[id]/complete Route Handler', () => {
       method: 'POST',
     });
 
-    const response = await POST(request as any, { params: { id: 'contract-1' } });
+    const response = await POST(request as any, { params: Promise.resolve({ id: 'contract-1' }) });
     const json = await response.json();
 
     expect(response.status).toBe(200);
@@ -106,7 +114,7 @@ describe('POST /api/contracts/[id]/complete Route Handler', () => {
       method: 'POST',
     });
 
-    const response = await POST(request as any, { params: { id: 'contract-1' } });
+    const response = await POST(request as any, { params: Promise.resolve({ id: 'contract-1' }) });
     const json = await response.json();
 
     expect(response.status).toBe(200);
@@ -146,7 +154,7 @@ describe('POST /api/contracts/[id]/complete Route Handler', () => {
       method: 'POST',
     });
 
-    const response = await POST(request as any, { params: { id: 'contract-4' } });
+    const response = await POST(request as any, { params: Promise.resolve({ id: 'contract-4' }) });
     const json = await response.json();
 
     expect(response.status).toBe(403);
@@ -162,7 +170,9 @@ describe('POST /api/contracts/[id]/complete Route Handler', () => {
       method: 'POST',
     });
 
-    const response = await POST(request as any, { params: { id: 'non-existent' } });
+    const response = await POST(request as any, {
+      params: Promise.resolve({ id: 'non-existent' }),
+    });
     const json = await response.json();
 
     expect(response.status).toBe(404);

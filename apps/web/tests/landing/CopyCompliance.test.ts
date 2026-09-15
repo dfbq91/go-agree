@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { es } from '../../src/locales/es';
 
 describe('Landing Page Copy Truthfulness & Compliance Audit', () => {

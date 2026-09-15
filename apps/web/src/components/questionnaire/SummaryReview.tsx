@@ -1,5 +1,5 @@
-import React from 'react';
 import type { QuestionDTO } from '@go-agree/application';
+import type React from 'react';
 import { es } from '../../locales/es';
 
 export interface SummaryReviewProps {
@@ -17,7 +17,7 @@ export const SummaryReview: React.FC<SummaryReviewProps> = ({
   answers,
   onEdit,
   onConfirm,
-onBackToDashboard,
+  onBackToDashboard,
   isSubmitting = false,
   isCompleted = false,
 }) => {
@@ -77,7 +77,7 @@ onBackToDashboard,
     }
 
     if (question.type === 'checkbox') {
-      return Boolean(answer) ? 'Sí' : 'No';
+      return answer ? 'Sí' : 'No';
     }
 
     return String(answer);
@@ -86,12 +86,8 @@ onBackToDashboard,
   return (
     <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-6 sm:p-8">
       <div className="mb-6 pb-4 border-b border-gray-100">
-        <h2 className="text-2xl font-bold text-gray-900">
-          {es.questionnaire.summary.title}
-        </h2>
-        <p className="mt-1 text-sm text-gray-500">
-          {es.questionnaire.summary.subtitle}
-        </p>
+        <h2 className="text-2xl font-bold text-gray-900">{es.questionnaire.summary.title}</h2>
+        <p className="mt-1 text-sm text-gray-500">{es.questionnaire.summary.subtitle}</p>
       </div>
 
       <div className="divide-y divide-gray-100">
@@ -111,9 +107,7 @@ onBackToDashboard,
                 <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
                   {questionTitle}
                 </span>
-                <h3 className="text-sm sm:text-base font-medium text-gray-900 mt-0.5">
-                  {prompt}
-                </h3>
+                <h3 className="text-sm sm:text-base font-medium text-gray-900 mt-0.5">{prompt}</h3>
                 <p className="mt-1 text-sm text-blue-900 bg-blue-50/50 p-2.5 rounded-lg inline-block w-full sm:w-auto">
                   {display}
                 </p>
@@ -146,8 +140,8 @@ onBackToDashboard,
           {isSubmitting
             ? 'Confirmando...'
             : isCompleted
-            ? es.questionnaire.summary.backToDashboard
-            : es.questionnaire.nav.confirm}
+              ? es.questionnaire.summary.backToDashboard
+              : es.questionnaire.nav.confirm}
         </button>
       </div>
     </div>

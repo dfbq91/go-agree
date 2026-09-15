@@ -1,8 +1,7 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import {
-  PaymentProviderRegistry,
-  DEFAULT_COLOMBIA_WOMPI_PROVIDER,
   type PaymentProviderInfo,
+  PaymentProviderRegistry,
 } from '../src/entities/PaymentProviderInfo.js';
 
 describe('PaymentProviderRegistry', () => {

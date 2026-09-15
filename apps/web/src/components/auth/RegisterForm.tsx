@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
 import { es } from '@/locales/es';
+import type React from 'react';
+import { useState } from 'react';
 import { AuthSubmitButton } from './AuthSubmitButton';
 
 interface RegisterFormProps {

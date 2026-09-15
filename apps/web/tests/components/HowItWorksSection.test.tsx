@@ -1,6 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import React from 'react';
 import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 import { HowItWorksSection } from '../../src/components/landing/HowItWorksSection';
 import { es } from '../../src/locales/es';
 
@@ -20,37 +19,19 @@ describe('HowItWorksSection Component', () => {
     expect(screen.getByText(es.landing.howItWorks.subtitle)).toBeDefined();
 
     // Step 1
-    expect(
-      screen.getByText(es.landing.howItWorks.steps.step1.badge)
-    ).toBeDefined();
-    expect(
-      screen.getByText(es.landing.howItWorks.steps.step1.title)
-    ).toBeDefined();
-    expect(
-      screen.getByText(es.landing.howItWorks.steps.step1.description)
-    ).toBeDefined();
+    expect(screen.getByText(es.landing.howItWorks.steps.step1.badge)).toBeDefined();
+    expect(screen.getByText(es.landing.howItWorks.steps.step1.title)).toBeDefined();
+    expect(screen.getByText(es.landing.howItWorks.steps.step1.description)).toBeDefined();
 
     // Step 2
-    expect(
-      screen.getByText(es.landing.howItWorks.steps.step2.badge)
-    ).toBeDefined();
-    expect(
-      screen.getByText(es.landing.howItWorks.steps.step2.title)
-    ).toBeDefined();
-    expect(
-      screen.getByText(es.landing.howItWorks.steps.step2.description)
-    ).toBeDefined();
+    expect(screen.getByText(es.landing.howItWorks.steps.step2.badge)).toBeDefined();
+    expect(screen.getByText(es.landing.howItWorks.steps.step2.title)).toBeDefined();
+    expect(screen.getByText(es.landing.howItWorks.steps.step2.description)).toBeDefined();
 
     // Step 3
-    expect(
-      screen.getByText(es.landing.howItWorks.steps.step3.badge)
-    ).toBeDefined();
-    expect(
-      screen.getByText(es.landing.howItWorks.steps.step3.title)
-    ).toBeDefined();
-    expect(
-      screen.getByText(es.landing.howItWorks.steps.step3.description)
-    ).toBeDefined();
+    expect(screen.getByText(es.landing.howItWorks.steps.step3.badge)).toBeDefined();
+    expect(screen.getByText(es.landing.howItWorks.steps.step3.title)).toBeDefined();
+    expect(screen.getByText(es.landing.howItWorks.steps.step3.description)).toBeDefined();
   });
 
   it('strictly limits copy to actual capabilities without false promises', () => {

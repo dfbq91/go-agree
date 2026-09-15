@@ -141,17 +141,15 @@ export class SupabasePaymentRepository implements PaymentRepositoryPort {
   async recordWebhookEvent(
     event: Omit<PaymentWebhookEventDTO, 'id' | 'processedAt'>
   ): Promise<void> {
-    const { error } = await this.supabase
-      .from('payment_webhook_events')
-      .insert({
-        event_id: event.eventId,
-        provider_id: event.providerId,
-        transaction_reference: event.transactionReference,
-        event_type: event.eventType,
-        payload: event.payload,
-        checksum: event.checksum,
-        status: event.status,
-      });
+    const { error } = await this.supabase.from('payment_webhook_events').insert({
+      event_id: event.eventId,
+      provider_id: event.providerId,
+      transaction_reference: event.transactionReference,
+      event_type: event.eventType,
+      payload: event.payload,
+      checksum: event.checksum,
+      status: event.status,
+    });
 
     if (error) {
       throw new Error(`Failed to record webhook event ${event.eventId}: ${error.message}`);

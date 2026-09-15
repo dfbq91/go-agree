@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
-import type { BillingCycle, PricingPlanConfig } from '@go-agree/domain';
 import { es } from '@/locales/es';
+import type { BillingCycle, PricingPlanConfig } from '@go-agree/domain';
+import type React from 'react';
+import { useState } from 'react';
 import { BillingToggle } from './BillingToggle';
 import { PricingCard } from './PricingCard';
 
@@ -11,10 +12,7 @@ export interface PricingSectionProps {
   readonly isAuthenticated: boolean;
 }
 
-export const PricingSection: React.FC<PricingSectionProps> = ({
-  plan,
-  isAuthenticated,
-}) => {
+export const PricingSection: React.FC<PricingSectionProps> = ({ plan, isAuthenticated }) => {
   const [selectedCycle, setSelectedCycle] = useState<BillingCycle>('monthly');
 
   return (
@@ -46,12 +44,14 @@ export const PricingSection: React.FC<PricingSectionProps> = ({
             <span>{es.landing.pricing.freeTrialBanner.badge}</span>
           </div>
           <h3 className="text-xl font-bold text-emerald-950">
-            {plan.freeContractsIncluded !== undefined && es.landing.pricing.freeTrialBanner.formatTitle
+            {plan.freeContractsIncluded !== undefined &&
+            es.landing.pricing.freeTrialBanner.formatTitle
               ? es.landing.pricing.freeTrialBanner.formatTitle(plan.freeContractsIncluded)
               : es.landing.pricing.freeTrialBanner.title}
           </h3>
           <p className="mt-2 text-sm text-emerald-800 leading-relaxed">
-            {plan.freeContractsIncluded !== undefined && es.landing.pricing.freeTrialBanner.formatDescription
+            {plan.freeContractsIncluded !== undefined &&
+            es.landing.pricing.freeTrialBanner.formatDescription
               ? es.landing.pricing.freeTrialBanner.formatDescription(plan.freeContractsIncluded)
               : es.landing.pricing.freeTrialBanner.description}
           </p>

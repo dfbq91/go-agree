@@ -1,16 +1,16 @@
 import type {
-  ContractRepositoryPort,
-  ContractProgressPort,
+  CompleteQuestionnaireInput,
   ContractGenerationDTO,
   ContractGenerationSummaryDTO,
+  ContractProgressPort,
+  ContractRepositoryPort,
   UpdateProgressInput,
   UpdateTitleInput,
-  CompleteQuestionnaireInput,
 } from '@go-agree/application';
 import {
   ContractNotFoundError,
-  UnauthorizedContractAccessError,
   EmptyTitleError,
+  UnauthorizedContractAccessError,
 } from '@go-agree/domain';
 
 export class MockContractRepository implements ContractRepositoryPort, ContractProgressPort {
@@ -139,4 +139,3 @@ export class MockContractRepository implements ContractRepositoryPort, ContractP
     return `Mi Contrato ${count + 1}`;
   }
 }
-

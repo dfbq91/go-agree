@@ -1,6 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import React from 'react';
 import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 import { HeroSection } from '../../src/components/landing/HeroSection';
 import { es } from '../../src/locales/es';
 
@@ -45,9 +44,7 @@ describe('HeroSection Component', () => {
     expect(dashboardCta.getAttribute('href')).toBe('/dashboard');
 
     // Should not display registration CTA
-    expect(
-      screen.queryByRole('link', { name: es.landing.hero.ctaPrimary })
-    ).toBeNull();
+    expect(screen.queryByRole('link', { name: es.landing.hero.ctaPrimary })).toBeNull();
   });
 
   it('renders dynamic free contracts badge and note when custom freeContractsCount is provided', () => {
@@ -59,4 +56,3 @@ describe('HeroSection Component', () => {
     ).toBeDefined();
   });
 });
-

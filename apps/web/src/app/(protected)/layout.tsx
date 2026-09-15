@@ -1,14 +1,14 @@
-import React from 'react';
-import Link from 'next/link';
-import { es } from '@/locales/es';
-import { getServerAuthAdapter } from '@/lib/auth';
 import { UserNav } from '@/components/ui/UserNav';
+import { getServerAuthAdapter } from '@/lib/auth';
+import { es } from '@/locales/es';
+import Link from 'next/link';
+import type React from 'react';
 
 export default async function ProtectedLayout({ children }: { children: React.ReactNode }) {
   let userEmail: string | undefined;
 
   try {
-    const authAdapter = getServerAuthAdapter();
+    const authAdapter = await getServerAuthAdapter();
     const session = await authAdapter.getCurrentSession();
     if (session) {
       userEmail = session.userId;
@@ -42,9 +42,7 @@ export default async function ProtectedLayout({ children }: { children: React.Re
           </div>
         </div>
       </header>
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {children}
-      </main>
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">{children}</main>
     </div>
   );
 }

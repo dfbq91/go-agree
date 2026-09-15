@@ -1,6 +1,6 @@
-import { Question } from './Question.js';
-import { QuestionOption } from '../value-objects/QuestionOption.js';
 import { ConditionRule } from '../value-objects/ConditionRule.js';
+import { QuestionOption } from '../value-objects/QuestionOption.js';
+import { Question } from './Question.js';
 
 export interface QuestionnaireDefinitionProps {
   id: string;
@@ -20,13 +20,16 @@ export class QuestionnaireDefinition {
   }
 
   getVisibleQuestions(answers: Record<string, unknown>): Question[] {
-    if (answers['q0_party_role'] && answers['q0_party_role'] !== 'client') {
+    if (answers.q0_party_role && answers.q0_party_role !== 'client') {
       return this.questions.filter((q) => q.id === 'q0_party_role');
     }
     return this.questions.filter((q) => q.isVisible(answers));
   }
 
-  getNextQuestion(currentIdOrIndex: string | number, answers: Record<string, unknown>): Question | null {
+  getNextQuestion(
+    currentIdOrIndex: string | number,
+    answers: Record<string, unknown>
+  ): Question | null {
     const visible = this.getVisibleQuestions(answers);
     let currentIndex = -1;
 
@@ -42,7 +45,10 @@ export class QuestionnaireDefinition {
     return null;
   }
 
-  getPreviousQuestion(currentIdOrIndex: string | number, answers: Record<string, unknown>): Question | null {
+  getPreviousQuestion(
+    currentIdOrIndex: string | number,
+    answers: Record<string, unknown>
+  ): Question | null {
     const visible = this.getVisibleQuestions(answers);
     let currentIndex = -1;
 
@@ -281,8 +287,7 @@ export class QuestionnaireDefinition {
             id: 'opt_smlmv',
             label: 'Salario Mínimo Legal Vigente (SMLMV)',
             value: 'smlmv',
-            tooltip:
-              'Ajuste indexado al incremento porcentual decretado para el salario mínimo.',
+            tooltip: 'Ajuste indexado al incremento porcentual decretado para el salario mínimo.',
           }),
           new QuestionOption({
             id: 'opt_other_price',
@@ -412,7 +417,8 @@ export class QuestionnaireDefinition {
             id: 'opt_amicable_settlement',
             label: 'Amigable composición',
             value: 'amicable_settlement',
-            tooltip: 'Mecanismo donde un tercero experto define la solución contractual obligatoria.',
+            tooltip:
+              'Mecanismo donde un tercero experto define la solución contractual obligatoria.',
           }),
         ],
       }),

@@ -1,10 +1,10 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import {
-  CountryPricingRegistry,
   COLOMBIA_PRICING_PLAN,
-  validatePricingPlanConfig,
-  getLocaleForCountry,
+  CountryPricingRegistry,
   type PricingPlanConfig,
+  getLocaleForCountry,
+  validatePricingPlanConfig,
 } from '../src/entities/PricingConfig.js';
 import { PricingCalculatorService } from '../src/services/PricingCalculatorService.js';
 
@@ -27,9 +27,7 @@ describe('PricingConfig & CountryPricingRegistry Domain Tests', () => {
 
     it('rejects plan with missing or empty id', () => {
       const invalid = { ...COLOMBIA_PRICING_PLAN, id: '' };
-      expect(() => validatePricingPlanConfig(invalid)).toThrow(
-        'Pricing plan must have a valid id'
-      );
+      expect(() => validatePricingPlanConfig(invalid)).toThrow('Pricing plan must have a valid id');
     });
 
     it('rejects plan where annual monthly price is not cheaper than monthly price', () => {
@@ -129,27 +127,19 @@ describe('PricingConfig & CountryPricingRegistry Domain Tests', () => {
 
   describe('PricingCalculatorService', () => {
     it('calculates annual savings accurately for Colombia plan', () => {
-      const savings = PricingCalculatorService.calculateAnnualSavings(
-        COLOMBIA_PRICING_PLAN
-      );
+      const savings = PricingCalculatorService.calculateAnnualSavings(COLOMBIA_PRICING_PLAN);
       // (49000 * 12) - 468000 = 588000 - 468000 = 120000
       expect(savings).toBe(120000);
     });
 
     it('formats price according to Spanish currency formatting standards', () => {
-      const formatted = PricingCalculatorService.formatPrice(
-        49000,
-        COLOMBIA_PRICING_PLAN.currency
-      );
+      const formatted = PricingCalculatorService.formatPrice(49000, COLOMBIA_PRICING_PLAN.currency);
       // In es-CO, 49000 is formatted with dot separator: 49.000 (or non-breaking space depending on env)
       expect(formatted).toMatch(/\$\s*49[.,]000\s*COP/);
     });
 
     it('provides display price details for monthly billing cycle', () => {
-      const details = PricingCalculatorService.getDisplayPrice(
-        COLOMBIA_PRICING_PLAN,
-        'monthly'
-      );
+      const details = PricingCalculatorService.getDisplayPrice(COLOMBIA_PRICING_PLAN, 'monthly');
       expect(details.amount).toBe(49000);
       expect(details.periodLabel).toBe('/ mes');
       expect(details.savingsText).toBeUndefined();
@@ -157,10 +147,7 @@ describe('PricingConfig & CountryPricingRegistry Domain Tests', () => {
     });
 
     it('provides display price details for annual billing cycle with savings highlight', () => {
-      const details = PricingCalculatorService.getDisplayPrice(
-        COLOMBIA_PRICING_PLAN,
-        'annual'
-      );
+      const details = PricingCalculatorService.getDisplayPrice(COLOMBIA_PRICING_PLAN, 'annual');
       expect(details.amount).toBe(39000);
       expect(details.periodLabel).toBe('/ mes');
       expect(details.savingsText).toBe('Ahorra 20%');
@@ -211,4 +198,3 @@ describe('PricingConfig & CountryPricingRegistry Domain Tests', () => {
     });
   });
 });
-

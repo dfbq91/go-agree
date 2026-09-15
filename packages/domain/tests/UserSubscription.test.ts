@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
-import { UserId } from '../src/value-objects/UserId.js';
+import { describe, expect, it } from 'vitest';
 import { UserSubscription } from '../src/entities/UserSubscription.js';
 import { FreeQuotaExceededError } from '../src/errors/DomainErrors.js';
+import { UserId } from '../src/value-objects/UserId.js';
 
 describe('UserSubscription Entity', () => {
   const userId = new UserId('usr_12345678-1234-1234-1234-123456789012');

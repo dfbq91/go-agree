@@ -3,13 +3,10 @@
  * @description Aggregate root representing a user's subscription, entitlement, and free contract quota.
  */
 
-import { UserId } from '../value-objects/UserId.js';
-import type { BillingCycle } from './PricingConfig.js';
 import { FreeQuotaExceededError } from '../errors/DomainErrors.js';
-import {
-  DEFAULT_FREE_CONTRACT_LIMIT,
-  getFreeContractLimit,
-} from './FreeQuotaConfig.js';
+import type { UserId } from '../value-objects/UserId.js';
+import { DEFAULT_FREE_CONTRACT_LIMIT, getFreeContractLimit } from './FreeQuotaConfig.js';
+import type { BillingCycle } from './PricingConfig.js';
 
 export { DEFAULT_FREE_CONTRACT_LIMIT, getFreeContractLimit };
 

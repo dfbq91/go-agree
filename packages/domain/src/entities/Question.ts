@@ -1,5 +1,5 @@
-import { QuestionOption } from '../value-objects/QuestionOption.js';
-import { ConditionRule } from '../value-objects/ConditionRule.js';
+import type { ConditionRule } from '../value-objects/ConditionRule.js';
+import type { QuestionOption } from '../value-objects/QuestionOption.js';
 
 export type QuestionType = 'open_text' | 'single_choice' | 'multiple_choice' | 'checkbox';
 

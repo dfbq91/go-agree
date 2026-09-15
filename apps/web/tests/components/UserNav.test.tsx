@@ -1,6 +1,5 @@
-import { describe, it, expect, vi } from 'vitest';
-import React from 'react';
-import { render, screen, fireEvent, act } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 import { UserNav } from '../../src/components/ui/UserNav';
 import { es } from '../../src/locales/es';
 

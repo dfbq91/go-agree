@@ -1,8 +1,8 @@
 'use client';
 
-import React from 'react';
-import { useRouter } from 'next/navigation';
 import type { QuestionDTO } from '@go-agree/application';
+import { useRouter } from 'next/navigation';
+import type React from 'react';
 import { QuestionnaireContainer } from './QuestionnaireContainer';
 
 export interface QuestionnaireClientPageProps {

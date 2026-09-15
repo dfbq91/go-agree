@@ -9,7 +9,7 @@ export interface TooltipProps {
 export const Tooltip: React.FC<TooltipProps> = ({
   content,
   children,
-  position = 'top',
+  position: _position = 'top',
 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const tooltipId = useId();
@@ -25,23 +25,24 @@ export const Tooltip: React.FC<TooltipProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isVisible]);
 
-  const trigger = React.cloneElement(children, {
+  const child = children as React.ReactElement<any>;
+  const trigger = React.cloneElement(child, {
     'aria-describedby': isVisible ? tooltipId : undefined,
     onMouseEnter: (e: React.MouseEvent) => {
       setIsVisible(true);
-      children.props.onMouseEnter?.(e);
+      child.props.onMouseEnter?.(e);
     },
     onMouseLeave: (e: React.MouseEvent) => {
       setIsVisible(false);
-      children.props.onMouseLeave?.(e);
+      child.props.onMouseLeave?.(e);
     },
     onFocus: (e: React.FocusEvent) => {
       setIsVisible(true);
-      children.props.onFocus?.(e);
+      child.props.onFocus?.(e);
     },
     onBlur: (e: React.FocusEvent) => {
       setIsVisible(false);
-      children.props.onBlur?.(e);
+      child.props.onBlur?.(e);
     },
   });
 

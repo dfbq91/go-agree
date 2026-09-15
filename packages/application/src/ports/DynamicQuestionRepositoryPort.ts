@@ -1,4 +1,8 @@
-import type { ConditionRuleDTO, QuestionOptionDTO, QuestionType } from './QuestionnaireEnginePort.js';
+import type {
+  ConditionRuleDTO,
+  QuestionOptionDTO,
+  QuestionType,
+} from './QuestionnaireEnginePort.js';
 
 export interface DynamicQuestionDTO {
   id: string;
@@ -39,6 +43,10 @@ export interface SaveDynamicQuestionsInput {
 export interface DynamicQuestionRepositoryPort {
   saveQuestions(input: SaveDynamicQuestionsInput): Promise<DynamicQuestionDTO[]>;
   getQuestionsByContractId(contractId: string, userId: string): Promise<DynamicQuestionDTO[]>;
-  getSnapshot(contractId: string, userId: string, stage: number): Promise<Record<string, unknown> | null>;
+  getSnapshot(
+    contractId: string,
+    userId: string,
+    stage: number
+  ): Promise<Record<string, unknown> | null>;
   deleteQuestionsByStage(contractId: string, userId: string, stage: number): Promise<void>;
 }

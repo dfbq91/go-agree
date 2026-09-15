@@ -12,6 +12,9 @@
   },
   "scripts": {
     "build": "tsc -b",
+    "lint": "biome lint .",
+    "format": "biome format --write .",
+    "check": "biome check --write .",
     "test": "vitest run",
     "test:watch": "vitest"
   },

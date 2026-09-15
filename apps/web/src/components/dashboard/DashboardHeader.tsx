@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import type { SubscriptionStatusResult } from '@go-agree/application';
 import Link from 'next/link';
+import type React from 'react';
+import { useState } from 'react';
 import { es } from '../../locales/es';
 import { PlanQuotaBadge } from './PlanQuotaBadge';
 import { QuotaUpgradeModal } from './QuotaUpgradeModal';
-import type { SubscriptionStatusResult } from '@go-agree/application';
 
 export interface DashboardHeaderProps {
   readonly subscription: SubscriptionStatusResult;

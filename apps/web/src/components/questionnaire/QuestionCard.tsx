@@ -1,10 +1,10 @@
-import React from 'react';
 import type { QuestionDTO } from '@go-agree/application';
+import React from 'react';
 import { es } from '../../locales/es';
-import { Tooltip } from './Tooltip';
 import { ExpandableHelp } from './ExpandableHelp';
-import { QuestionRenderer } from './QuestionRenderer';
 import { QuestionGuidance } from './QuestionGuidance';
+import { QuestionRenderer } from './QuestionRenderer';
+import { Tooltip } from './Tooltip';
 
 export interface QuestionCardProps {
   question: QuestionDTO;
@@ -23,6 +23,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 }) => {
   const headingRef = React.useRef<HTMLHeadingElement>(null);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Refocus heading when question ID changes
   React.useEffect(() => {
     headingRef.current?.focus();
   }, [question.id]);
@@ -46,10 +47,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
           >
             <span>{prompt}</span>
             {question.isRequired && (
-              <span
-                className="text-red-500 font-bold select-none"
-                aria-hidden="true"
-              >
+              <span className="text-red-500 font-bold select-none" aria-hidden="true">
                 *
               </span>
             )}
@@ -70,9 +68,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         </div>
 
         {/* Expandable "Why are we asking this?" */}
-        {helpText && (
-          <ExpandableHelp questionId={question.id} helpText={helpText} />
-        )}
+        {helpText && <ExpandableHelp questionId={question.id} helpText={helpText} />}
       </div>
 
       {/* Visual Recommendations & Guidance Panel */}
@@ -101,7 +97,9 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
           aria-label="Aviso de disponibilidad para contratistas"
           className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-xl text-amber-900 text-xs sm:text-sm flex items-start gap-3 shadow-2xs animate-fade-in"
         >
-          <span className="text-xl flex-shrink-0" aria-hidden="true">⚠️</span>
+          <span className="text-xl flex-shrink-0" aria-hidden="true">
+            ⚠️
+          </span>
           <div>
             <h3 className="font-semibold text-amber-950">
               {es.questionnaire.contractorNotice.title}

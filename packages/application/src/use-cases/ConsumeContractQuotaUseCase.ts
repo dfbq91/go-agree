@@ -3,8 +3,8 @@
  * @description Validates and increments the free contract generation quota for a user.
  */
 
+import { FreeQuotaExceededError, UserId, UserSubscription } from '@go-agree/domain';
 import type { SubscriptionRepositoryPort } from '../ports/SubscriptionRepositoryPort.js';
-import { UserSubscription, UserId, FreeQuotaExceededError } from '@go-agree/domain';
 
 export interface ConsumeContractQuotaInput {
   readonly userId: string;

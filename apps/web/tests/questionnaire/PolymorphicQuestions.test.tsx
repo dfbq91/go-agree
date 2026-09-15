@@ -1,24 +1,16 @@
-import { describe, it, expect, vi } from 'vitest';
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import type { QuestionDTO } from '@go-agree/application';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
+import { QuestionRenderer } from '../../src/components/questionnaire/QuestionRenderer';
+import { CheckboxQuestion } from '../../src/components/questionnaire/types/CheckboxQuestion';
+import { MultipleChoiceQuestion } from '../../src/components/questionnaire/types/MultipleChoiceQuestion';
 import { OpenTextQuestion } from '../../src/components/questionnaire/types/OpenTextQuestion';
 import { SingleChoiceQuestion } from '../../src/components/questionnaire/types/SingleChoiceQuestion';
-import { MultipleChoiceQuestion } from '../../src/components/questionnaire/types/MultipleChoiceQuestion';
-import { CheckboxQuestion } from '../../src/components/questionnaire/types/CheckboxQuestion';
-import { QuestionRenderer } from '../../src/components/questionnaire/QuestionRenderer';
-import type { QuestionDTO } from '@go-agree/application';
 
 describe('Polymorphic Question Renderers', () => {
   it('renders OpenTextQuestion with character counter and triggers onChange', () => {
     const onChange = vi.fn();
-    render(
-      <OpenTextQuestion
-        id="q0"
-        value="Texto inicial"
-        onChange={onChange}
-        maxLength={2000}
-      />
-    );
+    render(<OpenTextQuestion id="q0" value="Texto inicial" onChange={onChange} maxLength={2000} />);
 
     const textarea = screen.getByRole('textbox');
     expect((textarea as HTMLTextAreaElement).value).toBe('Texto inicial');
@@ -35,14 +27,7 @@ describe('Polymorphic Question Renderers', () => {
       { id: '2', label: 'Opción B', value: 'opt_b' },
     ];
 
-    render(
-      <SingleChoiceQuestion
-        id="q1"
-        value="opt_a"
-        options={options}
-        onChange={onChange}
-      />
-    );
+    render(<SingleChoiceQuestion id="q1" value="opt_a" options={options} onChange={onChange} />);
 
     const radioB = screen.getByLabelText('Opción B');
     fireEvent.click(radioB);
@@ -109,13 +94,7 @@ describe('Polymorphic Question Renderers', () => {
       isRequired: true,
     };
 
-    render(
-      <QuestionRenderer
-        question={question}
-        value="Valor prueba"
-        onChange={vi.fn()}
-      />
-    );
+    render(<QuestionRenderer question={question} value="Valor prueba" onChange={vi.fn()} />);
 
     expect(screen.getByRole('textbox')).toBeDefined();
   });
@@ -129,12 +108,7 @@ describe('Polymorphic Question Renderers', () => {
 
     // Initially not selected
     const { rerender } = render(
-      <SingleChoiceQuestion
-        id="q8"
-        value="days_30"
-        options={options}
-        onChange={onChange}
-      />
+      <SingleChoiceQuestion id="q8" value="days_30" options={options} onChange={onChange} />
     );
 
     expect(screen.queryByPlaceholderText(/Escribe el valor específico aquí/i)).toBeNull();
@@ -170,12 +144,7 @@ describe('Polymorphic Question Renderers', () => {
     ];
 
     const { rerender } = render(
-      <MultipleChoiceQuestion
-        id="q5_custom"
-        value={[]}
-        options={options}
-        onChange={onChange}
-      />
+      <MultipleChoiceQuestion id="q5_custom" value={[]} options={options} onChange={onChange} />
     );
 
     expect(screen.queryByPlaceholderText(/Escribe el valor específico aquí/i)).toBeNull();

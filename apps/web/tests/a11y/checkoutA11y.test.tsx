@@ -1,13 +1,12 @@
-import { describe, it, expect, vi } from 'vitest';
-import React from 'react';
+import type { PaymentProviderInfo } from '@go-agree/domain';
 import { render } from '@testing-library/react';
 import axe from 'axe-core';
+import { describe, expect, it, vi } from 'vitest';
+import { PaymentProviderSelector } from '../../src/components/checkout/PaymentProviderSelector';
+import { PaymentResultView } from '../../src/components/checkout/PaymentResultView';
+import { PlanCheckoutCard } from '../../src/components/checkout/PlanCheckoutCard';
 import { PlanQuotaBadge } from '../../src/components/dashboard/PlanQuotaBadge';
 import { QuotaUpgradeModal } from '../../src/components/dashboard/QuotaUpgradeModal';
-import { PaymentProviderSelector } from '../../src/components/checkout/PaymentProviderSelector';
-import { PlanCheckoutCard } from '../../src/components/checkout/PlanCheckoutCard';
-import { PaymentResultView } from '../../src/components/checkout/PaymentResultView';
-import type { PaymentProviderInfo } from '@go-agree/domain';
 
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: vi.fn() }),
@@ -59,11 +58,7 @@ describe('Checkout & Quota Accessibility Audit (axe-core)', () => {
 
   it('QuotaUpgradeModal passes accessibility checks without violations', async () => {
     const { container } = render(
-      <QuotaUpgradeModal
-        isOpen={true}
-        onClose={vi.fn()}
-        onUpgrade={vi.fn()}
-      />
+      <QuotaUpgradeModal isOpen={true} onClose={vi.fn()} onUpgrade={vi.fn()} />
     );
     const results = await axe.run(container, axeOptions);
     expect(results.violations).toEqual([]);
@@ -83,10 +78,7 @@ describe('Checkout & Quota Accessibility Audit (axe-core)', () => {
 
   it('PlanCheckoutCard passes accessibility checks without violations', async () => {
     const { container } = render(
-      <PlanCheckoutCard
-        selectedProvider={mockProvider}
-        onInitiateCheckout={vi.fn()}
-      />
+      <PlanCheckoutCard selectedProvider={mockProvider} onInitiateCheckout={vi.fn()} />
     );
     const results = await axe.run(container, axeOptions);
     expect(results.violations).toEqual([]);

@@ -1,8 +1,7 @@
-import { describe, it, expect, vi } from 'vitest';
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import { QuestionCard } from '../../src/components/questionnaire/QuestionCard';
 import type { QuestionDTO } from '@go-agree/application';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
+import { QuestionCard } from '../../src/components/questionnaire/QuestionCard';
 
 describe('QuestionCard Component', () => {
   const mockOpenTextQuestion: QuestionDTO = {
@@ -44,13 +43,7 @@ describe('QuestionCard Component', () => {
 
   it('renders single choice question options and calls onChange upon selection', () => {
     const onChange = vi.fn();
-    render(
-      <QuestionCard
-        question={mockChoiceQuestion}
-        value=""
-        onChange={onChange}
-      />
-    );
+    render(<QuestionCard question={mockChoiceQuestion} value="" onChange={onChange} />);
 
     expect(
       screen.getByRole('heading', { name: '¿Eres persona natural o persona jurídica?' })
@@ -79,25 +72,19 @@ describe('QuestionCard Component', () => {
 
   it('programmatically shifts focus to question heading on mount or question transition', () => {
     const { rerender } = render(
-      <QuestionCard
-        question={mockOpenTextQuestion}
-        value=""
-        onChange={vi.fn()}
-      />
+      <QuestionCard question={mockOpenTextQuestion} value="" onChange={vi.fn()} />
     );
 
-    const heading = screen.getByRole('heading', { name: 'Describe el bien o servicio que necesitas' });
+    const heading = screen.getByRole('heading', {
+      name: 'Describe el bien o servicio que necesitas',
+    });
     expect(document.activeElement).toBe(heading);
 
-    rerender(
-      <QuestionCard
-        question={mockChoiceQuestion}
-        value=""
-        onChange={vi.fn()}
-      />
-    );
+    rerender(<QuestionCard question={mockChoiceQuestion} value="" onChange={vi.fn()} />);
 
-    const nextHeading = screen.getByRole('heading', { name: '¿Eres persona natural o persona jurídica?' });
+    const nextHeading = screen.getByRole('heading', {
+      name: '¿Eres persona natural o persona jurídica?',
+    });
     expect(document.activeElement).toBe(nextHeading);
   });
 
@@ -110,13 +97,7 @@ describe('QuestionCard Component', () => {
       isRequired: true,
     };
 
-    render(
-      <QuestionCard
-        question={mockGuidanceQuestion}
-        value=""
-        onChange={vi.fn()}
-      />
-    );
+    render(<QuestionCard question={mockGuidanceQuestion} value="" onChange={vi.fn()} />);
 
     expect(screen.getByText('Recomendaciones para describir el bien o servicio')).toBeDefined();
     expect(screen.getByText(/Base para análisis del Asistente de IA/i)).toBeDefined();
@@ -135,13 +116,7 @@ describe('QuestionCard Component', () => {
       isRequired: true,
     };
 
-    render(
-      <QuestionCard
-        question={mockGuidanceQuestion}
-        value=""
-        onChange={onChange}
-      />
-    );
+    render(<QuestionCard question={mockGuidanceQuestion} value="" onChange={onChange} />);
 
     // Click on example pill
     const exampleButton = screen.getByRole('button', { name: /Ejemplo de Servicio/i });
@@ -154,7 +129,9 @@ describe('QuestionCard Component', () => {
     const useTemplateButton = screen.getByRole('button', { name: /Usar como plantilla/i });
     fireEvent.click(useTemplateButton);
 
-    expect(onChange).toHaveBeenCalledWith(expect.stringContaining('Contratación de servicios de desarrollo de software'));
+    expect(onChange).toHaveBeenCalledWith(
+      expect.stringContaining('Contratación de servicios de desarrollo de software')
+    );
   });
 
   it('renders contractor notice alert when contractor role is selected', () => {
@@ -171,24 +148,20 @@ describe('QuestionCard Component', () => {
     };
 
     const { rerender } = render(
-      <QuestionCard
-        question={mockPartyRoleQuestion}
-        value="client"
-        onChange={vi.fn()}
-      />
+      <QuestionCard question={mockPartyRoleQuestion} value="client" onChange={vi.fn()} />
     );
 
     expect(screen.queryByText('Flujo para contratistas en desarrollo')).toBeNull();
 
     rerender(
-      <QuestionCard
-        question={mockPartyRoleQuestion}
-        value="contractor"
-        onChange={vi.fn()}
-      />
+      <QuestionCard question={mockPartyRoleQuestion} value="contractor" onChange={vi.fn()} />
     );
 
     expect(screen.getByText('Flujo para contratistas en desarrollo')).toBeDefined();
-    expect(screen.getByText(/Actualmente la generación de contratos está habilitada únicamente para la parte contratante/i)).toBeDefined();
+    expect(
+      screen.getByText(
+        /Actualmente la generación de contratos está habilitada únicamente para la parte contratante/i
+      )
+    ).toBeDefined();
   });
 });

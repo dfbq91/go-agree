@@ -1,8 +1,8 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { ContractGeneration } from '../src/entities/ContractGeneration';
+import { DomainAuthError } from '../src/errors/DomainErrors';
 import { ContractId } from '../src/value-objects/ContractId';
 import { UserId } from '../src/value-objects/UserId';
-import { DomainAuthError } from '../src/errors/DomainErrors';
 
 describe('ContractGeneration Entity (Multi-Tenant Isolation)', () => {
   const contractId = ContractId.create('contract-100');

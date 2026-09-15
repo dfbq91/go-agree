@@ -1,6 +1,6 @@
-import React from 'react';
-import Link from 'next/link';
 import { es } from '@/locales/es';
+import Link from 'next/link';
+import type React from 'react';
 
 export const LandingFooter: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -57,9 +57,7 @@ export const LandingFooter: React.FC = () => {
 
           {/* Legal / Account */}
           <div className="space-y-4">
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-white">
-              Acceso
-            </h3>
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-white">Acceso</h3>
             <ul className="space-y-2">
               <li>
                 <Link

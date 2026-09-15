@@ -1,4 +1,7 @@
-import type { ContractProgressPort, ContractGenerationDTO } from '../../ports/ContractProgressPort.js';
+import type {
+  ContractGenerationDTO,
+  ContractProgressPort,
+} from '../../ports/ContractProgressPort.js';
 
 export interface UpdateTitleRequest {
   contractId: string;

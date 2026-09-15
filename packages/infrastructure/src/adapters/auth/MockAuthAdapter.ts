@@ -6,7 +6,6 @@ import type {
   LoginWithEmailInput,
   RegisterWithEmailInput,
   RequestPasswordResetInput,
-  UserAccountDTO,
   UserSessionDTO,
 } from '@go-agree/application';
 import {
@@ -104,7 +103,7 @@ export class MockAuthAdapter implements AuthPort {
     };
   }
 
-  async handleOAuthCallback(input: HandleOAuthCallbackInput): Promise<AuthResultDTO> {
+  async handleOAuthCallback(_input: HandleOAuthCallbackInput): Promise<AuthResultDTO> {
     const email = 'google-user@example.com';
     let user = this.users.get(email);
 
@@ -160,7 +159,7 @@ export class MockAuthAdapter implements AuthPort {
     return this.activeSession;
   }
 
-  async requestPasswordReset(input: RequestPasswordResetInput): Promise<void> {
+  async requestPasswordReset(_input: RequestPasswordResetInput): Promise<void> {
     // Enumeration-safe: completes cleanly
   }
 }

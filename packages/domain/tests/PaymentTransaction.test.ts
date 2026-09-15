@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
-import { UserId } from '../src/value-objects/UserId.js';
+import { describe, expect, it } from 'vitest';
 import { PaymentTransaction } from '../src/entities/PaymentTransaction.js';
+import { UserId } from '../src/value-objects/UserId.js';
 
 describe('PaymentTransaction Entity', () => {
   const userId = new UserId('usr_12345678-1234-1234-1234-123456789012');

@@ -1,7 +1,7 @@
-import { describe, it, expect, vi } from 'vitest';
+import type { AuthPort } from '@go-agree/application';
+import { describe, expect, it, vi } from 'vitest';
 import { MockAuthAdapter } from '../../src/adapters/auth/MockAuthAdapter';
 import { SupabaseAuthAdapter } from '../../src/adapters/auth/SupabaseAuthAdapter';
-import type { AuthPort } from '@go-agree/application';
 
 function runAuthPortGoogleContractTests(
   name: string,
@@ -53,7 +53,7 @@ describe('AuthPort Google Implementations', () => {
             error: null,
           })
         ),
-        exchangeCodeForSession: vi.fn().mockImplementation((code: string) =>
+        exchangeCodeForSession: vi.fn().mockImplementation((_code: string) =>
           Promise.resolve({
             data: {
               user: {

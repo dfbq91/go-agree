@@ -1,10 +1,17 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type { PaymentGatewayPort } from '../src/ports/PaymentGatewayPort.js';
+import type {
+  PaymentRepositoryPort,
+  PaymentTransactionDTO,
+  PaymentWebhookEventDTO,
+} from '../src/ports/PaymentRepositoryPort.js';
+import type {
+  SubscriptionRepositoryPort,
+  UserSubscriptionDTO,
+} from '../src/ports/SubscriptionRepositoryPort.js';
+import { GetTransactionStatusUseCase } from '../src/use-cases/GetTransactionStatusUseCase.js';
 import { InitiatePlanCheckoutUseCase } from '../src/use-cases/InitiatePlanCheckoutUseCase.js';
 import { ProcessPaymentWebhookUseCase } from '../src/use-cases/ProcessPaymentWebhookUseCase.js';
-import { GetTransactionStatusUseCase } from '../src/use-cases/GetTransactionStatusUseCase.js';
-import type { SubscriptionRepositoryPort, UserSubscriptionDTO } from '../src/ports/SubscriptionRepositoryPort.js';
-import type { PaymentRepositoryPort, PaymentTransactionDTO, PaymentWebhookEventDTO } from '../src/ports/PaymentRepositoryPort.js';
-import type { PaymentGatewayPort } from '../src/ports/PaymentGatewayPort.js';
 
 class InMemorySubscriptionRepo implements SubscriptionRepositoryPort {
   public subs = new Map<string, UserSubscriptionDTO>();
@@ -43,7 +50,9 @@ class InMemoryPaymentRepo implements PaymentRepositoryPort {
   public txs = new Map<string, PaymentTransactionDTO>();
   public webhookEvents = new Map<string, PaymentWebhookEventDTO>();
 
-  async createTransaction(tx: Omit<PaymentTransactionDTO, 'id' | 'createdAt' | 'updatedAt'>): Promise<PaymentTransactionDTO> {
+  async createTransaction(
+    tx: Omit<PaymentTransactionDTO, 'id' | 'createdAt' | 'updatedAt'>
+  ): Promise<PaymentTransactionDTO> {
     if (this.txs.has(tx.reference)) {
       throw new Error(`Reference ${tx.reference} already exists and cannot be reused`);
     }
@@ -86,7 +95,9 @@ class InMemoryPaymentRepo implements PaymentRepositoryPort {
     return this.webhookEvents.has(eventId);
   }
 
-  async recordWebhookEvent(event: Omit<PaymentWebhookEventDTO, 'id' | 'processedAt'>): Promise<void> {
+  async recordWebhookEvent(
+    event: Omit<PaymentWebhookEventDTO, 'id' | 'processedAt'>
+  ): Promise<void> {
     this.webhookEvents.set(event.eventId, {
       ...event,
       id: `evt_${Date.now()}`,
@@ -120,16 +131,8 @@ describe('Payment Rejection Handling & Non-Reusable References (US5)', () => {
       getTransactionStatus: vi.fn(),
     };
 
-    initiateUseCase = new InitiatePlanCheckoutUseCase(
-      subRepo,
-      paymentRepo,
-      () => mockGateway
-    );
-    webhookUseCase = new ProcessPaymentWebhookUseCase(
-      subRepo,
-      paymentRepo,
-      () => mockGateway
-    );
+    initiateUseCase = new InitiatePlanCheckoutUseCase(subRepo, paymentRepo, () => mockGateway);
+    webhookUseCase = new ProcessPaymentWebhookUseCase(subRepo, paymentRepo, () => mockGateway);
     getStatusUseCase = new GetTransactionStatusUseCase(paymentRepo);
   });
 

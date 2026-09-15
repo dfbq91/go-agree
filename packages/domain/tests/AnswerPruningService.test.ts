@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
-import { AnswerPruningService } from '../src/services/AnswerPruningService.js';
+import { describe, expect, it } from 'vitest';
 import { QuestionnaireDefinition } from '../src/entities/QuestionnaireDefinition.js';
+import { AnswerPruningService } from '../src/services/AnswerPruningService.js';
 
 describe('AnswerPruningService', () => {
   const questionnaire = QuestionnaireDefinition.createStandard();

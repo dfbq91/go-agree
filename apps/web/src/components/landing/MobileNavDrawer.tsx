@@ -1,6 +1,7 @@
-import React, { useEffect, useRef } from 'react';
-import Link from 'next/link';
 import { es } from '@/locales/es';
+import Link from 'next/link';
+import type React from 'react';
+import { useEffect, useRef } from 'react';
 
 export interface MobileNavDrawerProps {
   readonly isOpen: boolean;

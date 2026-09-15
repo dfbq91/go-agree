@@ -98,13 +98,14 @@ export class CountryPricingRegistry {
   /** It allows, in run time, to register new pricing plans for specific countries */
   static registerPlan(countryCode: CountryCode, plan: PricingPlanConfig): void {
     validatePricingPlanConfig(plan);
-    this.plans.set(countryCode.toUpperCase(), plan);
+    CountryPricingRegistry.plans.set(countryCode.toUpperCase(), plan);
   }
 
   static getPlanForCountry(countryCode?: CountryCode): PricingPlanConfig {
     const raw = !countryCode
-      ? this.plans.get(this.defaultCountry)!
-      : (this.plans.get(countryCode.toUpperCase()) ?? this.plans.get(this.defaultCountry)!);
+      ? CountryPricingRegistry.plans.get(CountryPricingRegistry.defaultCountry)!
+      : (CountryPricingRegistry.plans.get(countryCode.toUpperCase()) ??
+        CountryPricingRegistry.plans.get(CountryPricingRegistry.defaultCountry)!);
 
     if (raw.id === 'pro') {
       return {
@@ -116,12 +117,12 @@ export class CountryPricingRegistry {
   }
 
   static getSupportedCountries(): CountryCode[] {
-    return Array.from(this.plans.keys());
+    return Array.from(CountryPricingRegistry.plans.keys());
   }
 
   static resetToDefaults(): void {
-    this.plans.clear();
-    this.plans.set('CO', COLOMBIA_PRICING_PLAN);
+    CountryPricingRegistry.plans.clear();
+    CountryPricingRegistry.plans.set('CO', COLOMBIA_PRICING_PLAN);
   }
 }
 
@@ -138,4 +139,3 @@ export function getLocaleForCountry(countryCode?: CountryCode): string {
   };
   return map[countryCode.toUpperCase()] || 'es-CO';
 }
-

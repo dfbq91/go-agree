@@ -1,7 +1,7 @@
-import React from 'react';
 import Link from 'next/link';
-import { InlineTitleEditor } from './InlineTitleEditor';
+import type React from 'react';
 import { es } from '../../locales/es';
+import { InlineTitleEditor } from './InlineTitleEditor';
 
 export interface QuestionnaireHeaderProps {
   title: string;
@@ -36,7 +36,10 @@ export const QuestionnaireHeader: React.FC<QuestionnaireHeaderProps> = ({
             </span>
           )}
           {saveStatus === 'error' && (
-            <span role="alert" className="text-amber-700 bg-amber-50 px-2.5 py-1 rounded-md text-xs font-medium border border-amber-200">
+            <span
+              role="alert"
+              className="text-amber-700 bg-amber-50 px-2.5 py-1 rounded-md text-xs font-medium border border-amber-200"
+            >
               {es.questionnaire.saveError}
             </span>
           )}

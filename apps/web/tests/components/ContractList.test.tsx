@@ -1,9 +1,8 @@
-import { describe, it, expect } from 'vitest';
-import React from 'react';
+import type { ContractGenerationSummaryDTO } from '@go-agree/application';
 import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 import { ContractList } from '../../src/components/dashboard/ContractList';
 import { es } from '../../src/locales/es';
-import type { ContractGenerationSummaryDTO } from '@go-agree/application';
 
 describe('ContractList Component (Dashboard UI & Spanish Localization)', () => {
   it('renders empty state when no contracts exist', () => {

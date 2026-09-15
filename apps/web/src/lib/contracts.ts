@@ -1,18 +1,18 @@
-import fs from 'fs';
-import path from 'path';
-import { cookies } from 'next/headers';
-import { createClient } from '@supabase/supabase-js';
-import {
-  createSupabaseServerClient,
-  SupabaseContractRepository,
-  MockContractRepository,
-} from '@go-agree/infrastructure';
+import fs from 'node:fs';
+import path from 'node:path';
 import type { ContractRepositoryPort } from '@go-agree/application';
+import {
+  MockContractRepository,
+  SupabaseContractRepository,
+  createSupabaseServerClient,
+} from '@go-agree/infrastructure';
+import { createClient } from '@supabase/supabase-js';
+import { cookies } from 'next/headers';
 
 const globalMockContractRepo = new MockContractRepository();
 
 function getServiceRoleKey(): string | undefined {
-  if (process.env.SUPABASE_SERVICE_ROLE_KEY) {
+  if (process.env.SUPABASE_SERVICE_ROLE_KEY && process.env.SUPABASE_SERVICE_ROLE_KEY !== 'undefined') {
     return process.env.SUPABASE_SERVICE_ROLE_KEY;
   }
   try {
@@ -25,7 +25,7 @@ function getServiceRoleKey(): string | undefined {
       if (fs.existsSync(envPath)) {
         const content = fs.readFileSync(envPath, 'utf8');
         const match = content.match(/^SUPABASE_SERVICE_ROLE_KEY=(.+)$/m);
-        if (match && match[1]) {
+        if (match?.[1]) {
           return match[1].trim();
         }
       }
@@ -36,7 +36,7 @@ function getServiceRoleKey(): string | undefined {
   return undefined;
 }
 
-export function getServerContractRepository(): ContractRepositoryPort {
+export async function getServerContractRepository(): Promise<ContractRepositoryPort> {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceRoleKey = getServiceRoleKey();
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -53,7 +53,7 @@ export function getServerContractRepository(): ContractRepositoryPort {
     }
 
     if (supabaseAnonKey) {
-      const cookieStore = cookies();
+      const cookieStore = await cookies();
       const client = createSupabaseServerClient(supabaseUrl, supabaseAnonKey, {
         get(name: string) {
           return cookieStore.get(name)?.value;

@@ -1,20 +1,20 @@
-import { cookies } from 'next/headers';
-import {
-  createSupabaseServerClient,
-  SupabaseAuthAdapter,
-  MockAuthAdapter,
-} from '@go-agree/infrastructure';
 import type { AuthPort } from '@go-agree/application';
+import {
+  MockAuthAdapter,
+  SupabaseAuthAdapter,
+  createSupabaseServerClient,
+} from '@go-agree/infrastructure';
+import { cookies } from 'next/headers';
 
 // Singleton in-memory mock for dev fallback when Supabase credentials are not configured
 const globalMockAdapter = new MockAuthAdapter();
 
-export function getServerAuthAdapter(): AuthPort {
+export async function getServerAuthAdapter(): Promise<AuthPort> {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   if (supabaseUrl && supabaseAnonKey && !supabaseUrl.includes('<your-project-id>')) {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const client = createSupabaseServerClient(supabaseUrl, supabaseAnonKey, {
       get(name: string) {
         return cookieStore.get(name)?.value;

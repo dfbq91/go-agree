@@ -1,17 +1,18 @@
 'use client';
 
-import React, { useState } from 'react';
-import Link from 'next/link';
-import type {
-  PaymentProviderInfo,
-  BillingCycle,
-  PricingPlanConfig,
-  CountryCode,
-} from '@go-agree/domain';
 import type { SubscriptionStatusResult } from '@go-agree/application';
+import type {
+  BillingCycle,
+  CountryCode,
+  PaymentProviderInfo,
+  PricingPlanConfig,
+} from '@go-agree/domain';
+import Link from 'next/link';
+import type React from 'react';
+import { useState } from 'react';
+import { es } from '../../locales/es';
 import { PaymentProviderSelector } from './PaymentProviderSelector';
 import { PlanCheckoutCard } from './PlanCheckoutCard';
-import { es } from '../../locales/es';
 
 export interface CheckoutClientPageProps {
   readonly providers: PaymentProviderInfo[];
@@ -30,8 +31,7 @@ export const CheckoutClientPage: React.FC<CheckoutClientPageProps> = ({
   const [selectedProviderId, setSelectedProviderId] = useState(defaultProvider?.id || '');
   const [error, setError] = useState<string | null>(null);
 
-  const selectedProvider =
-    providers.find((p) => p.id === selectedProviderId) || defaultProvider;
+  const selectedProvider = providers.find((p) => p.id === selectedProviderId) || defaultProvider;
 
   const isActivePro = subscription.planType === 'pro' && subscription.status === 'active';
 
@@ -76,9 +76,7 @@ export const CheckoutClientPage: React.FC<CheckoutClientPageProps> = ({
         <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
           {es.checkout.title}
         </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          {es.checkout.subtitle}
-        </p>
+        <p className="mt-2 text-sm text-muted-foreground">{es.checkout.subtitle}</p>
       </div>
 
       {isActivePro ? (
@@ -99,9 +97,7 @@ export const CheckoutClientPage: React.FC<CheckoutClientPageProps> = ({
               />
             </svg>
           </div>
-          <h2 className="text-lg font-bold text-foreground">
-            {es.plans.unlimitedAccess}
-          </h2>
+          <h2 className="text-lg font-bold text-foreground">{es.plans.unlimitedAccess}</h2>
           <p className="mt-2 text-sm text-muted-foreground max-w-md mx-auto">
             {es.checkout.duplicateWarning}
           </p>

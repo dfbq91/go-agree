@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import type React from 'react';
+import { useState } from 'react';
 import { es } from '../../locales/es';
 
 export interface GuidanceTip {
@@ -31,6 +32,11 @@ export const QuestionGuidance: React.FC<QuestionGuidanceProps> = ({
 }) => {
   const [selectedExampleIndex, setSelectedExampleIndex] = useState<number | null>(null);
 
+  const selectedExample =
+    selectedExampleIndex !== null && guidance.examples
+      ? guidance.examples[selectedExampleIndex]
+      : null;
+
   const toggleExample = (idx: number) => {
     setSelectedExampleIndex((prev) => (prev === idx ? null : idx));
   };
@@ -40,12 +46,13 @@ export const QuestionGuidance: React.FC<QuestionGuidanceProps> = ({
       {/* Header with Title & Badge */}
       <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
         <div className="flex items-center gap-2">
-          <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-100 text-blue-700 font-bold text-base" aria-hidden="true">
+          <span
+            className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-100 text-blue-700 font-bold text-base"
+            aria-hidden="true"
+          >
             💡
           </span>
-          <h3 className="text-sm sm:text-base font-semibold text-gray-900">
-            {guidance.title}
-          </h3>
+          <h3 className="text-sm sm:text-base font-semibold text-gray-900">{guidance.title}</h3>
         </div>
         {guidance.badge && (
           <span className="inline-flex items-center rounded-full bg-blue-100/80 px-2.5 py-0.5 text-xs font-medium text-blue-800">
@@ -69,14 +76,14 @@ export const QuestionGuidance: React.FC<QuestionGuidanceProps> = ({
             className="rounded-lg bg-white/90 border border-blue-100/60 p-3 shadow-2xs flex flex-col justify-start"
           >
             <div className="flex items-center gap-1.5 mb-1">
-              {tip.icon && <span className="text-base" aria-hidden="true">{tip.icon}</span>}
-              <span className="text-xs font-semibold text-blue-950">
-                {tip.title}
-              </span>
+              {tip.icon && (
+                <span className="text-base" aria-hidden="true">
+                  {tip.icon}
+                </span>
+              )}
+              <span className="text-xs font-semibold text-blue-950">{tip.title}</span>
             </div>
-            <p className="text-xs text-gray-600 leading-snug">
-              {tip.text}
-            </p>
+            <p className="text-xs text-gray-600 leading-snug">{tip.text}</p>
           </div>
         ))}
       </div>
@@ -112,19 +119,19 @@ export const QuestionGuidance: React.FC<QuestionGuidanceProps> = ({
             })}
           </div>
 
-          {selectedExampleIndex !== null && guidance.examples[selectedExampleIndex] && (
+          {selectedExample && (
             <div className="mt-2.5 rounded-lg bg-white p-3 border border-blue-200 text-xs text-gray-700 shadow-2xs animate-fade-in">
-              <p className="italic text-gray-800 mb-2 leading-relaxed">
-                "{guidance.examples[selectedExampleIndex].text}"
-              </p>
+              <p className="italic text-gray-800 mb-2 leading-relaxed">"{selectedExample.text}"</p>
               {onSelectExample && (
                 <div className="flex justify-end">
                   <button
                     type="button"
-                    onClick={() => onSelectExample(guidance.examples![selectedExampleIndex].text)}
+                    onClick={() => onSelectExample(selectedExample.text)}
                     className="text-xs font-medium text-blue-600 hover:text-blue-800 hover:underline inline-flex items-center gap-1"
                   >
-                    <span>{es.questionnaire.guidanceAction?.useExample || 'Usar como plantilla'}</span>
+                    <span>
+                      {es.questionnaire.guidanceAction?.useExample || 'Usar como plantilla'}
+                    </span>
                     <span>→</span>
                   </button>
                 </div>

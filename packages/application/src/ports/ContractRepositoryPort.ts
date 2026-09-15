@@ -22,5 +22,7 @@ export interface ContractRepositoryPort {
   listByUserId(userId: string): Promise<ContractGenerationSummaryDTO[]>;
   getByIdAndUserId(id: string, userId: string): Promise<ContractGenerationDTO | null>;
   save(contract: ContractGenerationDTO): Promise<void>;
-  create(contract: Omit<ContractGenerationDTO, 'createdAt' | 'updatedAt'>): Promise<ContractGenerationDTO>;
+  create(
+    contract: Omit<ContractGenerationDTO, 'createdAt' | 'updatedAt'>
+  ): Promise<ContractGenerationDTO>;
 }

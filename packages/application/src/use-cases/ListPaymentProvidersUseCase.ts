@@ -4,9 +4,9 @@
  */
 
 import {
-  PaymentProviderRegistry,
-  type PaymentProviderInfo,
   type CountryCode,
+  type PaymentProviderInfo,
+  PaymentProviderRegistry,
 } from '@go-agree/domain';
 
 export interface ListPaymentProvidersInput {

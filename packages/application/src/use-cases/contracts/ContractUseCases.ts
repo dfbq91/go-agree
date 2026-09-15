@@ -1,7 +1,7 @@
 import type {
-  ContractRepositoryPort,
   ContractGenerationDTO,
   ContractGenerationSummaryDTO,
+  ContractRepositoryPort,
 } from '../../ports/ContractRepositoryPort.js';
 
 export class ListUserContractsUseCase {

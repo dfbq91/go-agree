@@ -5,22 +5,28 @@
  *   node scripts/simulate-webhook.mjs <TRANSACTION_REFERENCE> [--declined] [--tamper]
  */
 
-import { createHash } from 'crypto';
-import fs from 'fs';
-import path from 'path';
+import { createHash } from 'node:crypto';
+import fs from 'node:fs';
+import path from 'node:path';
 
 // 1. Parse arguments
 const args = process.argv.slice(2);
-const reference = args.find(a => !a.startsWith('--'));
+const reference = args.find((a) => !a.startsWith('--'));
 const isDeclined = args.includes('--declined');
 const isTampered = args.includes('--tamper');
 
 if (!reference) {
   console.error('\n❌ ERROR: Falta la referencia de la transacción.');
   console.log('\nUso correcto:');
-  console.log('  node scripts/simulate-webhook.mjs <REFERENCIA>           -> Simular Pago Aprobado');
-  console.log('  node scripts/simulate-webhook.mjs <REFERENCIA> --declined -> Simular Pago Rechazado (fondos insuficientes)');
-  console.log('  node scripts/simulate-webhook.mjs <REFERENCIA> --tamper   -> Simular Firma Inválida / Alterada\n');
+  console.log(
+    '  node scripts/simulate-webhook.mjs <REFERENCIA>           -> Simular Pago Aprobado'
+  );
+  console.log(
+    '  node scripts/simulate-webhook.mjs <REFERENCIA> --declined -> Simular Pago Rechazado (fondos insuficientes)'
+  );
+  console.log(
+    '  node scripts/simulate-webhook.mjs <REFERENCIA> --tamper   -> Simular Firma Inválida / Alterada\n'
+  );
   console.log('Ejemplo:');
   console.log('  node scripts/simulate-webhook.mjs ga_pro_m_1789411108473_tifzv8cw\n');
   process.exit(1);
@@ -33,7 +39,7 @@ try {
   if (fs.existsSync(envPath)) {
     const content = fs.readFileSync(envPath, 'utf8');
     const match = content.match(/^WOMPI_EVENT_SECRET=(.+)$/m);
-    if (match && match[1]) {
+    if (match?.[1]) {
       eventSecret = match[1].trim();
     }
   }
@@ -84,15 +90,15 @@ const payload = {
 const scenarioLabel = isTampered
   ? '⚠️ FIRMA ALTERADA (Ataque / Manipulación)'
   : isDeclined
-  ? '❌ PAGO RECHAZADO (Fondos insuficientes)'
-  : '✅ PAGO APROBADO';
+    ? '❌ PAGO RECHAZADO (Fondos insuficientes)'
+    : '✅ PAGO APROBADO';
 
-console.log(`\n======================================================`);
+console.log('\n======================================================');
 console.log(`🚀 Simulando Webhook de Wompi: ${scenarioLabel}`);
 console.log(`📌 Referencia: ${reference}`);
 console.log(`💰 Monto: $${(amount / 100).toLocaleString('es-CO')} COP`);
 console.log(`🔑 Checksum SHA-256: ${checksum.slice(0, 16)}...`);
-console.log(`======================================================\n`);
+console.log('======================================================\n');
 
 try {
   const response = await fetch('http://localhost:3000/api/webhooks/wompi', {
@@ -108,14 +114,20 @@ try {
     console.log(JSON.stringify(data, null, 2));
 
     if (isDeclined) {
-      console.log('\n❌ [Rechazado]: Mira tu navegador. La pantalla de espera cambiará en segundos mostrando el motivo del rechazo.\n');
+      console.log(
+        '\n❌ [Rechazado]: Mira tu navegador. La pantalla de espera cambiará en segundos mostrando el motivo del rechazo.\n'
+      );
     } else {
-      console.log('\n🎉 [Aprobado]: Mira tu navegador. La pantalla cambiará a verde "¡Pago completado con éxito!" en segundos.\n');
+      console.log(
+        '\n🎉 [Aprobado]: Mira tu navegador. La pantalla cambiará a verde "¡Pago completado con éxito!" en segundos.\n'
+      );
     }
   } else {
     console.log(`🛡️ Respuesta esperada de seguridad (HTTP ${response.status}):`);
     console.log(JSON.stringify(data, null, 2));
-    console.log('\n🔒 [Protección activa]: La firma no coincide. El servidor bloqueó la petición y mantuvo la transacción intacta.\n');
+    console.log(
+      '\n🔒 [Protección activa]: La firma no coincide. El servidor bloqueó la petición y mantuvo la transacción intacta.\n'
+    );
   }
 } catch (err) {
   console.error('\n❌ No se pudo conectar con http://localhost:3000');

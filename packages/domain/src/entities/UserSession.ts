@@ -1,4 +1,4 @@
-import { UserId } from '../value-objects/UserId.js';
+import type { UserId } from '../value-objects/UserId.js';
 
 export interface UserSessionProps {
   sessionId: string;

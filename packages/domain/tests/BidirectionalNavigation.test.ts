@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { QuestionnaireDefinition } from '../src/entities/QuestionnaireDefinition.js';
 
 describe('Bidirectional Navigation & Answer Modification', () => {
@@ -22,7 +22,7 @@ describe('Bidirectional Navigation & Answer Modification', () => {
     expect(nextAfterQ5?.id).toBe('q5b_recurring_duration');
 
     // Stepping backwards from Q5b must return to Q5
-    const prevFromQ5b = questionnaire.getPreviousQuestion(nextAfterQ5!.id, recurringAnswers);
+    const prevFromQ5b = questionnaire.getPreviousQuestion(nextAfterQ5?.id, recurringAnswers);
     expect(prevFromQ5b?.id).toBe('q5_modality');
   });
 

@@ -1,11 +1,16 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
+import type {
+  PaymentRepositoryPort,
+  PaymentTransactionDTO,
+} from '../src/ports/PaymentRepositoryPort.js';
 import { GetTransactionStatusUseCase } from '../src/use-cases/GetTransactionStatusUseCase.js';
-import type { PaymentRepositoryPort, PaymentTransactionDTO } from '../src/ports/PaymentRepositoryPort.js';
 
 class InMemoryPaymentRepo implements PaymentRepositoryPort {
   public txs = new Map<string, PaymentTransactionDTO>();
 
-  async createTransaction(tx: Omit<PaymentTransactionDTO, 'id' | 'createdAt' | 'updatedAt'>): Promise<PaymentTransactionDTO> {
+  async createTransaction(
+    tx: Omit<PaymentTransactionDTO, 'id' | 'createdAt' | 'updatedAt'>
+  ): Promise<PaymentTransactionDTO> {
     const created: PaymentTransactionDTO = {
       ...tx,
       id: `tx_${Date.now()}`,
@@ -21,7 +26,9 @@ class InMemoryPaymentRepo implements PaymentRepositoryPort {
   }
 
   async updateTransactionStatus(): Promise<void> {}
-  async hasWebhookEvent(): Promise<boolean> { return false; }
+  async hasWebhookEvent(): Promise<boolean> {
+    return false;
+  }
   async recordWebhookEvent(): Promise<void> {}
 }
 

@@ -1,16 +1,19 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { POST } from '../../src/app/api/contracts/[id]/analyze/route';
 
+const { mockExecute } = vi.hoisted(() => ({
+  mockExecute: vi.fn(),
+}));
+
 // Mocks para simular sesión y casos de uso
 vi.mock('@/lib/auth', () => ({
-  getServerAuthAdapter: () => ({
+  getServerAuthAdapter: vi.fn().mockResolvedValue({
     getCurrentSession: vi.fn().mockResolvedValue({ userId: 'user-123' }),
   }),
 }));
 
-const mockExecute = vi.fn();
 vi.mock('@/lib/analysis', () => ({
-  getAnalyzeContractUseCase: () => ({
+  getAnalyzeContractUseCase: vi.fn().mockResolvedValue({
     execute: mockExecute,
   }),
 }));
@@ -32,7 +35,9 @@ describe('POST /api/contracts/[id]/analyze Route Handler', () => {
       body: JSON.stringify({ stage: 1 }),
     });
 
-    const response = await POST(request as any, { params: { id: 'contract-123' } });
+    const response = await POST(request as any, {
+      params: Promise.resolve({ id: 'contract-123' }),
+    });
     const json = await response.json();
 
     expect(response.status).toBe(200);
@@ -52,10 +57,13 @@ describe('POST /api/contracts/[id]/analyze Route Handler', () => {
       method: 'POST',
     });
 
-    const response = await POST(request as any, { params: { id: 'contract-123' } });
+    const response = await POST(request as any, {
+      params: Promise.resolve({ id: 'contract-123' }),
+    });
     const json = await response.json();
 
     expect(response.status).toBe(500);
-    expect(json.error).toBeDefined();
+    expect(json.code).toBe('ANALYSIS_ERROR');
+    expect(json.correlationId).toBeDefined();
   });
 });

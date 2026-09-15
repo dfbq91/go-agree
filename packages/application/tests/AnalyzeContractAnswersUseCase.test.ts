@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
-    AnalyzeContractAnswersUseCase,
-    type ContractRepositoryPort,
-    type DynamicQuestionRepositoryPort,
-    type LlmQuestionAnalysisPort,
-    type QuestionDTO
+  AnalyzeContractAnswersUseCase,
+  type ContractRepositoryPort,
+  type DynamicQuestionRepositoryPort,
+  type LlmQuestionAnalysisPort,
+  type QuestionDTO,
 } from '../src/index.js';
 
 describe('AnalyzeContractAnswersUseCase (Idempotency & Orchestration)', () => {

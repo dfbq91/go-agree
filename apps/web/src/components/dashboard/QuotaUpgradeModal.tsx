@@ -1,8 +1,8 @@
 'use client';
 
-import React from 'react';
-import { useRouter } from 'next/navigation';
 import { getFreeContractLimit } from '@go-agree/domain';
+import { useRouter } from 'next/navigation';
+import type React from 'react';
 import { es } from '../../locales/es';
 
 export interface QuotaUpgradeModalProps {
@@ -43,11 +43,7 @@ export const QuotaUpgradeModal: React.FC<QuotaUpgradeModalProps> = ({
       aria-modal="true"
       aria-labelledby="modal-title"
     >
-      <div
-        className="fixed inset-0"
-        aria-hidden="true"
-        onClick={onClose}
-      />
+      <div className="fixed inset-0" aria-hidden="true" onClick={onClose} />
       <div className="relative w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-xl z-10">
         <div className="flex items-center gap-3 mb-4">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
@@ -71,9 +67,7 @@ export const QuotaUpgradeModal: React.FC<QuotaUpgradeModalProps> = ({
           </h2>
         </div>
 
-        <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
-          {modalDescription}
-        </p>
+        <p className="text-sm text-muted-foreground mb-6 leading-relaxed">{modalDescription}</p>
 
         <div className="flex flex-col gap-2.5 sm:flex-row-reverse">
           <button

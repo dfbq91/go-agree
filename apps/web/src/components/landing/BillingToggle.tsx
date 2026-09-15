@@ -1,6 +1,7 @@
-import React, { useRef } from 'react';
-import type { BillingCycle } from '@go-agree/domain';
 import { es } from '@/locales/es';
+import type { BillingCycle } from '@go-agree/domain';
+import type React from 'react';
+import { useRef } from 'react';
 
 export interface BillingToggleProps {
   readonly selectedCycle: BillingCycle;
@@ -11,15 +12,12 @@ export interface BillingToggleProps {
 export const BillingToggle: React.FC<BillingToggleProps> = ({
   selectedCycle,
   onCycleChange,
-  annualDiscountPercent = 20,
+  annualDiscountPercent: _annualDiscountPercent = 20,
 }) => {
   const monthlyRef = useRef<HTMLButtonElement>(null);
   const annualRef = useRef<HTMLButtonElement>(null);
 
-  const handleKeyDown = (
-    e: React.KeyboardEvent<HTMLButtonElement>,
-    current: BillingCycle
-  ) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>, current: BillingCycle) => {
     if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
       e.preventDefault();
       onCycleChange('annual');

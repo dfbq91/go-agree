@@ -1,6 +1,6 @@
-import { ContractId } from '../value-objects/ContractId.js';
-import { UserId } from '../value-objects/UserId.js';
 import { DomainAuthError, EmptyTitleError } from '../errors/DomainErrors.js';
+import type { ContractId } from '../value-objects/ContractId.js';
+import type { UserId } from '../value-objects/UserId.js';
 import type { QuestionnaireDefinition } from './QuestionnaireDefinition.js';
 
 export type ContractStatus = 'in_progress' | 'completed';
@@ -83,7 +83,10 @@ export class ContractGeneration {
 
   assertOwnership(userId: UserId): void {
     if (!this.isOwnedBy(userId)) {
-      throw new DomainAuthError('Access denied: You do not own this contract generation', 'UNAUTHORIZED');
+      throw new DomainAuthError(
+        'Access denied: You do not own this contract generation',
+        'UNAUTHORIZED'
+      );
     }
   }
 

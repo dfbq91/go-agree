@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 import { es } from '../../locales/es';
 
 export interface NavigationControlsProps {
@@ -39,10 +39,7 @@ export const NavigationControls: React.FC<NavigationControlsProps> = ({
 
       <div className="flex flex-col sm:flex-row items-end sm:items-center gap-3">
         {error && (
-          <div
-            role="alert"
-            className="text-xs sm:text-sm text-red-600 font-medium animate-fade-in"
-          >
+          <div role="alert" className="text-xs sm:text-sm text-red-600 font-medium animate-fade-in">
             {error}
           </div>
         )}
@@ -69,7 +66,9 @@ export const NavigationControls: React.FC<NavigationControlsProps> = ({
             <span>{es.questionnaire.savingStatus}</span>
           ) : (
             <>
-              <span>{isLastQuestion ? es.questionnaire.nav.review : es.questionnaire.nav.next}</span>
+              <span>
+                {isLastQuestion ? es.questionnaire.nav.review : es.questionnaire.nav.next}
+              </span>
               <span>→</span>
             </>
           )}

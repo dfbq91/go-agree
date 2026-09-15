@@ -1,10 +1,10 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { ContractNotFoundError, UnauthorizedContractAccessError } from '@go-agree/domain';
+import { beforeEach, describe, expect, it } from 'vitest';
+import type {
+  ContractGenerationDTO,
+  ContractProgressPort,
+} from '../src/ports/ContractProgressPort.js';
 import { UpdateQuestionnaireProgressUseCase } from '../src/use-cases/questionnaire/UpdateQuestionnaireProgressUseCase.js';
-import {
-  ContractNotFoundError,
-  UnauthorizedContractAccessError,
-} from '@go-agree/domain';
-import type { ContractProgressPort, ContractGenerationDTO } from '../src/ports/ContractProgressPort.js';
 
 class InMemoryProgressPort implements ContractProgressPort {
   contracts = new Map<string, ContractGenerationDTO>();
@@ -18,7 +18,8 @@ class InMemoryProgressPort implements ContractProgressPort {
   async updateProgress(input: any): Promise<ContractGenerationDTO> {
     const c = this.contracts.get(input.contractId);
     if (!c) throw new ContractNotFoundError(input.contractId);
-    if (c.userId !== input.userId) throw new UnauthorizedContractAccessError(input.contractId, input.userId);
+    if (c.userId !== input.userId)
+      throw new UnauthorizedContractAccessError(input.contractId, input.userId);
 
     const updated = {
       ...c,
@@ -30,9 +31,15 @@ class InMemoryProgressPort implements ContractProgressPort {
     return updated;
   }
 
-  async updateTitle(): Promise<any> { throw new Error('Not implemented'); }
-  async completeQuestionnaire(): Promise<any> { throw new Error('Not implemented'); }
-  async getNextDefaultTitle(): Promise<string> { return 'Mi Contrato 1'; }
+  async updateTitle(): Promise<any> {
+    throw new Error('Not implemented');
+  }
+  async completeQuestionnaire(): Promise<any> {
+    throw new Error('Not implemented');
+  }
+  async getNextDefaultTitle(): Promise<string> {
+    return 'Mi Contrato 1';
+  }
 }
 
 describe('UpdateQuestionnaireProgressUseCase', () => {

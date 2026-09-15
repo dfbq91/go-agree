@@ -1,6 +1,5 @@
-import { describe, it, expect, vi } from 'vitest';
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 import { PlanQuotaBadge } from '../../src/components/dashboard/PlanQuotaBadge';
 import { QuotaUpgradeModal } from '../../src/components/dashboard/QuotaUpgradeModal';
 import { es } from '../../src/locales/es';
@@ -64,17 +63,11 @@ describe('PlanQuotaBadge & QuotaUpgradeModal Components', () => {
       const onClose = vi.fn();
       const onUpgrade = vi.fn();
 
-      render(
-        <QuotaUpgradeModal
-          isOpen={true}
-          onClose={onClose}
-          onUpgrade={onUpgrade}
-        />
-      );
+      render(<QuotaUpgradeModal isOpen={true} onClose={onClose} onUpgrade={onUpgrade} />);
 
       expect(screen.getByText(es.plans.upgradeModalTitle)).toBeDefined();
       expect(screen.getByText(es.plans.upgradeModalDescription)).toBeDefined();
-      
+
       const upgradeBtn = screen.getByRole('button', { name: es.plans.upgradeModalCta });
       fireEvent.click(upgradeBtn);
       expect(onUpgrade).toHaveBeenCalledOnce();
@@ -85,13 +78,7 @@ describe('PlanQuotaBadge & QuotaUpgradeModal Components', () => {
     });
 
     it('renders upgrade modal with custom freeContractsLimit messaging', () => {
-      render(
-        <QuotaUpgradeModal
-          isOpen={true}
-          onClose={vi.fn()}
-          freeContractsLimit={5}
-        />
-      );
+      render(<QuotaUpgradeModal isOpen={true} onClose={vi.fn()} freeContractsLimit={5} />);
 
       expect(
         screen.getByText(
@@ -101,12 +88,7 @@ describe('PlanQuotaBadge & QuotaUpgradeModal Components', () => {
     });
 
     it('does not render when isOpen is false', () => {
-      render(
-        <QuotaUpgradeModal
-          isOpen={false}
-          onClose={vi.fn()}
-        />
-      );
+      render(<QuotaUpgradeModal isOpen={false} onClose={vi.fn()} />);
 
       expect(screen.queryByText(es.plans.upgradeModalTitle)).toBeNull();
     });

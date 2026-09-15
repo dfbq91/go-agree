@@ -1,15 +1,26 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { ContractNotFoundError, EmptyTitleError } from '@go-agree/domain';
+import { beforeEach, describe, expect, it } from 'vitest';
+import type {
+  ContractGenerationDTO,
+  ContractProgressPort,
+} from '../src/ports/ContractProgressPort.js';
 import { UpdateTitleUseCase } from '../src/use-cases/questionnaire/UpdateTitleUseCase.js';
-import { EmptyTitleError, ContractNotFoundError } from '@go-agree/domain';
-import type { ContractProgressPort, ContractGenerationDTO } from '../src/ports/ContractProgressPort.js';
 
 class MockPort implements ContractProgressPort {
   contract: ContractGenerationDTO | null = null;
 
-  async getContractById(): Promise<any> { return this.contract; }
-  async updateProgress(): Promise<any> { return this.contract; }
-  async completeQuestionnaire(): Promise<any> { return this.contract; }
-  async getNextDefaultTitle(): Promise<string> { return 'Mi Contrato 1'; }
+  async getContractById(): Promise<any> {
+    return this.contract;
+  }
+  async updateProgress(): Promise<any> {
+    return this.contract;
+  }
+  async completeQuestionnaire(): Promise<any> {
+    return this.contract;
+  }
+  async getNextDefaultTitle(): Promise<string> {
+    return 'Mi Contrato 1';
+  }
 
   async updateTitle(input: any): Promise<ContractGenerationDTO> {
     if (!input.title || input.title.trim().length === 0) {

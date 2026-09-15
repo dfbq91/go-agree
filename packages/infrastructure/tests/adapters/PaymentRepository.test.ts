@@ -1,6 +1,6 @@
-import { describe, it, expect, vi } from 'vitest';
-import { SupabasePaymentRepository } from '../../src/adapters/storage/SupabasePaymentRepository';
+import { describe, expect, it, vi } from 'vitest';
 import { MockPaymentRepository } from '../../src/adapters/storage/MockPaymentRepository';
+import { SupabasePaymentRepository } from '../../src/adapters/storage/SupabasePaymentRepository';
 
 describe('PaymentRepository getTransactionByReference', () => {
   describe('MockPaymentRepository', () => {

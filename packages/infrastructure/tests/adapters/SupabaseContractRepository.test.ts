@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { SupabaseContractRepository } from '../../src/adapters/storage/SupabaseContractRepository';
 
 describe('SupabaseContractRepository (Tenant Isolation & RLS)', () => {
@@ -39,7 +39,9 @@ describe('SupabaseContractRepository (Tenant Isolation & RLS)', () => {
         select: vi.fn().mockReturnValue({
           eq: vi.fn().mockReturnValue({
             eq: vi.fn().mockReturnValue({
-              single: vi.fn().mockResolvedValue({ data: null, error: { message: 'Row not found' } }),
+              single: vi
+                .fn()
+                .mockResolvedValue({ data: null, error: { message: 'Row not found' } }),
             }),
           }),
         }),

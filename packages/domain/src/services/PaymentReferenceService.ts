@@ -11,7 +11,7 @@ export class PaymentReferenceService {
    * Format: ga_{planId}_{cyclePrefix}_{timestamp}_{randomHex}
    * Example: ga_pro_m_1726156800000_f3a1b2c4
    */
-  static generateReference(planId: string = 'pro', cycle: BillingCycle = 'monthly'): string {
+  static generateReference(planId = 'pro', cycle: BillingCycle = 'monthly'): string {
     const cyclePrefix = cycle === 'annual' ? 'a' : 'm';
     const timestamp = Date.now();
     const randomHex = Math.random().toString(36).substring(2, 10);

@@ -1,20 +1,20 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
-  getFreeContractLimit,
   DEFAULT_FREE_CONTRACT_LIMIT,
+  getFreeContractLimit,
 } from '../src/entities/FreeQuotaConfig.js';
+import { CountryPricingRegistry } from '../src/entities/PricingConfig.js';
 import { UserSubscription } from '../src/entities/UserSubscription.js';
 import { UserId } from '../src/value-objects/UserId.js';
-import { CountryPricingRegistry } from '../src/entities/PricingConfig.js';
 
 describe('FreeQuotaConfig & Environment Variable Integration', () => {
   const originalEnv = { ...process.env };
 
   beforeEach(() => {
-    delete process.env.NEXT_PUBLIC_FREE_CONTRACTS_LIMIT;
-    delete process.env.NEXT_PUBLIC_FREE_CONTRACT_LIMIT;
-    delete process.env.FREE_CONTRACTS_LIMIT;
-    delete process.env.FREE_CONTRACT_LIMIT;
+    process.env.NEXT_PUBLIC_FREE_CONTRACTS_LIMIT = undefined;
+    process.env.NEXT_PUBLIC_FREE_CONTRACT_LIMIT = undefined;
+    process.env.FREE_CONTRACTS_LIMIT = undefined;
+    process.env.FREE_CONTRACT_LIMIT = undefined;
   });
 
   afterEach(() => {

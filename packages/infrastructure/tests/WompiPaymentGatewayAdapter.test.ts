@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { createHash } from 'crypto';
+import { createHash } from 'node:crypto';
+import { describe, expect, it } from 'vitest';
 import { WompiPaymentGatewayAdapter } from '../src/adapters/payment/WompiPaymentGatewayAdapter.js';
 
 describe('WompiPaymentGatewayAdapter', () => {
@@ -25,7 +25,9 @@ describe('WompiPaymentGatewayAdapter', () => {
       };
 
       const expectedSignature = createHash('sha256')
-        .update(`${input.reference}${input.amountInCents}${input.currency}${config.integritySecret}`)
+        .update(
+          `${input.reference}${input.amountInCents}${input.currency}${config.integritySecret}`
+        )
         .digest('hex');
 
       const result = await adapter.createCheckoutUrl(input);
@@ -38,7 +40,9 @@ describe('WompiPaymentGatewayAdapter', () => {
       expect(result.checkoutUrl).toContain(`amount-in-cents=${input.amountInCents}`);
       expect(result.checkoutUrl).toContain(`reference=${input.reference}`);
       expect(result.checkoutUrl).toContain(`signature%3Aintegrity=${expectedSignature}`);
-      expect(result.checkoutUrl).toContain(`customer-data%3Aemail=${encodeURIComponent(input.customerEmail)}`);
+      expect(result.checkoutUrl).toContain(
+        `customer-data%3Aemail=${encodeURIComponent(input.customerEmail)}`
+      );
     });
   });
 
@@ -65,11 +69,7 @@ describe('WompiPaymentGatewayAdapter', () => {
           },
         },
         signature: {
-          properties: [
-            'transaction.id',
-            'transaction.status',
-            'transaction.amount_in_cents',
-          ],
+          properties: ['transaction.id', 'transaction.status', 'transaction.amount_in_cents'],
           checksum: validChecksum,
         },
         timestamp,

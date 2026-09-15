@@ -1,21 +1,21 @@
-import fs from 'fs';
-import path from 'path';
-import { cookies } from 'next/headers';
-import { createClient } from '@supabase/supabase-js';
-import {
-  createSupabaseServerClient,
-  SupabasePaymentRepository,
-  MockPaymentRepository,
-  WompiPaymentGatewayAdapter,
-  PaymentGatewayResolver,
-} from '@go-agree/infrastructure';
+import fs from 'node:fs';
+import path from 'node:path';
 import type { PaymentRepositoryPort } from '@go-agree/application';
+import {
+  MockPaymentRepository,
+  PaymentGatewayResolver,
+  SupabasePaymentRepository,
+  WompiPaymentGatewayAdapter,
+  createSupabaseServerClient,
+} from '@go-agree/infrastructure';
+import { createClient } from '@supabase/supabase-js';
+import { cookies } from 'next/headers';
 import { getPaymentConfig } from './config';
 
 const globalMockPaymentRepo = new MockPaymentRepository();
 
 function getServiceRoleKey(): string | undefined {
-  if (process.env.SUPABASE_SERVICE_ROLE_KEY) {
+  if (process.env.SUPABASE_SERVICE_ROLE_KEY && process.env.SUPABASE_SERVICE_ROLE_KEY !== 'undefined') {
     return process.env.SUPABASE_SERVICE_ROLE_KEY;
   }
   try {
@@ -28,7 +28,7 @@ function getServiceRoleKey(): string | undefined {
       if (fs.existsSync(envPath)) {
         const content = fs.readFileSync(envPath, 'utf8');
         const match = content.match(/^SUPABASE_SERVICE_ROLE_KEY=(.+)$/m);
-        if (match && match[1]) {
+        if (match?.[1]) {
           return match[1].trim();
         }
       }
@@ -39,7 +39,7 @@ function getServiceRoleKey(): string | undefined {
   return undefined;
 }
 
-export function getServerPaymentRepository(): PaymentRepositoryPort {
+export async function getServerPaymentRepository(): Promise<PaymentRepositoryPort> {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceRoleKey = getServiceRoleKey();
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -56,7 +56,7 @@ export function getServerPaymentRepository(): PaymentRepositoryPort {
     }
 
     if (supabaseAnonKey) {
-      const cookieStore = cookies();
+      const cookieStore = await cookies();
       const client = createSupabaseServerClient(supabaseUrl, supabaseAnonKey, {
         get(name: string) {
           return cookieStore.get(name)?.value;

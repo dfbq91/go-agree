@@ -1,14 +1,14 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import {
-  ListUserContractsUseCase,
-  GetContractByIdUseCase,
-  CreateContractUseCase,
-} from '../src/use-cases/contracts/ContractUseCases';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type {
-  ContractRepositoryPort,
   ContractGenerationDTO,
   ContractGenerationSummaryDTO,
+  ContractRepositoryPort,
 } from '../src/ports/ContractRepositoryPort';
+import {
+  CreateContractUseCase,
+  GetContractByIdUseCase,
+  ListUserContractsUseCase,
+} from '../src/use-cases/contracts/ContractUseCases';
 
 describe('Contract Application Use Cases (Tenant Isolation)', () => {
   let mockRepository: ContractRepositoryPort;

@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { RequestPasswordResetUseCase } from '../src/use-cases/auth/RequestPasswordResetUseCase.js';
-import type { AuthPort } from '../src/ports/AuthPort.js';
 import { InvalidEmailError } from '@go-agree/domain';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type { AuthPort } from '../src/ports/AuthPort.js';
+import { RequestPasswordResetUseCase } from '../src/use-cases/auth/RequestPasswordResetUseCase.js';
 
 describe('RequestPasswordResetUseCase', () => {
   let mockAuthPort: AuthPort;

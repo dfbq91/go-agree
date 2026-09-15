@@ -1,9 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import type { TransactionStatusResult } from '@go-agree/application';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PaymentResultView } from '../../src/components/checkout/PaymentResultView';
 import { es } from '../../src/locales/es';
-import type { TransactionStatusResult } from '@go-agree/application';
 
 describe('PaymentResultView Component', () => {
   beforeEach(() => {
@@ -25,12 +24,7 @@ describe('PaymentResultView Component', () => {
       updatedAt: new Date().toISOString(),
     };
 
-    render(
-      <PaymentResultView
-        initialStatus={mockTx}
-        reference={mockTx.reference}
-      />
-    );
+    render(<PaymentResultView initialStatus={mockTx} reference={mockTx.reference} />);
 
     expect(screen.getByText(es.paymentResult.approvedTitle)).toBeDefined();
     expect(screen.getByText(es.paymentResult.approvedSubtitle)).toBeDefined();
@@ -52,12 +46,7 @@ describe('PaymentResultView Component', () => {
       updatedAt: new Date().toISOString(),
     };
 
-    render(
-      <PaymentResultView
-        initialStatus={mockTx}
-        reference={mockTx.reference}
-      />
-    );
+    render(<PaymentResultView initialStatus={mockTx} reference={mockTx.reference} />);
 
     expect(screen.getByText(es.paymentResult.pendingTitle)).toBeDefined();
     expect(screen.getByText(es.paymentResult.pendingSubtitle)).toBeDefined();
@@ -79,12 +68,7 @@ describe('PaymentResultView Component', () => {
       updatedAt: new Date().toISOString(),
     };
 
-    render(
-      <PaymentResultView
-        initialStatus={mockTx}
-        reference={mockTx.reference}
-      />
-    );
+    render(<PaymentResultView initialStatus={mockTx} reference={mockTx.reference} />);
 
     expect(screen.getByText(es.paymentResult.rejectedTitle)).toBeDefined();
     expect(screen.getByText(/Fondos insuficientes/)).toBeDefined();
@@ -114,12 +98,7 @@ describe('PaymentResultView Component', () => {
       }),
     });
 
-    render(
-      <PaymentResultView
-        initialStatus={mockTx}
-        reference={mockTx.reference}
-      />
-    );
+    render(<PaymentResultView initialStatus={mockTx} reference={mockTx.reference} />);
 
     const verifyBtn = screen.getByRole('button', { name: es.paymentResult.verifyStatusButton });
     fireEvent.click(verifyBtn);

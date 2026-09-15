@@ -1,8 +1,14 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { InitiatePlanCheckoutUseCase } from '../src/use-cases/InitiatePlanCheckoutUseCase.js';
-import type { SubscriptionRepositoryPort, UserSubscriptionDTO } from '../src/ports/SubscriptionRepositoryPort.js';
-import type { PaymentRepositoryPort, PaymentTransactionDTO } from '../src/ports/PaymentRepositoryPort.js';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { PaymentGatewayPort } from '../src/ports/PaymentGatewayPort.js';
+import type {
+  PaymentRepositoryPort,
+  PaymentTransactionDTO,
+} from '../src/ports/PaymentRepositoryPort.js';
+import type {
+  SubscriptionRepositoryPort,
+  UserSubscriptionDTO,
+} from '../src/ports/SubscriptionRepositoryPort.js';
+import { InitiatePlanCheckoutUseCase } from '../src/use-cases/InitiatePlanCheckoutUseCase.js';
 
 class InMemorySubscriptionRepo implements SubscriptionRepositoryPort {
   public subs = new Map<string, UserSubscriptionDTO>();
@@ -40,7 +46,9 @@ class InMemorySubscriptionRepo implements SubscriptionRepositoryPort {
 class InMemoryPaymentRepo implements PaymentRepositoryPort {
   public txs = new Map<string, PaymentTransactionDTO>();
 
-  async createTransaction(tx: Omit<PaymentTransactionDTO, 'id' | 'createdAt' | 'updatedAt'>): Promise<PaymentTransactionDTO> {
+  async createTransaction(
+    tx: Omit<PaymentTransactionDTO, 'id' | 'createdAt' | 'updatedAt'>
+  ): Promise<PaymentTransactionDTO> {
     const created: PaymentTransactionDTO = {
       ...tx,
       id: `tx_${Date.now()}`,
@@ -56,7 +64,9 @@ class InMemoryPaymentRepo implements PaymentRepositoryPort {
   }
 
   async updateTransactionStatus(): Promise<void> {}
-  async hasWebhookEvent(): Promise<boolean> { return false; }
+  async hasWebhookEvent(): Promise<boolean> {
+    return false;
+  }
   async recordWebhookEvent(): Promise<void> {}
 }
 
@@ -83,11 +93,7 @@ describe('Abandoned Checkout Recovery (US6)', () => {
       getTransactionStatus: vi.fn(),
     };
 
-    initiateUseCase = new InitiatePlanCheckoutUseCase(
-      subRepo,
-      paymentRepo,
-      () => mockGateway
-    );
+    initiateUseCase = new InitiatePlanCheckoutUseCase(subRepo, paymentRepo, () => mockGateway);
   });
 
   it('allows user to initiate a new checkout session after abandoning a previous pending session', async () => {

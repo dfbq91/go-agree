@@ -1,12 +1,12 @@
-import type { SupabaseClient } from '@supabase/supabase-js';
 import type {
-  DynamicQuestionRepositoryPort,
-  DynamicQuestionDTO,
-  SaveDynamicQuestionsInput,
-  QuestionType,
-  QuestionOptionDTO,
   ConditionRuleDTO,
+  DynamicQuestionDTO,
+  DynamicQuestionRepositoryPort,
+  QuestionOptionDTO,
+  QuestionType,
+  SaveDynamicQuestionsInput,
 } from '@go-agree/application';
+import type { SupabaseClient } from '@supabase/supabase-js';
 
 export interface DynamicQuestionRow {
   id: string;
@@ -79,7 +79,10 @@ export class SupabaseDynamicQuestionRepository implements DynamicQuestionReposit
     return data.map((row: DynamicQuestionRow) => this.mapRowToDTO(row));
   }
 
-  async getQuestionsByContractId(contractId: string, userId: string): Promise<DynamicQuestionDTO[]> {
+  async getQuestionsByContractId(
+    contractId: string,
+    userId: string
+  ): Promise<DynamicQuestionDTO[]> {
     const { data, error } = await this.supabase
       .from('contract_dynamic_questions')
       .select<string, DynamicQuestionRow>('*')
@@ -94,7 +97,11 @@ export class SupabaseDynamicQuestionRepository implements DynamicQuestionReposit
     return data.map((row: DynamicQuestionRow) => this.mapRowToDTO(row));
   }
 
-  async getSnapshot(contractId: string, userId: string, stage: number): Promise<Record<string, unknown> | null> {
+  async getSnapshot(
+    contractId: string,
+    userId: string,
+    stage: number
+  ): Promise<Record<string, unknown> | null> {
     const { data, error } = await this.supabase
       .from('contract_generations')
       .select('analysis_snapshots')

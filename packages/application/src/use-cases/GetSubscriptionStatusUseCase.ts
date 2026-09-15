@@ -3,8 +3,8 @@
  * @description Retrieves the current subscription, plan tier, and remaining free quota for a user.
  */
 
+import { UserId, UserSubscription } from '@go-agree/domain';
 import type { SubscriptionRepositoryPort } from '../ports/SubscriptionRepositoryPort.js';
-import { UserSubscription, UserId, FREE_CONTRACT_LIMIT } from '@go-agree/domain';
 
 export interface GetSubscriptionStatusInput {
   readonly userId: string;

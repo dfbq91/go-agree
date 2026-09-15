@@ -1,11 +1,11 @@
-import React from 'react';
-import Link from 'next/link';
+import { es } from '@/locales/es';
 import {
   type BillingCycle,
-  type PricingPlanConfig,
   PricingCalculatorService,
+  type PricingPlanConfig,
 } from '@go-agree/domain';
-import { es } from '@/locales/es';
+import Link from 'next/link';
+import type React from 'react';
 
 export interface PricingCardProps {
   readonly plan: PricingPlanConfig;
@@ -18,10 +18,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
   selectedCycle,
   isAuthenticated,
 }) => {
-  const displayPrice = PricingCalculatorService.getDisplayPrice(
-    plan,
-    selectedCycle
-  );
+  const displayPrice = PricingCalculatorService.getDisplayPrice(plan, selectedCycle);
 
   return (
     <div className="relative bg-white border-2 border-primary-500 rounded-2xl p-8 sm:p-10 shadow-xl flex flex-col justify-between max-w-lg mx-auto">
@@ -35,9 +32,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
       <div>
         {/* Plan Header */}
         <div className="text-center pb-6 border-b border-gray-100">
-          <h3 className="text-2xl font-black text-gray-900 tracking-tight">
-            {plan.name}
-          </h3>
+          <h3 className="text-2xl font-black text-gray-900 tracking-tight">{plan.name}</h3>
           <p className="mt-1 text-sm text-gray-500">{plan.tagline}</p>
 
           {/* Price Block */}
@@ -45,9 +40,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
             <span className="text-4xl sm:text-5xl font-extrabold text-gray-900 tracking-tight">
               {displayPrice.formatted}
             </span>
-            <span className="text-gray-500 text-base font-medium">
-              {displayPrice.periodLabel}
-            </span>
+            <span className="text-gray-500 text-base font-medium">{displayPrice.periodLabel}</span>
           </div>
 
           {/* Billing Note */}
@@ -76,9 +69,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
                     clipRule="evenodd"
                   />
                 </svg>
-                <span className="text-sm sm:text-base text-gray-700 leading-snug">
-                  {feature}
-                </span>
+                <span className="text-sm sm:text-base text-gray-700 leading-snug">{feature}</span>
               </li>
             ))}
           </ul>
@@ -91,9 +82,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
           href={isAuthenticated ? '/dashboard' : plan.cta.href}
           className="w-full inline-flex items-center justify-center px-6 py-3.5 border border-transparent text-base font-bold rounded-lg shadow-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors"
         >
-          {isAuthenticated
-            ? es.landing.hero.ctaDashboard
-            : es.landing.pricing.cta}
+          {isAuthenticated ? es.landing.hero.ctaDashboard : es.landing.pricing.cta}
         </Link>
       </div>
     </div>

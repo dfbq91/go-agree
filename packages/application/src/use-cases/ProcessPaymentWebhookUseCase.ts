@@ -3,14 +3,10 @@
  * @description Processes incoming payment gateway webhook events, enforcing cryptographic checksum verification, strict idempotency, amount matching, and duplicate payment rejection.
  */
 
-import type { SubscriptionRepositoryPort } from '../ports/SubscriptionRepositoryPort.js';
-import type { PaymentRepositoryPort } from '../ports/PaymentRepositoryPort.js';
+import { PaymentTamperError, UserId, UserSubscription } from '@go-agree/domain';
 import type { PaymentGatewayPort } from '../ports/PaymentGatewayPort.js';
-import {
-  UserSubscription,
-  UserId,
-  PaymentTamperError,
-} from '@go-agree/domain';
+import type { PaymentRepositoryPort } from '../ports/PaymentRepositoryPort.js';
+import type { SubscriptionRepositoryPort } from '../ports/SubscriptionRepositoryPort.js';
 
 export interface ProcessPaymentWebhookInput {
   readonly providerId: string;
@@ -141,7 +137,11 @@ export class ProcessPaymentWebhookUseCase {
         lastPaymentTransactionId: subDTO.lastPaymentTransactionId,
       });
 
-      if (currentSub.planType === 'pro' && !currentSub.isExpired() && currentSub.lastPaymentTransactionId !== tx.id) {
+      if (
+        currentSub.planType === 'pro' &&
+        !currentSub.isExpired() &&
+        currentSub.lastPaymentTransactionId !== tx.id
+      ) {
         // Reject duplicate payment and mark for refund/reconciliation
         await this.paymentRepo.updateTransactionStatus(
           tx.reference,
@@ -182,12 +182,7 @@ export class ProcessPaymentWebhookUseCase {
       );
 
       // Activate Pro subscription
-      await this.subscriptionRepo.activateProPlan(
-        tx.userId,
-        tx.billingCycle,
-        expiresAt,
-        tx.id
-      );
+      await this.subscriptionRepo.activateProPlan(tx.userId, tx.billingCycle, expiresAt, tx.id);
 
       // Record idempotency receipt
       await this.paymentRepo.recordWebhookEvent({

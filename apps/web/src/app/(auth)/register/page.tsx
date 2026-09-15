@@ -1,16 +1,16 @@
-import React from 'react';
-import Link from 'next/link';
-import { RegisterForm } from '@/components/auth/RegisterForm';
 import { GoogleAuthButton } from '@/components/auth/GoogleAuthButton';
+import { RegisterForm } from '@/components/auth/RegisterForm';
 import { es } from '@/locales/es';
+import Link from 'next/link';
 
-export default function RegisterPage({
+export default async function RegisterPage({
   searchParams,
 }: {
-  searchParams?: { redirect?: string };
+  searchParams?: Promise<{ redirect?: string }>;
 }) {
-  const loginUrl = searchParams?.redirect
-    ? `/login?redirect=${encodeURIComponent(searchParams.redirect)}`
+  const params = (await searchParams) || {};
+  const loginUrl = params.redirect
+    ? `/login?redirect=${encodeURIComponent(params.redirect)}`
     : '/login';
 
   return (
@@ -20,7 +20,7 @@ export default function RegisterPage({
         <p className="text-sm text-gray-600 mt-1">{es.auth.registerSubtitle}</p>
       </div>
 
-      <RegisterForm redirectUrl={searchParams?.redirect} />
+      <RegisterForm redirectUrl={params.redirect} />
 
       <div className="mt-6 relative">
         <div className="absolute inset-0 flex items-center" aria-hidden="true">
@@ -32,7 +32,7 @@ export default function RegisterPage({
       </div>
 
       <div className="mt-6">
-        <GoogleAuthButton redirectUrl={searchParams?.redirect} />
+        <GoogleAuthButton redirectUrl={params.redirect} />
       </div>
 
       <div className="mt-6 text-center text-sm text-gray-600">

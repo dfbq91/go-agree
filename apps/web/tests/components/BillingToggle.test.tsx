@@ -1,17 +1,12 @@
-import { describe, it, expect, vi } from 'vitest';
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 import { BillingToggle } from '../../src/components/landing/BillingToggle';
 import { es } from '../../src/locales/es';
 
 describe('BillingToggle Component (WCAG 2.1 AA Accessibility)', () => {
   it('renders with role="radiogroup" and accessible radio options', () => {
     render(
-      <BillingToggle
-        selectedCycle="monthly"
-        onCycleChange={vi.fn()}
-        annualDiscountPercent={20}
-      />
+      <BillingToggle selectedCycle="monthly" onCycleChange={vi.fn()} annualDiscountPercent={20} />
     );
 
     const radiogroup = screen.getByRole('radiogroup', {
@@ -32,16 +27,10 @@ describe('BillingToggle Component (WCAG 2.1 AA Accessibility)', () => {
 
   it('renders savings badge next to annual option', () => {
     render(
-      <BillingToggle
-        selectedCycle="monthly"
-        onCycleChange={vi.fn()}
-        annualDiscountPercent={20}
-      />
+      <BillingToggle selectedCycle="monthly" onCycleChange={vi.fn()} annualDiscountPercent={20} />
     );
 
-    expect(
-      screen.getByText(es.landing.pricing.billingCycle.saveBadge)
-    ).toBeDefined();
+    expect(screen.getByText(es.landing.pricing.billingCycle.saveBadge)).toBeDefined();
   });
 
   it('calls onCycleChange when clicking the inactive radio option', () => {

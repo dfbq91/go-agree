@@ -3,9 +3,9 @@
  * @description Domain entity representing a financial transaction attempt through a payment gateway.
  */
 
-import { UserId } from '../value-objects/UserId.js';
-import type { BillingCycle } from './PricingConfig.js';
+import type { UserId } from '../value-objects/UserId.js';
 import type { PaymentProviderId } from './PaymentProviderInfo.js';
+import type { BillingCycle } from './PricingConfig.js';
 
 export type PaymentStatus =
   | 'pending'

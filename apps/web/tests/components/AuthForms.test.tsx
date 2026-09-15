@@ -1,10 +1,9 @@
-import { describe, it, expect, vi } from 'vitest';
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
+import { GoogleAuthButton } from '../../src/components/auth/GoogleAuthButton';
 import { LoginForm } from '../../src/components/auth/LoginForm';
 import { RegisterForm } from '../../src/components/auth/RegisterForm';
 import { ResetPasswordForm } from '../../src/components/auth/ResetPasswordForm';
-import { GoogleAuthButton } from '../../src/components/auth/GoogleAuthButton';
 import { es } from '../../src/locales/es';
 
 describe('Auth Forms (Spanish UI & Accessibility)', () => {

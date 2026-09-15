@@ -1,8 +1,7 @@
-import { describe, it, expect, vi } from 'vitest';
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import { PlanCheckoutCard } from '../../src/components/checkout/PlanCheckoutCard';
 import type { PaymentProviderInfo, PricingPlanConfig } from '@go-agree/domain';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
+import { PlanCheckoutCard } from '../../src/components/checkout/PlanCheckoutCard';
 
 const mockProvider: PaymentProviderInfo = {
   id: 'wompi',
@@ -16,12 +15,7 @@ const mockProvider: PaymentProviderInfo = {
 
 describe('PlanCheckoutCard Component', () => {
   it('renders Colombia plan and COP currency by default', () => {
-    render(
-      <PlanCheckoutCard
-        selectedProvider={mockProvider}
-        onInitiateCheckout={vi.fn()}
-      />
-    );
+    render(<PlanCheckoutCard selectedProvider={mockProvider} onInitiateCheckout={vi.fn()} />);
 
     expect(screen.getByText('Plan Pro')).toBeDefined();
     expect(screen.getByText(/49[.,]000/)).toBeDefined();
@@ -29,12 +23,7 @@ describe('PlanCheckoutCard Component', () => {
   });
 
   it('updates price and period on annual billing cycle toggle for default plan', () => {
-    render(
-      <PlanCheckoutCard
-        selectedProvider={mockProvider}
-        onInitiateCheckout={vi.fn()}
-      />
-    );
+    render(<PlanCheckoutCard selectedProvider={mockProvider} onInitiateCheckout={vi.fn()} />);
 
     const annualBtn = screen.getByRole('button', { name: /anual/i });
     fireEvent.click(annualBtn);
@@ -90,10 +79,7 @@ describe('PlanCheckoutCard Component', () => {
   it('calls onInitiateCheckout with selected billing cycle when pay button is clicked', async () => {
     const onInitiateCheckout = vi.fn();
     render(
-      <PlanCheckoutCard
-        selectedProvider={mockProvider}
-        onInitiateCheckout={onInitiateCheckout}
-      />
+      <PlanCheckoutCard selectedProvider={mockProvider} onInitiateCheckout={onInitiateCheckout} />
     );
 
     const annualBtn = screen.getByRole('button', { name: /anual/i });

@@ -1,13 +1,13 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { RegisterUserUseCase } from '../src/use-cases/auth/RegisterUserUseCase.js';
-import { LoginWithEmailUseCase } from '../src/use-cases/auth/LoginWithEmailUseCase.js';
-import type { AuthPort, AuthResultDTO } from '../src/ports/AuthPort.js';
 import {
-  InvalidEmailError,
-  WeakPasswordError,
   InvalidCredentialsError,
+  InvalidEmailError,
   UserAlreadyExistsError,
+  WeakPasswordError,
 } from '@go-agree/domain';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type { AuthPort, AuthResultDTO } from '../src/ports/AuthPort.js';
+import { LoginWithEmailUseCase } from '../src/use-cases/auth/LoginWithEmailUseCase.js';
+import { RegisterUserUseCase } from '../src/use-cases/auth/RegisterUserUseCase.js';
 
 describe('RegisterUserUseCase & LoginWithEmailUseCase', () => {
   let mockAuthPort: AuthPort;

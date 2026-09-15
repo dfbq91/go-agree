@@ -1,8 +1,7 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import React from 'react';
-import { render, screen, fireEvent, act } from '@testing-library/react';
-import { QuestionnaireContainer } from '../../src/components/questionnaire/QuestionnaireContainer';
 import type { QuestionDTO } from '@go-agree/application';
+import { act, fireEvent, render, screen } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { QuestionnaireContainer } from '../../src/components/questionnaire/QuestionnaireContainer';
 
 describe('Dynamic Questions Flow Integration', () => {
   beforeEach(() => {
@@ -34,9 +33,7 @@ describe('Dynamic Questions Flow Integration', () => {
       />
     );
 
-    expect(
-      screen.getByText('¿Cuáles son los hitos de entrega del software?')
-    ).toBeDefined();
+    expect(screen.getByText('¿Cuáles son los hitos de entrega del software?')).toBeDefined();
   });
 
   it('appends dynamic questions returned by /api/contracts/[id]/analyze to the questionnaire', async () => {
@@ -126,8 +123,6 @@ describe('Dynamic Questions Flow Integration', () => {
     }
 
     // Now the active question MUST be the dynamic question
-    expect(
-      screen.getByText('¿Cómo se realizarán los pagos de los entregables?')
-    ).toBeDefined();
+    expect(screen.getByText('¿Cómo se realizarán los pagos de los entregables?')).toBeDefined();
   });
 });

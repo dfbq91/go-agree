@@ -3,11 +3,8 @@
  * @description Supabase implementation of SubscriptionRepositoryPort.
  */
 
-import type {
-  SubscriptionRepositoryPort,
-  UserSubscriptionDTO,
-} from '@go-agree/application';
-import { UserSubscription, UserId } from '@go-agree/domain';
+import type { SubscriptionRepositoryPort, UserSubscriptionDTO } from '@go-agree/application';
+import { UserId, UserSubscription } from '@go-agree/domain';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 interface UserSubscriptionRow {
@@ -113,9 +110,8 @@ export class SupabaseSubscriptionRepository implements SubscriptionRepositoryPor
   }
 
   async save(subscription: UserSubscriptionDTO): Promise<void> {
-    const { error } = await this.supabase
-      .from('user_subscriptions')
-      .upsert({
+    const { error } = await this.supabase.from('user_subscriptions').upsert(
+      {
         user_id: subscription.userId,
         plan_type: subscription.planType,
         status: subscription.status,
@@ -125,10 +121,14 @@ export class SupabaseSubscriptionRepository implements SubscriptionRepositoryPor
         current_period_billing_cycle: subscription.currentPeriodBillingCycle,
         last_payment_transaction_id: subscription.lastPaymentTransactionId,
         updated_at: new Date().toISOString(),
-      }, { onConflict: 'user_id' });
+      },
+      { onConflict: 'user_id' }
+    );
 
     if (error) {
-      throw new Error(`Failed to save subscription for user ${subscription.userId}: ${error.message}`);
+      throw new Error(
+        `Failed to save subscription for user ${subscription.userId}: ${error.message}`
+      );
     }
   }
 
@@ -145,7 +145,9 @@ export class SupabaseSubscriptionRepository implements SubscriptionRepositoryPor
       .eq('user_id', userId);
 
     if (error) {
-      throw new Error(`Failed to increment free contract count for user ${userId}: ${error.message}`);
+      throw new Error(
+        `Failed to increment free contract count for user ${userId}: ${error.message}`
+      );
     }
 
     return updatedCount;

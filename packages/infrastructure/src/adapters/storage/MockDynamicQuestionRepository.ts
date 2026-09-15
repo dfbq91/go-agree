@@ -5,7 +5,11 @@ import type {
 } from '@go-agree/application';
 
 const generateId = (): string => {
-  if (typeof globalThis !== 'undefined' && globalThis.crypto && typeof globalThis.crypto.randomUUID === 'function') {
+  if (
+    typeof globalThis !== 'undefined' &&
+    globalThis.crypto &&
+    typeof globalThis.crypto.randomUUID === 'function'
+  ) {
     return globalThis.crypto.randomUUID();
   }
   return `dyn_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
@@ -43,13 +47,20 @@ export class MockDynamicQuestionRepository implements DynamicQuestionRepositoryP
     return created;
   }
 
-  async getQuestionsByContractId(contractId: string, userId: string): Promise<DynamicQuestionDTO[]> {
+  async getQuestionsByContractId(
+    contractId: string,
+    userId: string
+  ): Promise<DynamicQuestionDTO[]> {
     return this.questions
       .filter((q) => q.contractId === contractId && q.userId === userId)
       .sort((a, b) => a.orderIndex - b.orderIndex);
   }
 
-  async getSnapshot(contractId: string, userId: string, stage: number): Promise<Record<string, unknown> | null> {
+  async getSnapshot(
+    contractId: string,
+    userId: string,
+    stage: number
+  ): Promise<Record<string, unknown> | null> {
     const snapshotKey = `${contractId}:${userId}:${stage}`;
     return this.snapshots.get(snapshotKey) || null;
   }

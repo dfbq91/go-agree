@@ -1,21 +1,17 @@
-import type { QuestionDTO } from "@go-agree/application";
-import {
-  ConditionRule,
-  Question,
-  QuestionOption,
-  QuestionnaireDefinition,
-} from "@go-agree/domain";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { es } from "../../locales/es";
-import { NavigationControls } from "./NavigationControls";
-import { NetworkStatusBanner } from "./NetworkStatusBanner";
-import { QuestionCard } from "./QuestionCard";
-import { QuestionnaireHeader } from "./QuestionnaireHeader";
-import { SummaryReview } from "./SummaryReview";
-import { ANALYSIS_CHECKPOINTS } from "./checkpoints";
-import { useDynamicQuestionsSubscription } from "../../hooks/useDynamicQuestionsSubscription";
+import type { QuestionDTO } from '@go-agree/application';
+import { ConditionRule, Question, QuestionOption, QuestionnaireDefinition } from '@go-agree/domain';
+import type React from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useDynamicQuestionsSubscription } from '../../hooks/useDynamicQuestionsSubscription';
+import { es } from '../../locales/es';
+import { NavigationControls } from './NavigationControls';
+import { NetworkStatusBanner } from './NetworkStatusBanner';
+import { QuestionCard } from './QuestionCard';
+import { QuestionnaireHeader } from './QuestionnaireHeader';
+import { SummaryReview } from './SummaryReview';
+import { ANALYSIS_CHECKPOINTS } from './checkpoints';
 
-export type SaveStatus = "idle" | "saving" | "saved" | "error";
+export type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
 
 export interface QuestionnaireContainerProps {
   contractId: string;
@@ -25,19 +21,14 @@ export interface QuestionnaireContainerProps {
   initialIsReviewing?: boolean;
   isCompleted?: boolean;
   initialDynamicQuestions?: QuestionDTO[];
-  onSaveProgress?: (
-    index: number,
-    answers: Record<string, unknown>,
-  ) => Promise<void>;
+  onSaveProgress?: (index: number, answers: Record<string, unknown>) => Promise<void>;
   onSaveTitle?: (newTitle: string) => Promise<void>;
   onComplete?: () => Promise<void>;
 }
 
-export const QuestionnaireContainer: React.FC<
-  QuestionnaireContainerProps
-> = ({
+export const QuestionnaireContainer: React.FC<QuestionnaireContainerProps> = ({
   contractId,
-  initialTitle = "Mi Contrato",
+  initialTitle = 'Mi Contrato',
   initialAnswers = {},
   initialQuestionIndex = 0,
   initialIsReviewing = false,
@@ -47,23 +38,17 @@ export const QuestionnaireContainer: React.FC<
   onSaveTitle,
   onComplete,
 }) => {
-  const questionnaire = useMemo(
-    () => QuestionnaireDefinition.createStandard(),
-    [],
-  );
+  const questionnaire = useMemo(() => QuestionnaireDefinition.createStandard(), []);
 
-  const [answers, setAnswers] =
-    useState<Record<string, unknown>>(initialAnswers);
-  const [currentIndex, setCurrentIndex] =
-    useState<number>(initialQuestionIndex);
+  const [answers, setAnswers] = useState<Record<string, unknown>>(initialAnswers);
+  const [currentIndex, setCurrentIndex] = useState<number>(initialQuestionIndex);
   const [isReviewing, setIsReviewing] = useState<boolean>(initialIsReviewing);
-  const [isEditingFromSummary, setIsEditingFromSummary] =
-    useState<boolean>(false);
+  const [isEditingFromSummary, setIsEditingFromSummary] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>(undefined);
   const [title, setTitle] = useState<string>(initialTitle);
   const [isCompleting, setIsCompleting] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
-  const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
+  const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle');
   const [dynamicQuestions, setDynamicQuestions] = useState<Question[]>(() => {
     if (!initialDynamicQuestions || initialDynamicQuestions.length === 0) return [];
     return initialDynamicQuestions.map(
@@ -78,20 +63,18 @@ export const QuestionnaireContainer: React.FC<
           tooltip: dto.tooltip,
           options: dto.options?.map((opt) => new QuestionOption(opt)),
           condition: dto.condition ? new ConditionRule(dto.condition) : undefined,
-        }),
+        })
     );
   });
-  const [analysisError, setAnalysisError] = useState<string | undefined>(
-    undefined,
-  );
+  const [analysisError, setAnalysisError] = useState<string | undefined>(undefined);
   const [failedStage, setFailedStage] = useState<number | null>(null);
   const triggeredStagesRef = useRef<Set<number>>(new Set());
 
   // Temporizador para resetear "Guardado" a "idle" tras 2 segundos
   useEffect(() => {
-    if (saveStatus === "saved") {
+    if (saveStatus === 'saved') {
       const timer = setTimeout(() => {
-        setSaveStatus("idle");
+        setSaveStatus('idle');
       }, 2000);
       return () => clearTimeout(timer);
     }
@@ -130,10 +113,7 @@ export const QuestionnaireContainer: React.FC<
     return [...standard, ...dynamic].sort((a, b) => a.order - b.order);
   }, [questionnaire, answers, dynamicQuestions]);
 
-  const safeIndex = Math.min(
-    Math.max(0, currentIndex),
-    Math.max(0, visibleQuestions.length - 1),
-  );
+  const safeIndex = Math.min(Math.max(0, currentIndex), Math.max(0, visibleQuestions.length - 1));
   const currentQuestion = visibleQuestions[safeIndex];
 
   // Disparar el análisis en segundo plano tras guardar
@@ -166,10 +146,8 @@ export const QuestionnaireContainer: React.FC<
           });
         }
       }
-    } catch (err) {
-      setAnalysisError(
-        'No pudimos generar algunas preguntas adicionales personalizadas.'
-      );
+    } catch (_err) {
+      setAnalysisError('No pudimos generar algunas preguntas adicionales personalizadas.');
       setFailedStage(stage);
     }
   };
@@ -200,7 +178,7 @@ export const QuestionnaireContainer: React.FC<
       return;
     }
 
-    if (currentQuestion.id === "q0_party_role" && answer === "contractor") {
+    if (currentQuestion.id === 'q0_party_role' && answer === 'contractor') {
       setError(es.questionnaire.contractorNotice.error);
       return;
     }
@@ -213,23 +191,23 @@ export const QuestionnaireContainer: React.FC<
     // Persistencia exclusiva en "Siguiente"
     if (onSaveProgress) {
       setIsSaving(true);
-      setSaveStatus("saving");
+      setSaveStatus('saving');
       try {
         await onSaveProgress(nextIndex, answers);
-        setSaveStatus("saved");
+        setSaveStatus('saved');
 
         // Detectar si la pregunta que acabamos de responder es un checkpoint de análisis
         const checkpoint = ANALYSIS_CHECKPOINTS.find(
-          (cp) => cp.triggerQuestionId === currentQuestion.id,
+          (cp) => cp.triggerQuestionId === currentQuestion.id
         );
         if (checkpoint && !triggeredStagesRef.current.has(checkpoint.stage)) {
           triggeredStagesRef.current.add(checkpoint.stage);
           // Se ejecuta en segundo plano: el usuario avanza de inmediato sin ser bloqueado
           triggerAnalysisInBackground(checkpoint.stage);
         }
-      } catch (err) {
-        setSaveStatus("error");
-        setError("Error al guardar tu respuesta. Por favor intenta de nuevo.");
+      } catch (_err) {
+        setSaveStatus('error');
+        setError('Error al guardar tu respuesta. Por favor intenta de nuevo.');
         return; // DETENCIÓN: No avanza si falló el guardado
       } finally {
         setIsSaving(false);
@@ -281,7 +259,7 @@ export const QuestionnaireContainer: React.FC<
       return;
     }
 
-    if (currentQuestion.id === "q0_party_role" && answer === "contractor") {
+    if (currentQuestion.id === 'q0_party_role' && answer === 'contractor') {
       setError(es.questionnaire.contractorNotice.error);
       return;
     }
@@ -290,13 +268,13 @@ export const QuestionnaireContainer: React.FC<
 
     if (onSaveProgress) {
       setIsSaving(true);
-      setSaveStatus("saving");
+      setSaveStatus('saving');
       try {
         await onSaveProgress(safeIndex, answers);
-        setSaveStatus("saved");
-      } catch (err) {
-        setSaveStatus("error");
-        setError("Error al guardar tu respuesta. Por favor intenta de nuevo.");
+        setSaveStatus('saved');
+      } catch (_err) {
+        setSaveStatus('error');
+        setError('Error al guardar tu respuesta. Por favor intenta de nuevo.');
         return;
       } finally {
         setIsSaving(false);
@@ -338,16 +316,9 @@ export const QuestionnaireContainer: React.FC<
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
       {/* Cabecera con título y estado visual de guardado */}
-      <QuestionnaireHeader
-        title={title}
-        saveStatus={saveStatus}
-        onSaveTitle={handleTitleSave}
-      />
+      <QuestionnaireHeader title={title} saveStatus={saveStatus} onSaveTitle={handleTitleSave} />
 
-      <NetworkStatusBanner
-        hasError={saveStatus === "error"}
-        onRetry={handleNext}
-      />
+      <NetworkStatusBanner hasError={saveStatus === 'error'} onRetry={handleNext} />
 
       {/* Flujo Principal del Cuestionario */}
       {isReviewing ? (

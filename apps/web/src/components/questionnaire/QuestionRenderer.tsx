@@ -1,10 +1,10 @@
-import React from 'react';
 import type { QuestionDTO } from '@go-agree/application';
+import type React from 'react';
+import { es } from '../../locales/es';
+import { CheckboxQuestion } from './types/CheckboxQuestion';
+import { MultipleChoiceQuestion } from './types/MultipleChoiceQuestion';
 import { OpenTextQuestion } from './types/OpenTextQuestion';
 import { SingleChoiceQuestion } from './types/SingleChoiceQuestion';
-import { MultipleChoiceQuestion } from './types/MultipleChoiceQuestion';
-import { CheckboxQuestion } from './types/CheckboxQuestion';
-import { es } from '../../locales/es';
 
 export interface QuestionRendererProps {
   question: QuestionDTO;
@@ -72,14 +72,7 @@ export const QuestionRenderer: React.FC<QuestionRendererProps> = ({
       );
 
     case 'checkbox':
-      return (
-        <CheckboxQuestion
-          id={question.id}
-          label={prompt}
-          value={value}
-          onChange={onChange}
-        />
-      );
+      return <CheckboxQuestion id={question.id} label={prompt} value={value} onChange={onChange} />;
 
     default:
       return null;

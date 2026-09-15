@@ -1,9 +1,16 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { ProcessPaymentWebhookUseCase } from '../src/use-cases/ProcessPaymentWebhookUseCase.js';
-import type { SubscriptionRepositoryPort, UserSubscriptionDTO } from '../src/ports/SubscriptionRepositoryPort.js';
-import type { PaymentRepositoryPort, PaymentTransactionDTO, PaymentWebhookEventDTO } from '../src/ports/PaymentRepositoryPort.js';
-import type { PaymentGatewayPort } from '../src/ports/PaymentGatewayPort.js';
 import { PaymentTamperError } from '@go-agree/domain';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type { PaymentGatewayPort } from '../src/ports/PaymentGatewayPort.js';
+import type {
+  PaymentRepositoryPort,
+  PaymentTransactionDTO,
+  PaymentWebhookEventDTO,
+} from '../src/ports/PaymentRepositoryPort.js';
+import type {
+  SubscriptionRepositoryPort,
+  UserSubscriptionDTO,
+} from '../src/ports/SubscriptionRepositoryPort.js';
+import { ProcessPaymentWebhookUseCase } from '../src/use-cases/ProcessPaymentWebhookUseCase.js';
 
 class InMemorySubscriptionRepo implements SubscriptionRepositoryPort {
   public subs = new Map<string, UserSubscriptionDTO>();
@@ -30,11 +37,16 @@ class InMemorySubscriptionRepo implements SubscriptionRepositoryPort {
     this.subs.set(sub.userId, { ...sub });
   }
 
-  async incrementFreeContractCount(userId: string): Promise<number> {
+  async incrementFreeContractCount(_userId: string): Promise<number> {
     return 3;
   }
 
-  async activateProPlan(userId: string, cycle: 'monthly' | 'annual', expiresAt: Date, txId: string): Promise<void> {
+  async activateProPlan(
+    userId: string,
+    cycle: 'monthly' | 'annual',
+    expiresAt: Date,
+    txId: string
+  ): Promise<void> {
     this.subs.set(userId, {
       id: `sub_${userId}`,
       userId,
@@ -57,7 +69,9 @@ class InMemoryPaymentRepo implements PaymentRepositoryPort {
   public txs = new Map<string, PaymentTransactionDTO>();
   public webhookEvents = new Map<string, PaymentWebhookEventDTO>();
 
-  async createTransaction(tx: Omit<PaymentTransactionDTO, 'id' | 'createdAt' | 'updatedAt'>): Promise<PaymentTransactionDTO> {
+  async createTransaction(
+    tx: Omit<PaymentTransactionDTO, 'id' | 'createdAt' | 'updatedAt'>
+  ): Promise<PaymentTransactionDTO> {
     const created: PaymentTransactionDTO = {
       ...tx,
       id: `tx_${Date.now()}`,
@@ -97,7 +111,9 @@ class InMemoryPaymentRepo implements PaymentRepositoryPort {
     return this.webhookEvents.has(eventId);
   }
 
-  async recordWebhookEvent(event: Omit<PaymentWebhookEventDTO, 'id' | 'processedAt'>): Promise<void> {
+  async recordWebhookEvent(
+    event: Omit<PaymentWebhookEventDTO, 'id' | 'processedAt'>
+  ): Promise<void> {
     this.webhookEvents.set(event.eventId, {
       ...event,
       id: `evt_${Date.now()}`,
@@ -151,11 +167,7 @@ describe('ProcessPaymentWebhookUseCase', () => {
       getTransactionStatus: vi.fn(),
     };
 
-    useCase = new ProcessPaymentWebhookUseCase(
-      subRepo,
-      paymentRepo,
-      () => mockGateway
-    );
+    useCase = new ProcessPaymentWebhookUseCase(subRepo, paymentRepo, () => mockGateway);
   });
 
   it('activates Plan Pro upon valid approved webhook', async () => {
@@ -192,7 +204,7 @@ describe('ProcessPaymentWebhookUseCase', () => {
     ).rejects.toThrow(PaymentTamperError);
 
     const failedEvent = Array.from(paymentRepo.webhookEvents.values()).find(
-      e => e.status === 'failed_verification'
+      (e) => e.status === 'failed_verification'
     );
     expect(failedEvent).toBeDefined();
   });

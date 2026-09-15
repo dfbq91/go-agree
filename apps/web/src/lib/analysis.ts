@@ -1,16 +1,16 @@
+import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import {
-    AnalyzeContractAnswersUseCase,
-    type ContractRepositoryPort,
-    type DynamicQuestionRepositoryPort,
-    type LlmQuestionAnalysisPort,
+  AnalyzeContractAnswersUseCase,
+  type ContractRepositoryPort,
+  type DynamicQuestionRepositoryPort,
+  type LlmQuestionAnalysisPort,
 } from '@go-agree/application';
 import {
-    AiQuestionAnalysisAdapter,
-    MockDynamicQuestionRepository,
-    SupabaseContractRepository,
-    SupabaseDynamicQuestionRepository
+  AiQuestionAnalysisAdapter,
+  MockDynamicQuestionRepository,
+  SupabaseContractRepository,
+  SupabaseDynamicQuestionRepository,
 } from '@go-agree/infrastructure';
-import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { createClient } from '@supabase/supabase-js';
 import { getServerContractRepository } from './contracts';
 
@@ -33,13 +33,12 @@ export function getServerDynamicQuestionRepository(): DynamicQuestionRepositoryP
   return globalMockDynamicRepo;
 }
 
-export function getAnalyzeContractUseCase(): AnalyzeContractAnswersUseCase {
+export async function getAnalyzeContractUseCase(): Promise<AnalyzeContractAnswersUseCase> {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   let contractRepo: ContractRepositoryPort;
   const dynamicRepo = getServerDynamicQuestionRepository();
-  let llmAdapter: LlmQuestionAnalysisPort;
 
   // Si tenemos credenciales de Supabase configuradas
   if (supabaseUrl && serviceRoleKey && !supabaseUrl.includes('<your-project-id>')) {
@@ -49,7 +48,7 @@ export function getAnalyzeContractUseCase(): AnalyzeContractAnswersUseCase {
     contractRepo = new SupabaseContractRepository(adminClient);
   } else {
     // Fallback a repositorios en memoria para pruebas locales
-    contractRepo = getServerContractRepository();
+    contractRepo = await getServerContractRepository();
   }
 
   const google = createGoogleGenerativeAI({
@@ -57,7 +56,7 @@ export function getAnalyzeContractUseCase(): AnalyzeContractAnswersUseCase {
   });
   const model = google(process.env.AI_MODEL || 'gemini-3.5-flash-lite');
 
-  llmAdapter = new AiQuestionAnalysisAdapter({ model });
+  const llmAdapter: LlmQuestionAnalysisPort = new AiQuestionAnalysisAdapter({ model });
 
   return new AnalyzeContractAnswersUseCase(contractRepo, dynamicRepo, llmAdapter);
 }

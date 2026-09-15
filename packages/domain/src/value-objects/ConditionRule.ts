@@ -24,7 +24,11 @@ export class ConditionRule {
     const actualValue = answers[this.dependsOnQuestionId];
 
     if (actualValue === undefined || actualValue === null) {
-      return this.operator === 'not_equals' && this.expectedValue !== undefined && this.expectedValue !== null;
+      return (
+        this.operator === 'not_equals' &&
+        this.expectedValue !== undefined &&
+        this.expectedValue !== null
+      );
     }
 
     switch (this.operator) {
@@ -36,7 +40,8 @@ export class ConditionRule {
 
       case 'greater_than': {
         const numActual = typeof actualValue === 'number' ? actualValue : Number(actualValue);
-        const numExpected = typeof this.expectedValue === 'number' ? this.expectedValue : Number(this.expectedValue);
+        const numExpected =
+          typeof this.expectedValue === 'number' ? this.expectedValue : Number(this.expectedValue);
         if (Number.isNaN(numActual) || Number.isNaN(numExpected)) {
           return false;
         }

@@ -1,29 +1,29 @@
-import React from 'react';
-import { redirect } from 'next/navigation';
+import { PaymentResultView } from '@/components/checkout/PaymentResultView';
 import { getServerAuthAdapter } from '@/lib/auth';
 import { getServerPaymentRepository } from '@/lib/payments';
 import { GetTransactionStatusUseCase } from '@go-agree/application';
-import { PaymentResultView } from '@/components/checkout/PaymentResultView';
+import { redirect } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
 
 interface CheckoutResultPageProps {
-  searchParams: { id?: string; reference?: string };
+  searchParams: Promise<{ id?: string; reference?: string }>;
 }
 
 export default async function CheckoutResultPage({ searchParams }: CheckoutResultPageProps) {
-  const authAdapter = getServerAuthAdapter();
+  const resolvedSearchParams = (await searchParams) || {};
+  const authAdapter = await getServerAuthAdapter();
   const session = await authAdapter.getCurrentSession();
 
   if (!session) {
     redirect('/login?redirectTo=/checkout');
   }
 
-  const queryParam = searchParams.reference || searchParams.id || '';
+  const queryParam = resolvedSearchParams.reference || resolvedSearchParams.id || '';
 
   let initialStatus = null;
   if (queryParam) {
-    const paymentRepo = getServerPaymentRepository();
+    const paymentRepo = await getServerPaymentRepository();
     const useCase = new GetTransactionStatusUseCase(paymentRepo);
     initialStatus = await useCase.execute({
       reference: queryParam,
@@ -33,10 +33,5 @@ export default async function CheckoutResultPage({ searchParams }: CheckoutResul
 
   const reference = initialStatus?.reference || queryParam;
 
-  return (
-    <PaymentResultView
-      initialStatus={initialStatus}
-      reference={reference}
-    />
-  );
+  return <PaymentResultView initialStatus={initialStatus} reference={reference} />;
 }

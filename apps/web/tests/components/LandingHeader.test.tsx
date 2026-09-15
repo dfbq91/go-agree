@@ -1,6 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 import { LandingHeader } from '../../src/components/landing/LandingHeader';
 import { es } from '../../src/locales/es';
 

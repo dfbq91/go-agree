@@ -46,7 +46,8 @@ export const es = {
     title: 'Mis Contratos',
     newContractButton: 'Nuevo Contrato',
     emptyTitle: 'Aún no tienes contratos generados',
-    emptySubtitle: 'Comienza respondiendo el cuestionario estándar para generar tu primer contrato legal.',
+    emptySubtitle:
+      'Comienza respondiendo el cuestionario estándar para generar tu primer contrato legal.',
     createFirstContract: 'Comenzar cuestionario',
     statusInProgress: 'En progreso',
     statusCompleted: 'Completado',
@@ -63,7 +64,8 @@ export const es = {
     sessionExpired: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
     unauthorized: 'Debes iniciar sesión para acceder a esta sección.',
     rateLimitExceeded: 'Demasiados intentos. Por favor, espera un minuto antes de reintentar.',
-    networkError: 'Error de conexión. Por favor, verifica tu conexión a internet e inténtalo nuevamente.',
+    networkError:
+      'Error de conexión. Por favor, verifica tu conexión a internet e inténtalo nuevamente.',
     googleAuthFailed: 'No se pudo completar la autenticación con Google. Inténtalo de nuevo.',
     genericError: 'Ocurrió un error inesperado. Por favor, inténtalo más tarde.',
   },
@@ -94,7 +96,8 @@ export const es = {
     },
     summary: {
       title: 'Resumen de Respuestas',
-      subtitle: 'Revisa las respuestas del cuestionario estándar antes de continuar con la generación de tu contrato.',
+      subtitle:
+        'Revisa las respuestas del cuestionario estándar antes de continuar con la generación de tu contrato.',
       notAnswered: 'No respondido',
       confirmAction: 'Confirmar y continuar',
       backToDraft: 'Volver a la última pregunta',
@@ -198,7 +201,8 @@ export const es = {
       },
       q4_breach_impact: {
         title: 'Impacto por incumplimiento',
-        prompt: 'Cuéntanos, ¿cómo crees que te verías afectado si el proveedor incumple el contrato?',
+        prompt:
+          'Cuéntanos, ¿cómo crees que te verías afectado si el proveedor incumple el contrato?',
         placeholder:
           'Ej. Parálisis operativa, pérdida directa de ingresos comerciales, sanciones de clientes terceros o daño reputacional...',
         helpText:
@@ -235,8 +239,10 @@ export const es = {
       },
       q5_modality: {
         title: 'Modalidad de entrega',
-        prompt: '¿El bien o servicio se contrata para una entrega única o es periódico/recurrente en el tiempo?',
-        helpText: 'Distingue entre contratos de ejecución instantánea y contratos de tracto sucesivo, lo cual impacta causales de terminación y pagos.',
+        prompt:
+          '¿El bien o servicio se contrata para una entrega única o es periódico/recurrente en el tiempo?',
+        helpText:
+          'Distingue entre contratos de ejecución instantánea y contratos de tracto sucesivo, lo cual impacta causales de terminación y pagos.',
         options: {
           one_time: {
             label: 'Entrega única',
@@ -244,7 +250,8 @@ export const es = {
           },
           recurring: {
             label: 'Periódico o recurrente en el tiempo',
-            tooltip: 'Las obligaciones se ejecutan de manera continuada o escalonada durante un periodo.',
+            tooltip:
+              'Las obligaciones se ejecutan de manera continuada o escalonada durante un periodo.',
           },
         },
       },
@@ -252,12 +259,14 @@ export const es = {
         title: 'Plazo de entrega',
         prompt: 'Plazo o fecha de entrega requerida',
         placeholder: 'Ej. 30 días calendario contados a partir de la firma del contrato...',
-        helpText: 'Indica el límite temporal máximo para la entrega definitiva del bien o servicio contratado.',
+        helpText:
+          'Indica el límite temporal máximo para la entrega definitiva del bien o servicio contratado.',
       },
       q5b_recurring_duration: {
         title: 'Duración del contrato',
         prompt: 'Duración requerida del contrato',
-        helpText: 'La duración determina si aplican normas especiales de ajuste de precio o estabilidad contractual.',
+        helpText:
+          'La duración determina si aplican normas especiales de ajuste de precio o estabilidad contractual.',
         options: {
           lte_12m: {
             label: 'Menor o igual a 12 meses',
@@ -265,19 +274,24 @@ export const es = {
           },
           gt_12m: {
             label: 'Mayor a 12 meses',
-            tooltip: 'Contratos de largo plazo que típicamente requieren ajustes periódicos por inflación.',
+            tooltip:
+              'Contratos de largo plazo que típicamente requieren ajustes periódicos por inflación.',
           },
         },
       },
       q6_service_profile: {
         title: 'Perfil del servicio',
-        prompt: 'Si se contrata a un proveedor de servicios: Especifica si el proveedor empleará personal o utilizará vehículos',
-        tooltip: 'Esto es importante para definir obligaciones adicionales exigidas por la ley, como afiliaciones a seguridad social y pólizas de responsabilidad civil.',
-        helpText: 'La vinculación de personal o uso de vehículos genera riesgos laborales y extracontractuales que obligan a pactar cláusulas de indemnidad y pólizas.',
+        prompt:
+          'Si se contrata a un proveedor de servicios: Especifica si el proveedor empleará personal o utilizará vehículos',
+        tooltip:
+          'Esto es importante para definir obligaciones adicionales exigidas por la ley, como afiliaciones a seguridad social y pólizas de responsabilidad civil.',
+        helpText:
+          'La vinculación de personal o uso de vehículos genera riesgos laborales y extracontractuales que obligan a pactar cláusulas de indemnidad y pólizas.',
         options: {
           employs_people: {
             label: 'Empleará personal',
-            tooltip: 'El proveedor asignará trabajadores propios o subcontratistas para prestar el servicio.',
+            tooltip:
+              'El proveedor asignará trabajadores propios o subcontratistas para prestar el servicio.',
           },
           uses_vehicles: {
             label: 'Utilizará vehículos',
@@ -285,22 +299,26 @@ export const es = {
           },
           not_applicable: {
             label: 'No aplica / Adquisición de bienes o sin personal ni vehículos',
-            tooltip: 'El contrato es de compraventa o el proveedor presta el servicio de forma directa sin personal ni vehículos.',
+            tooltip:
+              'El contrato es de compraventa o el proveedor presta el servicio de forma directa sin personal ni vehículos.',
           },
         },
       },
       q7_price_adjustment: {
         title: 'Ajuste de precio',
         prompt: 'Define el mecanismo de incremento de precio',
-        helpText: 'En contratos superiores a 12 meses, este mecanismo protege el equilibrio económico del contrato frente a la inflación.',
+        helpText:
+          'En contratos superiores a 12 meses, este mecanismo protege el equilibrio económico del contrato frente a la inflación.',
         options: {
           renegotiation: {
             label: 'Renegociación entre las partes',
-            tooltip: 'Las partes se reunirán antes del vencimiento del periodo para concertar un nuevo precio de común acuerdo.',
+            tooltip:
+              'Las partes se reunirán antes del vencimiento del periodo para concertar un nuevo precio de común acuerdo.',
           },
           cpi: {
             label: 'Índice de Precios al Consumidor (IPC)',
-            tooltip: 'Ajuste anual automático indexado a la variación oficial de la inflación reportada.',
+            tooltip:
+              'Ajuste anual automático indexado a la variación oficial de la inflación reportada.',
           },
           smlmv: {
             label: 'Salario Mínimo Legal Vigente (SMLMV)',
@@ -315,7 +333,8 @@ export const es = {
       q8_termination_notice: {
         title: 'Preaviso de terminación',
         prompt: 'Define el plazo de preaviso de terminación que debe otorgar el proveedor',
-        helpText: 'El preaviso otorga tiempo razonable para buscar un reemplazo o planificar la transición operativa sin traumatismos.',
+        helpText:
+          'El preaviso otorga tiempo razonable para buscar un reemplazo o planificar la transición operativa sin traumatismos.',
         options: {
           days_30: {
             label: '30 días calendario',
@@ -338,15 +357,18 @@ export const es = {
       q9_renewal: {
         title: 'Renovación del contrato',
         prompt: '¿El contrato tendrá renovación automática o una fecha fija de terminación?',
-        helpText: 'Define si el contrato se prorroga tácitamente o si expira de forma definitiva llegada la fecha pactada.',
+        helpText:
+          'Define si el contrato se prorroga tácitamente o si expira de forma definitiva llegada la fecha pactada.',
         options: {
           automatic_renewal: {
             label: 'Renovación automática',
-            tooltip: 'Se prorroga por periodos iguales salvo que alguna parte notifique su deseo de no renovar.',
+            tooltip:
+              'Se prorroga por periodos iguales salvo que alguna parte notifique su deseo de no renovar.',
           },
           fixed_term: {
             label: 'Fecha fija de terminación',
-            tooltip: 'El contrato se extingue automáticamente al término pactado sin necesidad de aviso previo.',
+            tooltip:
+              'El contrato se extingue automáticamente al término pactado sin necesidad de aviso previo.',
           },
         },
       },
@@ -354,18 +376,22 @@ export const es = {
         title: 'Preaviso de renovación',
         prompt: 'Define el plazo de preaviso requerido para evitar la renovación automática',
         placeholder: 'Ej. 30 días calendario antes de la fecha de vencimiento...',
-        helpText: 'Indica con cuánta anticipación debe enviarse la comunicación escrita para impedir la prórroga automática.',
+        helpText:
+          'Indica con cuánta anticipación debe enviarse la comunicación escrita para impedir la prórroga automática.',
       },
       q10_additional_termination: {
         title: 'Causales de terminación adicional',
         prompt: 'Define causales adicionales de terminación anticipada más allá de las legales',
-        placeholder: 'Ej. Pérdida de certificaciones técnicas, cambio de control accionario del proveedor, o quiebra/insolvencia...',
-        helpText: 'Permite listar situaciones de negocio específicas que facultan a dar por terminado el contrato de forma unilateral y sin indemnización.',
+        placeholder:
+          'Ej. Pérdida de certificaciones técnicas, cambio de control accionario del proveedor, o quiebra/insolvencia...',
+        helpText:
+          'Permite listar situaciones de negocio específicas que facultan a dar por terminado el contrato de forma unilateral y sin indemnización.',
       },
       q11_dispute_resolution: {
         title: 'Resolución de controversias',
         prompt: 'Mecanismo de resolución de controversias',
-        helpText: 'Establece la vía jurídica para resolver discrepancias: los tribunales ordinarios son públicos y económicos pero más lentos; el arbitramento es privado, ágil y especializado pero con mayor costo.',
+        helpText:
+          'Establece la vía jurídica para resolver discrepancias: los tribunales ordinarios son públicos y económicos pero más lentos; el arbitramento es privado, ágil y especializado pero con mayor costo.',
         options: {
           ordinary_courts: {
             label: 'Tribunales ordinarios de justicia',
@@ -377,11 +403,13 @@ export const es = {
           },
           conciliation: {
             label: 'Centro de conciliación',
-            tooltip: 'Audiencia previa asistida por conciliador certificado antes de acudir a litigio.',
+            tooltip:
+              'Audiencia previa asistida por conciliador certificado antes de acudir a litigio.',
           },
           amicable_settlement: {
             label: 'Amigable composición',
-            tooltip: 'Mecanismo donde un tercero experto define la solución contractual obligatoria.',
+            tooltip:
+              'Mecanismo donde un tercero experto define la solución contractual obligatoria.',
           },
         },
       },
@@ -400,7 +428,8 @@ export const es = {
       subtitle:
         'Olvídate de formatos genéricos y confusos. go-agree analiza tus necesidades paso a paso para generar un acuerdo legal personalizado y listo para descargar.',
       freeTrialBadge: `🎁 ${defaultLimit} contratos gratis sin tarjeta de crédito`,
-      formatFreeTrialBadge: (count: number) => `🎁 ${count} contratos gratis sin tarjeta de crédito`,
+      formatFreeTrialBadge: (count: number) =>
+        `🎁 ${count} contratos gratis sin tarjeta de crédito`,
       ctaPrimary: 'Comenzar gratis',
       ctaSecondary: 'Iniciar sesión',
       ctaDashboard: 'Ir a mis contratos',
@@ -443,8 +472,7 @@ export const es = {
         badge: 'Prueba gratuita',
         title: `${defaultLimit} contratos gratis incluidos`,
         formatTitle: (count: number) => `${count} contratos gratis incluidos`,
-        description:
-          `Crea tu cuenta sin costo y genera tus primeros ${defaultLimit} contratos completos antes de suscribirte. Sin tarjeta de crédito requerida.`,
+        description: `Crea tu cuenta sin costo y genera tus primeros ${defaultLimit} contratos completos antes de suscribirte. Sin tarjeta de crédito requerida.`,
         formatDescription: (count: number) =>
           `Crea tu cuenta sin costo y genera tus primeros ${count} contratos completos antes de suscribirte. Sin tarjeta de crédito requerida.`,
       },
@@ -487,8 +515,7 @@ export const es = {
     unlimitedAccess: 'Acceso Pro: Contratos ilimitados',
     upgradeButton: 'Comprar Plan Pro',
     upgradeModalTitle: 'Límite de contratos gratuitos alcanzado',
-    upgradeModalDescription:
-      `Has generado tus ${defaultLimit} contratos gratuitos. Para continuar creando contratos ilimitados y acceder a todas las funciones profesionales, adquiere el Plan Pro.`,
+    upgradeModalDescription: `Has generado tus ${defaultLimit} contratos gratuitos. Para continuar creando contratos ilimitados y acceder a todas las funciones profesionales, adquiere el Plan Pro.`,
     formatUpgradeModalDescription: (count: number) =>
       `Has generado tus ${count} contratos gratuitos. Para continuar creando contratos ilimitados y acceder a todas las funciones profesionales, adquiere el Plan Pro.`,
     upgradeModalCta: 'Comprar Plan Pro',

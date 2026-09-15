@@ -1,5 +1,8 @@
 import type { ContractRepositoryPort } from '../../ports/ContractRepositoryPort.js';
-import type { DynamicQuestionDTO, DynamicQuestionRepositoryPort } from '../../ports/DynamicQuestionRepositoryPort.js';
+import type {
+  DynamicQuestionDTO,
+  DynamicQuestionRepositoryPort,
+} from '../../ports/DynamicQuestionRepositoryPort.js';
 import type { LlmQuestionAnalysisPort } from '../../ports/LlmQuestionAnalysisPort.js';
 
 export interface AnalyzeContractAnswersInput {
@@ -51,11 +54,7 @@ export class AnalyzeContractAnswersUseCase {
       }
 
       // Si las respuestas cambiaron, borramos las preguntas viejas de esta etapa para regenerar
-      await this.dynamicQuestionRepo.deleteQuestionsByStage(
-        input.contractId,
-        input.userId,
-        stage
-      );
+      await this.dynamicQuestionRepo.deleteQuestionsByStage(input.contractId, input.userId, stage);
     }
 
     // 3. Llamar al LLM para generar exactamente 5 preguntas

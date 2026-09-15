@@ -1,4 +1,3 @@
-import React from 'react';
 import { ResetPasswordForm } from '@/components/auth/ResetPasswordForm';
 import { es } from '@/locales/es';
 

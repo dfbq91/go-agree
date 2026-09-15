@@ -1,10 +1,9 @@
-import { describe, it, expect, vi } from 'vitest';
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import type { PaymentProviderInfo } from '@go-agree/domain';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 import { PaymentProviderSelector } from '../../src/components/checkout/PaymentProviderSelector';
 import { PlanCheckoutCard } from '../../src/components/checkout/PlanCheckoutCard';
 import { es } from '../../src/locales/es';
-import type { PaymentProviderInfo } from '@go-agree/domain';
 
 const mockProviders: PaymentProviderInfo[] = [
   {
@@ -65,12 +64,7 @@ describe('PaymentProviderSelector & PlanCheckoutCard Components', () => {
 
   describe('PlanCheckoutCard', () => {
     it('renders plan pricing and toggles between monthly and annual cycles', () => {
-      render(
-        <PlanCheckoutCard
-          selectedProvider={mockProviders[0]}
-          onInitiateCheckout={vi.fn()}
-        />
-      );
+      render(<PlanCheckoutCard selectedProvider={mockProviders[0]} onInitiateCheckout={vi.fn()} />);
 
       // Default monthly fee
       expect(screen.getByText(/49[.,]000/)).toBeDefined();
@@ -86,10 +80,7 @@ describe('PaymentProviderSelector & PlanCheckoutCard Components', () => {
       const onInitiate = vi.fn().mockImplementation(() => new Promise(() => {})); // Never resolves during test
 
       render(
-        <PlanCheckoutCard
-          selectedProvider={mockProviders[0]}
-          onInitiateCheckout={onInitiate}
-        />
+        <PlanCheckoutCard selectedProvider={mockProviders[0]} onInitiateCheckout={onInitiate} />
       );
 
       const payBtn = screen.getByRole('button', { name: /Pagar con Wompi/i });

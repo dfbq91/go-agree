@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import type React from 'react';
+import { useState } from 'react';
 import { es } from '../../locales/es';
 
 export interface ExpandableHelpProps {
@@ -6,10 +7,7 @@ export interface ExpandableHelpProps {
   helpText: string;
 }
 
-export const ExpandableHelp: React.FC<ExpandableHelpProps> = ({
-  questionId,
-  helpText,
-}) => {
+export const ExpandableHelp: React.FC<ExpandableHelpProps> = ({ questionId, helpText }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const contentId = `expandable-help-${questionId}`;
   const buttonId = `expandable-btn-${questionId}`;

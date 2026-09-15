@@ -1,13 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
 import type {
-  PaymentProviderInfo,
   BillingCycle,
-  PricingPlanConfig,
   CountryCode,
+  PaymentProviderInfo,
+  PricingPlanConfig,
 } from '@go-agree/domain';
 import { CountryPricingRegistry, getLocaleForCountry } from '@go-agree/domain';
+import type React from 'react';
+import { useState } from 'react';
 import { es } from '../../locales/es';
 
 export interface PlanCheckoutCardProps {
@@ -39,9 +40,7 @@ export const PlanCheckoutCard: React.FC<PlanCheckoutCardProps> = ({
       maximumFractionDigits: hasDecimals ? 2 : 0,
     });
 
-  const displayPrice = isAnnual
-    ? formatNumber(plan.annualTotal)
-    : formatNumber(plan.monthlyPrice);
+  const displayPrice = isAnnual ? formatNumber(plan.annualTotal) : formatNumber(plan.monthlyPrice);
 
   const annualMonthlyPrice = formatNumber(plan.annualMonthlyPrice);
 
@@ -97,7 +96,8 @@ export const PlanCheckoutCard: React.FC<PlanCheckoutCardProps> = ({
         </span>
         <div className="mt-2 flex items-baseline justify-center gap-1">
           <span className="text-4xl font-extrabold text-foreground">
-            {plan.currency.symbol}{displayPrice}
+            {plan.currency.symbol}
+            {displayPrice}
           </span>
           <span className="text-sm font-medium text-muted-foreground">
             {isAnnual ? `${plan.currency.code} / año` : `${plan.currency.code} / mes`}
@@ -105,7 +105,8 @@ export const PlanCheckoutCard: React.FC<PlanCheckoutCardProps> = ({
         </div>
         {isAnnual && (
           <p className="text-xs text-muted-foreground mt-1">
-            Equivale a {plan.currency.symbol}{annualMonthlyPrice} {plan.currency.code} / mes
+            Equivale a {plan.currency.symbol}
+            {annualMonthlyPrice} {plan.currency.code} / mes
           </p>
         )}
       </div>
@@ -125,7 +126,12 @@ export const PlanCheckoutCard: React.FC<PlanCheckoutCardProps> = ({
                 viewBox="0 0 24 24"
                 aria-hidden="true"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2.5}
+                  d="M5 13l4 4L19 7"
+                />
               </svg>
               <span>{feature}</span>
             </li>
@@ -172,9 +178,7 @@ export const PlanCheckoutCard: React.FC<PlanCheckoutCardProps> = ({
             <span>{es.checkout.processing}</span>
           </>
         ) : (
-          <span>
-            {es.checkout.payButton.replace('{provider}', selectedProvider.name)}
-          </span>
+          <span>{es.checkout.payButton.replace('{provider}', selectedProvider.name)}</span>
         )}
       </button>
     </div>

@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { LoginWithGoogleUseCase } from '../src/use-cases/auth/LoginWithGoogleUseCase';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AuthPort, AuthResultDTO } from '../src/ports/AuthPort';
+import { LoginWithGoogleUseCase } from '../src/use-cases/auth/LoginWithGoogleUseCase';
 
 describe('LoginWithGoogleUseCase', () => {
   let mockAuthPort: AuthPort;
@@ -73,7 +73,9 @@ describe('LoginWithGoogleUseCase', () => {
     });
 
     it('throws error if code is empty', async () => {
-      await expect(useCase.handleCallback({ code: '' })).rejects.toThrow('Authorization code is required');
+      await expect(useCase.handleCallback({ code: '' })).rejects.toThrow(
+        'Authorization code is required'
+      );
       expect(mockAuthPort.handleOAuthCallback).not.toHaveBeenCalled();
     });
   });

@@ -1,5 +1,5 @@
-import React from 'react';
 import { es } from '@/locales/es';
+import type React from 'react';
 
 export const HowItWorksSection: React.FC = () => {
   const steps = [
@@ -100,18 +100,14 @@ export const HowItWorksSection: React.FC = () => {
             >
               {/* Step Top Area */}
               <div className="flex items-center justify-between mb-6">
-                <div className="p-3 bg-primary-100/70 rounded-lg">
-                  {step.icon}
-                </div>
+                <div className="p-3 bg-primary-100/70 rounded-lg">{step.icon}</div>
                 <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-primary-600 text-white">
                   {step.badge}
                 </span>
               </div>
 
               {/* Title */}
-              <h3 className="text-xl font-bold text-gray-900 tracking-tight mb-3">
-                {step.title}
-              </h3>
+              <h3 className="text-xl font-bold text-gray-900 tracking-tight mb-3">{step.title}</h3>
 
               {/* Description */}
               <p className="text-gray-600 text-sm sm:text-base leading-relaxed flex-1">

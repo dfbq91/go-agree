@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import type React from 'react';
+import { useEffect, useState } from 'react';
 import { es } from '../../locales/es';
 
 export interface NetworkStatusBannerProps {

@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { UserAccount } from '../src/entities/UserAccount.js';
 import { Email } from '../src/value-objects/Email.js';
 import { UserId } from '../src/value-objects/UserId.js';

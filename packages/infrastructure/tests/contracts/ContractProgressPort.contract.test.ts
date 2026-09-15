@@ -1,10 +1,6 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { EmptyTitleError } from '@go-agree/domain';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { MockContractRepository } from '../../src/adapters/storage/MockContractRepository.js';
-import {
-  ContractNotFoundError,
-  UnauthorizedContractAccessError,
-  EmptyTitleError,
-} from '@go-agree/domain';
 
 describe('ContractProgressPort Contract Tests (MockContractRepository)', () => {
   let repo: MockContractRepository;

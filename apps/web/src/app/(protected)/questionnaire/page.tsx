@@ -1,27 +1,27 @@
-import React from 'react';
-import { redirect } from 'next/navigation';
+import { QuestionnaireClientPage } from '@/components/questionnaire/QuestionnaireClientPage';
+import { getServerDynamicQuestionRepository } from '@/lib/analysis';
 import { getServerAuthAdapter } from '@/lib/auth';
 import { getServerContractRepository } from '@/lib/contracts';
-import { getServerDynamicQuestionRepository } from '@/lib/analysis';
 import { getServerSubscriptionStatus } from '@/lib/subscription';
 import type { QuestionDTO } from '@go-agree/application';
-import { QuestionnaireClientPage } from '@/components/questionnaire/QuestionnaireClientPage';
+import { redirect } from 'next/navigation';
 
 interface QuestionnairePageProps {
-  searchParams: { id?: string; contractId?: string; mode?: string };
+  searchParams: Promise<{ id?: string; contractId?: string; mode?: string }>;
 }
 
 export default async function QuestionnairePage({ searchParams }: QuestionnairePageProps) {
-  const authAdapter = getServerAuthAdapter();
+  const resolvedSearchParams = (await searchParams) || {};
+  const authAdapter = await getServerAuthAdapter();
   const session = await authAdapter.getCurrentSession();
 
   if (!session) {
     redirect('/login');
   }
 
-  const contractRepo = getServerContractRepository();
+  const contractRepo = await getServerContractRepository();
   let contract = null;
-  const targetId = searchParams.id || searchParams.contractId;
+  const targetId = resolvedSearchParams.id || resolvedSearchParams.contractId;
 
   if (targetId) {
     contract = await contractRepo.getByIdAndUserId(targetId, session.userId);
@@ -50,7 +50,7 @@ export default async function QuestionnairePage({ searchParams }: QuestionnaireP
   }
 
   const isCompleted = contract.status === 'completed';
-  const shouldReview = isCompleted || searchParams.mode === 'summary';
+  const shouldReview = isCompleted || resolvedSearchParams.mode === 'summary';
 
   const dynamicRepo = getServerDynamicQuestionRepository();
   const existingDynamic = await dynamicRepo.getQuestionsByContractId(contract.id, session.userId);

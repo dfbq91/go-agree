@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
-import Link from 'next/link';
 import type { TransactionStatusResult } from '@go-agree/application';
+import Link from 'next/link';
+import type React from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { es } from '../../locales/es';
 
 export interface PaymentResultViewProps {
@@ -86,7 +87,12 @@ export const PaymentResultView: React.FC<PaymentResultViewProps> = ({
               viewBox="0 0 24 24"
               aria-hidden="true"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2.5}
+                d="M5 13l4 4L19 7"
+              />
             </svg>
           </div>
 
@@ -181,7 +187,12 @@ export const PaymentResultView: React.FC<PaymentResultViewProps> = ({
               viewBox="0 0 24 24"
               aria-hidden="true"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2.5}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </div>
 

@@ -1,11 +1,11 @@
-import { QuestionnaireDefinition } from '@go-agree/domain';
 import type {
-    GenerateQuestionsInput,
-    GenerateQuestionsOutput,
-    LlmQuestionAnalysisPort,
-    QuestionDTO,
+  GenerateQuestionsInput,
+  GenerateQuestionsOutput,
+  LlmQuestionAnalysisPort,
+  QuestionDTO,
 } from '@go-agree/application';
-import { generateText, Output, type LanguageModel } from 'ai';
+import { QuestionnaireDefinition } from '@go-agree/domain';
+import { type LanguageModel, Output, generateText } from 'ai';
 import { z } from 'zod';
 
 const dynamicQuestionOptionSchema = z.object({
@@ -16,18 +16,32 @@ const dynamicQuestionOptionSchema = z.object({
 });
 
 const dynamicQuestionSchema = z.object({
-  id: z.string().describe('Identificador semántico descriptivo en snake_case, ej. dyn_payment_terms'),
+  id: z
+    .string()
+    .describe('Identificador semántico descriptivo en snake_case, ej. dyn_payment_terms'),
   order: z.number().describe('Orden sugerido'),
   prompt: z.string().describe('Pregunta clara, directa y profesional en español'),
-  type: z.enum(['open_text', 'single_choice', 'multiple_choice', 'checkbox']).describe('Tipo de entrada'),
+  type: z
+    .enum(['open_text', 'single_choice', 'multiple_choice', 'checkbox'])
+    .describe('Tipo de entrada'),
   isRequired: z.boolean().default(true).describe('Si la respuesta es obligatoria'),
-  helpText: z.string().describe('Explicación obligatoria ("¿Por qué te preguntamos esto?") que justifica el riesgo legal/comercial'),
+  helpText: z
+    .string()
+    .describe(
+      'Explicación obligatoria ("¿Por qué te preguntamos esto?") que justifica el riesgo legal/comercial'
+    ),
   tooltip: z.string().optional().describe('Ayuda contextual adicional'),
-  options: z.array(dynamicQuestionOptionSchema).optional().describe('Opciones requeridas si es single_choice o multiple_choice'),
+  options: z
+    .array(dynamicQuestionOptionSchema)
+    .optional()
+    .describe('Opciones requeridas si es single_choice o multiple_choice'),
 });
 
 const dynamicQuestionsPayloadSchema = z.object({
-  questions: z.array(dynamicQuestionSchema).length(5).describe('Exactamente 5 preguntas de profundización'),
+  questions: z
+    .array(dynamicQuestionSchema)
+    .length(5)
+    .describe('Exactamente 5 preguntas de profundización'),
 });
 
 function formatQuestionnaireTranscript(answers: Record<string, unknown>): string {
@@ -94,8 +108,15 @@ function formatQuestionnaireTranscript(answers: Record<string, unknown>): string
 
   // Si hay alguna respuesta no listada en el cuestionario estándar, la agregamos
   for (const [key, val] of Object.entries(answers)) {
-    if (!questionnaire.questions.some((q) => q.id === key) && val !== undefined && val !== null && val !== '') {
-      lines.push(`- **Pregunta / Campo adicional (${key})**:\n  **Respuesta**: ${JSON.stringify(val)}`);
+    if (
+      !questionnaire.questions.some((q) => q.id === key) &&
+      val !== undefined &&
+      val !== null &&
+      val !== ''
+    ) {
+      lines.push(
+        `- **Pregunta / Campo adicional (${key})**:\n  **Respuesta**: ${JSON.stringify(val)}`
+      );
     }
   }
 
@@ -162,7 +183,10 @@ ${transcript}
 
 Con base en esta transcripción, analiza la naturaleza de la operación, detecta los riesgos y vacíos comerciales no abordados todavía, y formula exactamente las 5 preguntas de profundización más pertinentes para blindar este acuerdo en Colombia.`;
 
-    console.info('AiQuestionAnalysisAdapter: Generating questions with the following input:', { systemPrompt, userMessage });
+    console.info('AiQuestionAnalysisAdapter: Generating questions with the following input:', {
+      systemPrompt,
+      userMessage,
+    });
     const response = await this.generateTextFn({
       model: this.model,
       output: Output.object({ schema: dynamicQuestionsPayloadSchema }),

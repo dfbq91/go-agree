@@ -1,6 +1,6 @@
-import React from 'react';
-import Link from 'next/link';
 import { es } from '@/locales/es';
+import Link from 'next/link';
+import type React from 'react';
 
 export interface HeroSectionProps {
   readonly isAuthenticated: boolean;
@@ -78,11 +78,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         </div>
 
         {/* Subtext Note */}
-        {!isAuthenticated && (
-          <p className="mt-4 text-xs sm:text-sm text-gray-500">
-            {countNote}
-          </p>
-        )}
+        {!isAuthenticated && <p className="mt-4 text-xs sm:text-sm text-gray-500">{countNote}</p>}
       </div>
     </section>
   );

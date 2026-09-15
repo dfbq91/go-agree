@@ -3,8 +3,8 @@
  * @description Retrieves current status and diagnostics of a payment transaction.
  */
 
-import type { PaymentRepositoryPort } from '../ports/PaymentRepositoryPort.js';
 import type { PaymentStatus } from '@go-agree/domain';
+import type { PaymentRepositoryPort } from '../ports/PaymentRepositoryPort.js';
 
 export interface GetTransactionStatusInput {
   readonly reference: string;

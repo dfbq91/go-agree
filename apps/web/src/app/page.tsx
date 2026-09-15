@@ -1,17 +1,16 @@
-import { CountryPricingRegistry, getFreeContractLimit } from '@go-agree/domain';
-import { getServerAuthAdapter } from '@/lib/auth';
 import { HeroSection } from '@/components/landing/HeroSection';
 import { HowItWorksSection } from '@/components/landing/HowItWorksSection';
 import { LandingFooter } from '@/components/landing/LandingFooter';
 import { LandingHeader } from '@/components/landing/LandingHeader';
 import { PricingSection } from '@/components/landing/PricingSection';
-import React from 'react';
+import { getServerAuthAdapter } from '@/lib/auth';
+import { CountryPricingRegistry, getFreeContractLimit } from '@go-agree/domain';
 
 export default async function HomePage() {
   let isAuthenticated = false;
 
   try {
-    const authAdapter = getServerAuthAdapter();
+    const authAdapter = await getServerAuthAdapter();
     const session = await authAdapter.getCurrentSession();
     isAuthenticated = !!session;
   } catch {
@@ -30,10 +29,7 @@ export default async function HomePage() {
       <main id="main-content" className="flex-1">
         <HeroSection isAuthenticated={isAuthenticated} freeContractsCount={freeContractsLimit} />
         <HowItWorksSection />
-        <PricingSection
-          plan={pricingPlan}
-          isAuthenticated={isAuthenticated}
-        />
+        <PricingSection plan={pricingPlan} isAuthenticated={isAuthenticated} />
       </main>
 
       {/* Footer */}
@@ -41,4 +37,3 @@ export default async function HomePage() {
     </div>
   );
 }
-

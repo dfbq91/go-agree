@@ -3,19 +3,19 @@
  * @description Use case for validating checkout eligibility, creating a pending transaction, and generating a signed checkout redirect URL.
  */
 
-import type { SubscriptionRepositoryPort } from '../ports/SubscriptionRepositoryPort.js';
-import type { PaymentRepositoryPort } from '../ports/PaymentRepositoryPort.js';
-import type { PaymentGatewayPort } from '../ports/PaymentGatewayPort.js';
 import {
-  UserSubscription,
-  UserId,
-  PaymentReferenceService,
+  ActiveSubscriptionExistsError,
+  type CountryCode,
   CountryPricingRegistry,
   PaymentProviderRegistry,
-  ActiveSubscriptionExistsError,
+  PaymentReferenceService,
   UnsupportedPaymentProviderError,
-  type CountryCode,
+  UserId,
+  UserSubscription,
 } from '@go-agree/domain';
+import type { PaymentGatewayPort } from '../ports/PaymentGatewayPort.js';
+import type { PaymentRepositoryPort } from '../ports/PaymentRepositoryPort.js';
+import type { SubscriptionRepositoryPort } from '../ports/SubscriptionRepositoryPort.js';
 
 export interface InitiatePlanCheckoutInput {
   readonly userId: string;
@@ -74,18 +74,12 @@ export class InitiatePlanCheckoutUseCase {
       throw new UnsupportedPaymentProviderError(input.providerId, countryCode);
     }
 
-    const price =
-      input.billingCycle === 'annual'
-        ? plan.annualTotal
-        : plan.monthlyPrice;
+    const price = input.billingCycle === 'annual' ? plan.annualTotal : plan.monthlyPrice;
     const amountInCents = Math.round(price * 100);
     const currency = plan.currency.code;
 
     // 3. Generate unique, non-reusable merchant reference
-    const reference = PaymentReferenceService.generateReference(
-      input.planId,
-      input.billingCycle
-    );
+    const reference = PaymentReferenceService.generateReference(input.planId, input.billingCycle);
 
     // 4. Create pending transaction in storage
     await this.paymentRepo.createTransaction({
@@ -105,9 +99,7 @@ export class InitiatePlanCheckoutUseCase {
     // 5. Generate signed checkout redirect URL via gateway port
     const gateway = this.gatewayResolver(input.providerId);
     const planLabel =
-      input.billingCycle === 'annual'
-        ? `${plan.name} Anual`
-        : `${plan.name} Mensual`;
+      input.billingCycle === 'annual' ? `${plan.name} Anual` : `${plan.name} Mensual`;
 
     let redirectUrl = input.redirectUrl;
     try {

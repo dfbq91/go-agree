@@ -1,8 +1,7 @@
-import { describe, it, expect, vi } from 'vitest';
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import { SummaryReview } from '../../src/components/questionnaire/SummaryReview';
 import type { QuestionDTO } from '@go-agree/application';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
+import { SummaryReview } from '../../src/components/questionnaire/SummaryReview';
 
 describe('SummaryReview Component', () => {
   const mockQuestions: QuestionDTO[] = [
@@ -58,7 +57,11 @@ describe('SummaryReview Component', () => {
     expect(screen.getByText('Contratante')).toBeDefined();
     expect(screen.getByText('¿Eres persona natural o persona jurídica?')).toBeDefined();
     expect(screen.getByText('Persona natural')).toBeDefined();
-    expect(screen.getByText('Describe el bien o servicio que necesitas y en qué condiciones lo requieres')).toBeDefined();
+    expect(
+      screen.getByText(
+        'Describe el bien o servicio que necesitas y en qué condiciones lo requieres'
+      )
+    ).toBeDefined();
     expect(screen.getByText('Servicio de desarrollo de software')).toBeDefined();
   });
 

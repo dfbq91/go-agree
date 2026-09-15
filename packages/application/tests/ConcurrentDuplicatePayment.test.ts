@@ -1,10 +1,17 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { ActiveSubscriptionExistsError } from '@go-agree/domain';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type { PaymentGatewayPort } from '../src/ports/PaymentGatewayPort.js';
+import type {
+  PaymentRepositoryPort,
+  PaymentTransactionDTO,
+  PaymentWebhookEventDTO,
+} from '../src/ports/PaymentRepositoryPort.js';
+import type {
+  SubscriptionRepositoryPort,
+  UserSubscriptionDTO,
+} from '../src/ports/SubscriptionRepositoryPort.js';
 import { InitiatePlanCheckoutUseCase } from '../src/use-cases/InitiatePlanCheckoutUseCase.js';
 import { ProcessPaymentWebhookUseCase } from '../src/use-cases/ProcessPaymentWebhookUseCase.js';
-import type { SubscriptionRepositoryPort, UserSubscriptionDTO } from '../src/ports/SubscriptionRepositoryPort.js';
-import type { PaymentRepositoryPort, PaymentTransactionDTO, PaymentWebhookEventDTO } from '../src/ports/PaymentRepositoryPort.js';
-import type { PaymentGatewayPort } from '../src/ports/PaymentGatewayPort.js';
-import { ActiveSubscriptionExistsError } from '@go-agree/domain';
 
 class InMemorySubscriptionRepo implements SubscriptionRepositoryPort {
   public subs = new Map<string, UserSubscriptionDTO>();
@@ -33,7 +40,12 @@ class InMemorySubscriptionRepo implements SubscriptionRepositoryPort {
     return 3;
   }
 
-  async activateProPlan(userId: string, cycle: 'monthly' | 'annual', expiresAt: Date, txId: string): Promise<void> {
+  async activateProPlan(
+    userId: string,
+    cycle: 'monthly' | 'annual',
+    expiresAt: Date,
+    txId: string
+  ): Promise<void> {
     this.subs.set(userId, {
       id: `sub_${userId}`,
       userId,
@@ -56,7 +68,9 @@ class InMemoryPaymentRepo implements PaymentRepositoryPort {
   public txs = new Map<string, PaymentTransactionDTO>();
   public webhookEvents = new Map<string, PaymentWebhookEventDTO>();
 
-  async createTransaction(tx: Omit<PaymentTransactionDTO, 'id' | 'createdAt' | 'updatedAt'>): Promise<PaymentTransactionDTO> {
+  async createTransaction(
+    tx: Omit<PaymentTransactionDTO, 'id' | 'createdAt' | 'updatedAt'>
+  ): Promise<PaymentTransactionDTO> {
     const created: PaymentTransactionDTO = {
       ...tx,
       id: `tx_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
@@ -95,7 +109,9 @@ class InMemoryPaymentRepo implements PaymentRepositoryPort {
     return this.webhookEvents.has(eventId);
   }
 
-  async recordWebhookEvent(event: Omit<PaymentWebhookEventDTO, 'id' | 'processedAt'>): Promise<void> {
+  async recordWebhookEvent(
+    event: Omit<PaymentWebhookEventDTO, 'id' | 'processedAt'>
+  ): Promise<void> {
     this.webhookEvents.set(event.eventId, {
       ...event,
       id: `evt_${Date.now()}`,
@@ -128,16 +144,8 @@ describe('Concurrent Duplicate Payment Prevention (US7)', () => {
       getTransactionStatus: vi.fn(),
     };
 
-    initiateUseCase = new InitiatePlanCheckoutUseCase(
-      subRepo,
-      paymentRepo,
-      () => mockGateway
-    );
-    webhookUseCase = new ProcessPaymentWebhookUseCase(
-      subRepo,
-      paymentRepo,
-      () => mockGateway
-    );
+    initiateUseCase = new InitiatePlanCheckoutUseCase(subRepo, paymentRepo, () => mockGateway);
+    webhookUseCase = new ProcessPaymentWebhookUseCase(subRepo, paymentRepo, () => mockGateway);
   });
 
   it('rejects concurrent second approved payment as rejected_duplicate when first payment already upgraded user to Pro', async () => {

@@ -1,17 +1,13 @@
 import type {
-  ContractRepositoryPort,
-  ContractProgressPort,
+  CompleteQuestionnaireInput,
   ContractGenerationDTO,
   ContractGenerationSummaryDTO,
+  ContractProgressPort,
+  ContractRepositoryPort,
   UpdateProgressInput,
   UpdateTitleInput,
-  CompleteQuestionnaireInput,
 } from '@go-agree/application';
-import {
-  ContractNotFoundError,
-  UnauthorizedContractAccessError,
-  EmptyTitleError,
-} from '@go-agree/domain';
+import { ContractNotFoundError, EmptyTitleError } from '@go-agree/domain';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 export class SupabaseContractRepository implements ContractRepositoryPort, ContractProgressPort {

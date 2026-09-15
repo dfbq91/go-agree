@@ -1,13 +1,12 @@
-import { describe, it, expect } from 'vitest';
-import React from 'react';
 import { render } from '@testing-library/react';
 import axe from 'axe-core';
+import { describe, expect, it } from 'vitest';
+import { GoogleAuthButton } from '../../src/components/auth/GoogleAuthButton';
 import { LoginForm } from '../../src/components/auth/LoginForm';
 import { RegisterForm } from '../../src/components/auth/RegisterForm';
 import { ResetPasswordForm } from '../../src/components/auth/ResetPasswordForm';
-import { GoogleAuthButton } from '../../src/components/auth/GoogleAuthButton';
-import { UserNav } from '../../src/components/ui/UserNav';
 import { ContractList } from '../../src/components/dashboard/ContractList';
+import { UserNav } from '../../src/components/ui/UserNav';
 
 describe('WCAG 2.1 AA Accessibility Audit (axe-core)', () => {
   const axeOptions: axe.RunOptions = {

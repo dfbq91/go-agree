@@ -1,8 +1,8 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { ContractGeneration } from '../src/entities/ContractGeneration.js';
+import { EmptyTitleError } from '../src/errors/DomainErrors.js';
 import { ContractId } from '../src/value-objects/ContractId.js';
 import { UserId } from '../src/value-objects/UserId.js';
-import { EmptyTitleError } from '../src/errors/DomainErrors.js';
 
 describe('Contract Title Management', () => {
   it('updates title when valid non-empty string is provided', () => {

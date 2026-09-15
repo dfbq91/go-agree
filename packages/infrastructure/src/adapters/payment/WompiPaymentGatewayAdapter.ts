@@ -3,13 +3,13 @@
  * @description Wompi payment gateway adapter supporting checkout URL generation, signature calculation, and webhook verification.
  */
 
-import { createHash } from 'crypto';
+import { createHash } from 'node:crypto';
 import type {
-  PaymentGatewayPort,
   CreateCheckoutInput,
   CreateCheckoutResult,
-  WebhookVerificationInput,
   ParsedTransactionEvent,
+  PaymentGatewayPort,
+  WebhookVerificationInput,
 } from '@go-agree/application';
 
 export interface WompiGatewayConfig {
@@ -71,7 +71,12 @@ export class WompiPaymentGatewayAdapter implements PaymentGatewayPort {
    */
   verifyWebhookSignature(input: WebhookVerificationInput): boolean {
     const payload = input.parsedPayload as any;
-    if (!payload || !payload.signature || !payload.signature.checksum || !payload.signature.properties) {
+    if (
+      !payload ||
+      !payload.signature ||
+      !payload.signature.checksum ||
+      !payload.signature.properties
+    ) {
       return false;
     }
 
@@ -130,7 +135,9 @@ export class WompiPaymentGatewayAdapter implements PaymentGatewayPort {
     });
 
     if (!response.ok) {
-      throw new Error(`Wompi API returned ${response.status} for transaction ${gatewayTransactionId}`);
+      throw new Error(
+        `Wompi API returned ${response.status} for transaction ${gatewayTransactionId}`
+      );
     }
 
     const json = await response.json();

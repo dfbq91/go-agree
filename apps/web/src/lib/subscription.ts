@@ -1,22 +1,22 @@
-import fs from 'fs';
-import path from 'path';
-import { cookies } from 'next/headers';
-import { createClient } from '@supabase/supabase-js';
-import {
-  createSupabaseServerClient,
-  SupabaseSubscriptionRepository,
-  MockSubscriptionRepository,
-} from '@go-agree/infrastructure';
+import fs from 'node:fs';
+import path from 'node:path';
 import {
   GetSubscriptionStatusUseCase,
   type SubscriptionRepositoryPort,
   type SubscriptionStatusResult,
 } from '@go-agree/application';
+import {
+  MockSubscriptionRepository,
+  SupabaseSubscriptionRepository,
+  createSupabaseServerClient,
+} from '@go-agree/infrastructure';
+import { createClient } from '@supabase/supabase-js';
+import { cookies } from 'next/headers';
 
 const globalMockSubscriptionRepo = new MockSubscriptionRepository();
 
 function getServiceRoleKey(): string | undefined {
-  if (process.env.SUPABASE_SERVICE_ROLE_KEY) {
+  if (process.env.SUPABASE_SERVICE_ROLE_KEY && process.env.SUPABASE_SERVICE_ROLE_KEY !== 'undefined') {
     return process.env.SUPABASE_SERVICE_ROLE_KEY;
   }
   try {
@@ -29,7 +29,7 @@ function getServiceRoleKey(): string | undefined {
       if (fs.existsSync(envPath)) {
         const content = fs.readFileSync(envPath, 'utf8');
         const match = content.match(/^SUPABASE_SERVICE_ROLE_KEY=(.+)$/m);
-        if (match && match[1]) {
+        if (match?.[1]) {
           return match[1].trim();
         }
       }
@@ -40,7 +40,7 @@ function getServiceRoleKey(): string | undefined {
   return undefined;
 }
 
-export function getServerSubscriptionRepository(): SubscriptionRepositoryPort {
+export async function getServerSubscriptionRepository(): Promise<SubscriptionRepositoryPort> {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceRoleKey = getServiceRoleKey();
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -57,7 +57,7 @@ export function getServerSubscriptionRepository(): SubscriptionRepositoryPort {
     }
 
     if (supabaseAnonKey) {
-      const cookieStore = cookies();
+      const cookieStore = await cookies();
       const client = createSupabaseServerClient(supabaseUrl, supabaseAnonKey, {
         get(name: string) {
           return cookieStore.get(name)?.value;
@@ -85,8 +85,10 @@ export function getServerSubscriptionRepository(): SubscriptionRepositoryPort {
   return globalMockSubscriptionRepo;
 }
 
-export async function getServerSubscriptionStatus(userId: string): Promise<SubscriptionStatusResult> {
-  const repo = getServerSubscriptionRepository();
+export async function getServerSubscriptionStatus(
+  userId: string
+): Promise<SubscriptionStatusResult> {
+  const repo = await getServerSubscriptionRepository();
   const useCase = new GetSubscriptionStatusUseCase(repo);
   return useCase.execute({ userId });
 }

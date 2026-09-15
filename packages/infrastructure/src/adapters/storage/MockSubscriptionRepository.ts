@@ -3,10 +3,7 @@
  * @description In-memory mock implementation of SubscriptionRepositoryPort for testing.
  */
 
-import type {
-  SubscriptionRepositoryPort,
-  UserSubscriptionDTO,
-} from '@go-agree/application';
+import type { SubscriptionRepositoryPort, UserSubscriptionDTO } from '@go-agree/application';
 
 export class MockSubscriptionRepository implements SubscriptionRepositoryPort {
   private subscriptions: Map<string, UserSubscriptionDTO> = new Map();

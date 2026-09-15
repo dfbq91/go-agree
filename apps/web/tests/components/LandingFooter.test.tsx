@@ -1,6 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import React from 'react';
 import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 import { LandingFooter } from '../../src/components/landing/LandingFooter';
 import { es } from '../../src/locales/es';
 
@@ -16,9 +15,7 @@ describe('LandingFooter Component', () => {
     expect(disclaimer).toBeDefined();
 
     // Rights reserved
-    expect(
-      screen.getByText(new RegExp(es.landing.footer.rightsReserved))
-    ).toBeDefined();
+    expect(screen.getByText(new RegExp(es.landing.footer.rightsReserved))).toBeDefined();
   });
 
   it('renders in-page navigation anchor links', () => {

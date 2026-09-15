@@ -1,15 +1,14 @@
-import { describe, it, expect, vi } from 'vitest';
-import React from 'react';
+import type { QuestionDTO } from '@go-agree/application';
 import { render } from '@testing-library/react';
 import axe from 'axe-core';
-import type { QuestionDTO } from '@go-agree/application';
-import { QuestionCard } from '../../src/components/questionnaire/QuestionCard';
-import { NavigationControls } from '../../src/components/questionnaire/NavigationControls';
-import { SummaryReview } from '../../src/components/questionnaire/SummaryReview';
+import { describe, expect, it, vi } from 'vitest';
 import { InlineTitleEditor } from '../../src/components/questionnaire/InlineTitleEditor';
-import { QuestionnaireHeader } from '../../src/components/questionnaire/QuestionnaireHeader';
+import { NavigationControls } from '../../src/components/questionnaire/NavigationControls';
 import { NetworkStatusBanner } from '../../src/components/questionnaire/NetworkStatusBanner';
+import { QuestionCard } from '../../src/components/questionnaire/QuestionCard';
 import { QuestionnaireContainer } from '../../src/components/questionnaire/QuestionnaireContainer';
+import { QuestionnaireHeader } from '../../src/components/questionnaire/QuestionnaireHeader';
+import { SummaryReview } from '../../src/components/questionnaire/SummaryReview';
 
 describe('Questionnaire WCAG 2.1 AA Accessibility Audit (axe-core)', () => {
   const axeOptions: axe.RunOptions = {
@@ -36,15 +35,26 @@ describe('Questionnaire WCAG 2.1 AA Accessibility Audit (axe-core)', () => {
     isRequired: true,
     helpText: 'Determina las capacidades legales de la parte.',
     options: [
-      { id: 'opt_1', label: 'Persona natural', value: 'individual', tooltip: 'Individuo humano actuando por cuenta propia.' },
-      { id: 'opt_2', label: 'Persona jurídica', value: 'legal_entity', tooltip: 'Empresa, sociedad o entidad constituida legalmente.' },
+      {
+        id: 'opt_1',
+        label: 'Persona natural',
+        value: 'individual',
+        tooltip: 'Individuo humano actuando por cuenta propia.',
+      },
+      {
+        id: 'opt_2',
+        label: 'Persona jurídica',
+        value: 'legal_entity',
+        tooltip: 'Empresa, sociedad o entidad constituida legalmente.',
+      },
     ],
   };
 
   const mockMultipleChoiceQuestion: QuestionDTO = {
     id: 'q5_service_profile',
     order: 6,
-    prompt: '¿El servicio involucra personal asignado, vehículos o uso de instalaciones del cliente?',
+    prompt:
+      '¿El servicio involucra personal asignado, vehículos o uso de instalaciones del cliente?',
     type: 'multiple_choice',
     isRequired: true,
     helpText: 'Ayuda a determinar riesgos laborales y de seguridad.',
@@ -79,11 +89,7 @@ describe('Questionnaire WCAG 2.1 AA Accessibility Audit (axe-core)', () => {
 
   it('QuestionCard with SingleChoiceQuestion and Tooltips passes accessibility audit', async () => {
     const { container } = render(
-      <QuestionCard
-        question={mockSingleChoiceQuestion}
-        value="individual"
-        onChange={vi.fn()}
-      />
+      <QuestionCard question={mockSingleChoiceQuestion} value="individual" onChange={vi.fn()} />
     );
     const results = await axe.run(container, axeOptions);
     expect(results.violations).toEqual([]);
@@ -91,11 +97,7 @@ describe('Questionnaire WCAG 2.1 AA Accessibility Audit (axe-core)', () => {
 
   it('QuestionCard with MultipleChoiceQuestion passes accessibility audit', async () => {
     const { container } = render(
-      <QuestionCard
-        question={mockMultipleChoiceQuestion}
-        value={['staff']}
-        onChange={vi.fn()}
-      />
+      <QuestionCard question={mockMultipleChoiceQuestion} value={['staff']} onChange={vi.fn()} />
     );
     const results = await axe.run(container, axeOptions);
     expect(results.violations).toEqual([]);
@@ -103,11 +105,7 @@ describe('Questionnaire WCAG 2.1 AA Accessibility Audit (axe-core)', () => {
 
   it('QuestionCard with CheckboxQuestion passes accessibility audit', async () => {
     const { container } = render(
-      <QuestionCard
-        question={mockCheckboxQuestion}
-        value={true}
-        onChange={vi.fn()}
-      />
+      <QuestionCard question={mockCheckboxQuestion} value={true} onChange={vi.fn()} />
     );
     const results = await axe.run(container, axeOptions);
     expect(results.violations).toEqual([]);
@@ -149,20 +147,14 @@ describe('Questionnaire WCAG 2.1 AA Accessibility Audit (axe-core)', () => {
 
   it('QuestionnaireHeader passes accessibility audit', async () => {
     const { container } = render(
-      <QuestionnaireHeader
-        title="Mi Contrato 1"
-        saveStatus="saved"
-        onSaveTitle={vi.fn()}
-      />
+      <QuestionnaireHeader title="Mi Contrato 1" saveStatus="saved" onSaveTitle={vi.fn()} />
     );
     const results = await axe.run(container, axeOptions);
     expect(results.violations).toEqual([]);
   });
 
   it('NetworkStatusBanner passes accessibility audit in active error state', async () => {
-    const { container } = render(
-      <NetworkStatusBanner hasError={true} onRetry={vi.fn()} />
-    );
+    const { container } = render(<NetworkStatusBanner hasError={true} onRetry={vi.fn()} />);
     const results = await axe.run(container, axeOptions);
     expect(results.violations).toEqual([]);
   });
@@ -215,11 +207,7 @@ describe('Questionnaire WCAG 2.1 AA Accessibility Audit (axe-core)', () => {
       ],
     };
     const { container } = render(
-      <QuestionCard
-        question={mockRoleQuestion}
-        value="contractor"
-        onChange={vi.fn()}
-      />
+      <QuestionCard question={mockRoleQuestion} value="contractor" onChange={vi.fn()} />
     );
     const results = await axe.run(container, axeOptions);
     expect(results.violations).toEqual([]);
@@ -227,10 +215,7 @@ describe('Questionnaire WCAG 2.1 AA Accessibility Audit (axe-core)', () => {
 
   it('QuestionnaireContainer initial state passes accessibility audit', async () => {
     const { container } = render(
-      <QuestionnaireContainer
-        contractId="test-contract-id"
-        initialTitle="Mi Contrato 1"
-      />
+      <QuestionnaireContainer contractId="test-contract-id" initialTitle="Mi Contrato 1" />
     );
     const results = await axe.run(container, axeOptions);
     expect(results.violations).toEqual([]);

@@ -1,8 +1,11 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { GetSubscriptionStatusUseCase } from '../src/use-cases/GetSubscriptionStatusUseCase.js';
-import { ConsumeContractQuotaUseCase } from '../src/use-cases/ConsumeContractQuotaUseCase.js';
-import type { SubscriptionRepositoryPort, UserSubscriptionDTO } from '../src/ports/SubscriptionRepositoryPort.js';
 import { FreeQuotaExceededError } from '@go-agree/domain';
+import { beforeEach, describe, expect, it } from 'vitest';
+import type {
+  SubscriptionRepositoryPort,
+  UserSubscriptionDTO,
+} from '../src/ports/SubscriptionRepositoryPort.js';
+import { ConsumeContractQuotaUseCase } from '../src/use-cases/ConsumeContractQuotaUseCase.js';
+import { GetSubscriptionStatusUseCase } from '../src/use-cases/GetSubscriptionStatusUseCase.js';
 
 class InMemorySubscriptionRepository implements SubscriptionRepositoryPort {
   private subscriptions: Map<string, UserSubscriptionDTO> = new Map();

@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
 import { PROTECTED_ROUTES } from '@/middleware';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 const DRAFT_STORAGE_KEY = 'go_agree_questionnaire_draft';
 

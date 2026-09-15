@@ -66,7 +66,5 @@ export interface PaymentRepositoryPort {
   /**
    * Records a webhook receipt log.
    */
-  recordWebhookEvent(
-    event: Omit<PaymentWebhookEventDTO, 'id' | 'processedAt'>
-  ): Promise<void>;
+  recordWebhookEvent(event: Omit<PaymentWebhookEventDTO, 'id' | 'processedAt'>): Promise<void>;
 }

@@ -1,5 +1,5 @@
-import { Email } from '../value-objects/Email.js';
-import { UserId } from '../value-objects/UserId.js';
+import type { Email } from '../value-objects/Email.js';
+import type { UserId } from '../value-objects/UserId.js';
 
 export type AuthProviderType = 'email_password' | 'google';
 

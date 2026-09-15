@@ -1,7 +1,11 @@
-import { describe, it, expect, beforeEach } from 'vitest';
 import type { AuthPort } from '@go-agree/application';
+import {
+  InvalidCredentialsError,
+  UserAlreadyExistsError,
+  WeakPasswordError,
+} from '@go-agree/domain';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { MockAuthAdapter } from '../../src/adapters/auth/MockAuthAdapter.js';
-import { UserAlreadyExistsError, InvalidCredentialsError, WeakPasswordError } from '@go-agree/domain';
 
 describe('AuthPort Email/Password Contract Tests', () => {
   let authAdapter: AuthPort;

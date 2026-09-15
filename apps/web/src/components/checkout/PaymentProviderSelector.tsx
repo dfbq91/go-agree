@@ -1,7 +1,7 @@
 'use client';
 
-import React from 'react';
 import type { PaymentProviderInfo } from '@go-agree/domain';
+import type React from 'react';
 import { es } from '../../locales/es';
 
 export interface PaymentProviderSelectorProps {
@@ -59,9 +59,7 @@ export const PaymentProviderSelector: React.FC<PaymentProviderSelectorProps> = (
                 >
                   {provider.name}
                 </label>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  {provider.description}
-                </p>
+                <p className="text-xs text-muted-foreground mt-0.5">{provider.description}</p>
 
                 <div className="mt-3 flex flex-wrap gap-1.5">
                   {provider.supportedPaymentMethods.map((method) => (

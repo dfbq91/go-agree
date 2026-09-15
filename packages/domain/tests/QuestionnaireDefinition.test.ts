@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
-import { QuestionnaireDefinition } from '../src/entities/QuestionnaireDefinition.js';
+import { describe, expect, it } from 'vitest';
 import { Question } from '../src/entities/Question.js';
+import { QuestionnaireDefinition } from '../src/entities/QuestionnaireDefinition.js';
 
 describe('QuestionnaireDefinition', () => {
   it('initializes standard questionnaire with all standard questions', () => {
@@ -52,7 +52,11 @@ describe('QuestionnaireDefinition', () => {
     expect(oneTimeVisible.some((q) => q.id === 'q5b_recurring_duration')).toBe(false);
 
     // With client and recurring modality > 12m
-    const recurringAnswers = { q0_party_role: 'client', q5_modality: 'recurring', q5b_recurring_duration: '>12' };
+    const recurringAnswers = {
+      q0_party_role: 'client',
+      q5_modality: 'recurring',
+      q5b_recurring_duration: '>12',
+    };
     const recurringVisible = questionnaire.getVisibleQuestions(recurringAnswers);
     expect(recurringVisible.some((q) => q.id === 'q5a_delivery_timeframe')).toBe(false);
     expect(recurringVisible.some((q) => q.id === 'q5b_recurring_duration')).toBe(true);
@@ -68,7 +72,7 @@ describe('QuestionnaireDefinition', () => {
     const second = questionnaire.getNextQuestion(first.id, answers);
     expect(second?.id).toBe(visible[1].id);
 
-    const prev = questionnaire.getPreviousQuestion(second!.id, answers);
+    const prev = questionnaire.getPreviousQuestion(second?.id, answers);
     expect(prev?.id).toBe(first.id);
 
     const noPrevForFirst = questionnaire.getPreviousQuestion(first.id, answers);
@@ -108,7 +112,9 @@ describe('QuestionnaireDefinition', () => {
     expect(q8.validate({ selection: 'other', customValue: '   ' }).isValid).toBe(false);
 
     // "other" option with custom value should pass validation
-    expect(q8.validate({ selection: 'other', customValue: '45 días calendario' }).isValid).toBe(true);
+    expect(q8.validate({ selection: 'other', customValue: '45 días calendario' }).isValid).toBe(
+      true
+    );
     expect(q8.validate('other: 45 días calendario').isValid).toBe(true);
   });
 });

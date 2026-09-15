@@ -1,5 +1,6 @@
 import type { QuestionDTO } from '@go-agree/application';
-import { createSupabaseBrowserClient, DynamicQuestionRow } from '@go-agree/infrastructure';
+import type { DynamicQuestionRow } from '@go-agree/infrastructure';
+import { createBrowserClient } from '@supabase/ssr';
 import { useEffect, useRef } from 'react';
 
 export interface UseDynamicQuestionsSubscriptionOptions {
@@ -22,7 +23,7 @@ export function useDynamicQuestionsSubscription({
       return;
     }
 
-    const supabase = createSupabaseBrowserClient(supabaseUrl, supabaseAnonKey);
+    const supabase = createBrowserClient(supabaseUrl, supabaseAnonKey);
 
     let channel: ReturnType<typeof supabase.channel> | null = null;
     let isCancelled = false;

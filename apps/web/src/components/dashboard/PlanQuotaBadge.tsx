@@ -1,8 +1,8 @@
 'use client';
 
-import React from 'react';
-import Link from 'next/link';
 import { getFreeContractLimit } from '@go-agree/domain';
+import Link from 'next/link';
+import type React from 'react';
 import { es } from '../../locales/es';
 
 export interface PlanQuotaBadgeProps {
@@ -61,8 +61,8 @@ export const PlanQuotaBadge: React.FC<PlanQuotaBadgeProps> = ({
         <span>{quotaText}</span>
       </div>
 
-      {isExhausted && (
-        onUpgradeClick ? (
+      {isExhausted &&
+        (onUpgradeClick ? (
           <button
             type="button"
             onClick={onUpgradeClick}
@@ -77,8 +77,7 @@ export const PlanQuotaBadge: React.FC<PlanQuotaBadgeProps> = ({
           >
             {es.plans.upgradeButton}
           </Link>
-        )
-      )}
+        ))}
     </div>
   );
 };

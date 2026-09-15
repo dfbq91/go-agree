@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { LogoutUseCase, GetSessionUseCase } from '../src/use-cases/auth/SessionUseCases';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AuthPort, UserSessionDTO } from '../src/ports/AuthPort';
+import { GetSessionUseCase, LogoutUseCase } from '../src/use-cases/auth/SessionUseCases';
 
 describe('Session Use Cases', () => {
   let mockAuthPort: AuthPort;

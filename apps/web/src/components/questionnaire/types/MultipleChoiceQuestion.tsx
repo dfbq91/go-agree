@@ -1,7 +1,7 @@
-import React from 'react';
 import type { QuestionOptionDTO } from '@go-agree/application';
-import { Tooltip } from '../Tooltip';
+import type React from 'react';
 import { es } from '../../../locales/es';
+import { Tooltip } from '../Tooltip';
 
 export interface MultipleChoiceQuestionProps {
   id: string;
@@ -109,10 +109,7 @@ export const MultipleChoiceQuestion: React.FC<MultipleChoiceQuestionProps> = ({
             }`}
           >
             <div className="flex items-start justify-between">
-              <label
-                htmlFor={inputId}
-                className="flex items-center gap-3 cursor-pointer flex-1"
-              >
+              <label htmlFor={inputId} className="flex items-center gap-3 cursor-pointer flex-1">
                 <input
                   id={inputId}
                   type="checkbox"
@@ -121,9 +118,7 @@ export const MultipleChoiceQuestion: React.FC<MultipleChoiceQuestionProps> = ({
                   onChange={() => handleToggle(opt)}
                   className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                 />
-                <span className="text-sm sm:text-base font-medium text-gray-800">
-                  {opt.label}
-                </span>
+                <span className="text-sm sm:text-base font-medium text-gray-800">{opt.label}</span>
               </label>
               {opt.tooltip && (
                 <Tooltip content={opt.tooltip}>

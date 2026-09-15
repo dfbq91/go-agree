@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import type React from 'react';
+import { useState } from 'react';
 import { es } from '../../locales/es';
 
 export interface InlineTitleEditorProps {
@@ -6,10 +7,7 @@ export interface InlineTitleEditorProps {
   onSave: (newTitle: string) => Promise<void> | void;
 }
 
-export const InlineTitleEditor: React.FC<InlineTitleEditorProps> = ({
-  initialTitle,
-  onSave,
-}) => {
+export const InlineTitleEditor: React.FC<InlineTitleEditorProps> = ({ initialTitle, onSave }) => {
   const [title, setTitle] = useState(initialTitle);
   const [isEditing, setIsEditing] = useState(false);
   const [draft, setDraft] = useState(initialTitle);
@@ -46,7 +44,6 @@ export const InlineTitleEditor: React.FC<InlineTitleEditorProps> = ({
                 setIsEditing(false);
               }
             }}
-            autoFocus
             aria-label={es.questionnaire.editTitlePlaceholder}
             placeholder={es.questionnaire.editTitlePlaceholder}
             className="text-xl sm:text-2xl font-bold text-gray-900 border-b-2 border-blue-600 focus:outline-none bg-transparent"
@@ -68,9 +65,7 @@ export const InlineTitleEditor: React.FC<InlineTitleEditorProps> = ({
           </button>
         </div>
       )}
-      {errorMessage && (
-        <p className="mt-1 text-xs text-red-600 font-medium">{errorMessage}</p>
-      )}
+      {errorMessage && <p className="mt-1 text-xs text-red-600 font-medium">{errorMessage}</p>}
     </div>
   );
 };

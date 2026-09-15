@@ -5,9 +5,9 @@
 
 import {
   type BillingCycle,
+  type CountryCode,
   type CurrencyConfig,
   type PricingPlanConfig,
-  type CountryCode,
   getLocaleForCountry,
 } from '../entities/PricingConfig.js';
 
@@ -33,11 +33,7 @@ export class PricingCalculatorService {
    * Formats a monetary number into a localized string with thousands separator and currency code.
    * Example for COP: 49000 -> "$ 49.000 COP"
    */
-  static formatPrice(
-    amount: number,
-    currency: CurrencyConfig,
-    countryCode?: CountryCode
-  ): string {
+  static formatPrice(amount: number, currency: CurrencyConfig, countryCode?: CountryCode): string {
     const locale = getLocaleForCountry(countryCode);
     const hasDecimals = amount % 1 !== 0;
     const formattedNumber = new Intl.NumberFormat(locale, {
@@ -54,12 +50,9 @@ export class PricingCalculatorService {
   /**
    * Returns presentation details for the plan based on the active billing cycle.
    */
-  static getDisplayPrice(
-    plan: PricingPlanConfig,
-    cycle: BillingCycle
-  ): DisplayPriceDetails {
+  static getDisplayPrice(plan: PricingPlanConfig, cycle: BillingCycle): DisplayPriceDetails {
     if (cycle === 'monthly') {
-      const formatted = this.formatPrice(
+      const formatted = PricingCalculatorService.formatPrice(
         plan.monthlyPrice,
         plan.currency,
         plan.countryCode
@@ -72,12 +65,12 @@ export class PricingCalculatorService {
       };
     }
 
-    const formatted = this.formatPrice(
+    const formatted = PricingCalculatorService.formatPrice(
       plan.annualMonthlyPrice,
       plan.currency,
       plan.countryCode
     );
-    const totalAnnualFormatted = this.formatPrice(
+    const totalAnnualFormatted = PricingCalculatorService.formatPrice(
       plan.annualTotal,
       plan.currency,
       plan.countryCode

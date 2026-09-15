@@ -1,6 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import HomePage from '../../src/app/page';
 import * as authLib from '../../src/lib/auth';
 import { es } from '../../src/locales/es';
@@ -11,7 +10,7 @@ describe('Landing Page End-to-End Integration Suite', () => {
   });
 
   it('renders all complete landing sections for an unauthenticated visitor', async () => {
-    vi.spyOn(authLib, 'getServerAuthAdapter').mockReturnValue({
+    vi.spyOn(authLib, 'getServerAuthAdapter').mockResolvedValue({
       getCurrentSession: vi.fn().mockResolvedValue(null),
     } as any);
 
@@ -50,9 +49,7 @@ describe('Landing Page End-to-End Integration Suite', () => {
 
     // 4. Pricing Section
     expect(screen.getByText(es.landing.pricing.title)).toBeDefined();
-    expect(
-      screen.getByText(es.landing.pricing.freeTrialBanner.title)
-    ).toBeDefined();
+    expect(screen.getByText(es.landing.pricing.freeTrialBanner.title)).toBeDefined();
 
     // Default monthly price
     expect(screen.getByText(/49[.,]000/)).toBeDefined();
@@ -74,8 +71,9 @@ describe('Landing Page End-to-End Integration Suite', () => {
   });
 
   it('adapts call-to-actions appropriately when visitor is authenticated', async () => {
-    vi.spyOn(authLib, 'getServerAuthAdapter').mockReturnValue({
+    vi.spyOn(authLib, 'getServerAuthAdapter').mockResolvedValue({
       getCurrentSession: vi.fn().mockResolvedValue({
+        userId: 'test-user-id',
         user: { id: 'test-user-id', email: 'usuario@ejemplo.com' },
       }),
     } as any);

@@ -1,7 +1,6 @@
-import React from 'react';
-import Link from 'next/link';
 import { es } from '@/locales/es';
 import type { ContractGenerationSummaryDTO } from '@go-agree/application';
+import Link from 'next/link';
 
 interface ContractListProps {
   contracts: ContractGenerationSummaryDTO[];
@@ -21,9 +20,7 @@ export function ContractCard({ contract }: { contract: ContractGenerationSummary
           <h2 className="text-lg font-semibold text-gray-900 line-clamp-1">{contract.title}</h2>
           <span
             className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-              isInProgress
-                ? 'bg-yellow-100 text-yellow-800'
-                : 'bg-green-100 text-green-800'
+              isInProgress ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'
             }`}
           >
             {isInProgress ? es.dashboard.statusInProgress : es.dashboard.statusCompleted}

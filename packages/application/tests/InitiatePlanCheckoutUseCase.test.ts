@@ -1,17 +1,23 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { InitiatePlanCheckoutUseCase } from '../src/use-cases/InitiatePlanCheckoutUseCase.js';
-import { ListPaymentProvidersUseCase } from '../src/use-cases/ListPaymentProvidersUseCase.js';
-import type { SubscriptionRepositoryPort, UserSubscriptionDTO } from '../src/ports/SubscriptionRepositoryPort.js';
-import type { PaymentRepositoryPort, PaymentTransactionDTO } from '../src/ports/PaymentRepositoryPort.js';
-import type { PaymentGatewayPort, CreateCheckoutResult } from '../src/ports/PaymentGatewayPort.js';
 import {
   ActiveSubscriptionExistsError,
-  UnsupportedPaymentProviderError,
   CountryPricingRegistry,
+  type PaymentProviderInfo,
   PaymentProviderRegistry,
   type PricingPlanConfig,
-  type PaymentProviderInfo,
+  UnsupportedPaymentProviderError,
 } from '@go-agree/domain';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type { PaymentGatewayPort } from '../src/ports/PaymentGatewayPort.js';
+import type {
+  PaymentRepositoryPort,
+  PaymentTransactionDTO,
+} from '../src/ports/PaymentRepositoryPort.js';
+import type {
+  SubscriptionRepositoryPort,
+  UserSubscriptionDTO,
+} from '../src/ports/SubscriptionRepositoryPort.js';
+import { InitiatePlanCheckoutUseCase } from '../src/use-cases/InitiatePlanCheckoutUseCase.js';
+import { ListPaymentProvidersUseCase } from '../src/use-cases/ListPaymentProvidersUseCase.js';
 
 class InMemorySubscriptionRepo implements SubscriptionRepositoryPort {
   private subs = new Map<string, UserSubscriptionDTO>();
@@ -38,11 +44,16 @@ class InMemorySubscriptionRepo implements SubscriptionRepositoryPort {
     this.subs.set(sub.userId, { ...sub });
   }
 
-  async incrementFreeContractCount(userId: string): Promise<number> {
+  async incrementFreeContractCount(_userId: string): Promise<number> {
     return 3;
   }
 
-  async activateProPlan(userId: string, cycle: 'monthly' | 'annual', expiresAt: Date, txId: string): Promise<void> {
+  async activateProPlan(
+    userId: string,
+    cycle: 'monthly' | 'annual',
+    expiresAt: Date,
+    txId: string
+  ): Promise<void> {
     this.subs.set(userId, {
       id: `sub_${userId}`,
       userId,
@@ -64,7 +75,9 @@ class InMemorySubscriptionRepo implements SubscriptionRepositoryPort {
 class InMemoryPaymentRepo implements PaymentRepositoryPort {
   private txs = new Map<string, PaymentTransactionDTO>();
 
-  async createTransaction(tx: Omit<PaymentTransactionDTO, 'id' | 'createdAt' | 'updatedAt'>): Promise<PaymentTransactionDTO> {
+  async createTransaction(
+    tx: Omit<PaymentTransactionDTO, 'id' | 'createdAt' | 'updatedAt'>
+  ): Promise<PaymentTransactionDTO> {
     const created: PaymentTransactionDTO = {
       ...tx,
       id: `tx_${Date.now()}`,
@@ -80,7 +93,9 @@ class InMemoryPaymentRepo implements PaymentRepositoryPort {
   }
 
   async updateTransactionStatus(): Promise<void> {}
-  async hasWebhookEvent(): Promise<boolean> { return false; }
+  async hasWebhookEvent(): Promise<boolean> {
+    return false;
+  }
   async recordWebhookEvent(): Promise<void> {}
 }
 
@@ -120,7 +135,7 @@ describe('InitiatePlanCheckoutUseCase & ListPaymentProvidersUseCase', () => {
     it('returns Wompi for Colombia (CO)', async () => {
       const providers = await listProvidersUseCase.execute({ countryCode: 'CO' });
       expect(providers.length).toBeGreaterThan(0);
-      expect(providers.some(p => p.id === 'wompi')).toBe(true);
+      expect(providers.some((p) => p.id === 'wompi')).toBe(true);
     });
   });
 

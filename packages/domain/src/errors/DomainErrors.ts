@@ -4,7 +4,10 @@ import { getFreeContractLimit } from '../entities/FreeQuotaConfig.js';
  * Domain-specific typed errors (Principle I: Explicit typed domain errors)
  */
 export class DomainAuthError extends Error {
-  constructor(message: string, public readonly code: string = 'DOMAIN_AUTH_ERROR') {
+  constructor(
+    message: string,
+    public readonly code: string = 'DOMAIN_AUTH_ERROR'
+  ) {
     super(message);
     this.name = 'DomainAuthError';
     Object.setPrototypeOf(this, new.target.prototype);
@@ -54,7 +57,10 @@ export class UnauthorizedAccessError extends DomainAuthError {
 }
 
 export class QuestionnaireDomainError extends Error {
-  constructor(message: string, public readonly code: string) {
+  constructor(
+    message: string,
+    public readonly code: string
+  ) {
     super(message);
     this.name = 'QuestionnaireDomainError';
     Object.setPrototypeOf(this, new.target.prototype);
@@ -70,7 +76,10 @@ export class ContractNotFoundError extends QuestionnaireDomainError {
 
 export class UnauthorizedContractAccessError extends QuestionnaireDomainError {
   constructor(contractId: string, userId: string) {
-    super(`User ${userId} does not have permission to access contract ${contractId}`, 'UNAUTHORIZED_ACCESS');
+    super(
+      `User ${userId} does not have permission to access contract ${contractId}`,
+      'UNAUTHORIZED_ACCESS'
+    );
     this.name = 'UnauthorizedContractAccessError';
   }
 }
@@ -90,7 +99,10 @@ export class EmptyTitleError extends QuestionnaireDomainError {
 }
 
 export class PaymentDomainError extends Error {
-  constructor(message: string, public readonly code: string) {
+  constructor(
+    message: string,
+    public readonly code: string
+  ) {
     super(message);
     this.name = 'PaymentDomainError';
     Object.setPrototypeOf(this, new.target.prototype);
@@ -99,7 +111,10 @@ export class PaymentDomainError extends Error {
 
 export class FreeQuotaExceededError extends PaymentDomainError {
   constructor(limit: number = getFreeContractLimit()) {
-    super(`Has alcanzado el límite de ${limit} contratos gratuitos. Actualiza a Plan Pro para continuar.`, 'FREE_QUOTA_EXCEEDED');
+    super(
+      `Has alcanzado el límite de ${limit} contratos gratuitos. Actualiza a Plan Pro para continuar.`,
+      'FREE_QUOTA_EXCEEDED'
+    );
     this.name = 'FreeQuotaExceededError';
   }
 }
@@ -134,5 +149,3 @@ export class UnsupportedPaymentProviderError extends PaymentDomainError {
     this.name = 'UnsupportedPaymentProviderError';
   }
 }
-
-

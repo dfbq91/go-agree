@@ -7,6 +7,8 @@ export * from './ports/QuestionnaireEnginePort.js';
 export * from './ports/PaymentGatewayPort.js';
 export * from './ports/SubscriptionRepositoryPort.js';
 export * from './ports/PaymentRepositoryPort.js';
+export * from './ports/logger.port.js';
+export * from './ports/correlation.port.js';
 export * from './use-cases/auth/LoginWithEmailUseCase.js';
 export * from './use-cases/auth/LoginWithGoogleUseCase.js';
 export * from './use-cases/auth/RegisterUserUseCase.js';
@@ -23,4 +25,3 @@ export * from './use-cases/ListPaymentProvidersUseCase.js';
 export * from './use-cases/InitiatePlanCheckoutUseCase.js';
 export * from './use-cases/ProcessPaymentWebhookUseCase.js';
 export * from './use-cases/GetTransactionStatusUseCase.js';
-

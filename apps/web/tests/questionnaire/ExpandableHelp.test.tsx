@@ -1,6 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 import { ExpandableHelp } from '../../src/components/questionnaire/ExpandableHelp';
 
 describe('ExpandableHelp Component', () => {
@@ -14,16 +13,22 @@ describe('ExpandableHelp Component', () => {
 
     const toggle = screen.getByRole('button', { name: /¿Por qué te preguntamos esto?/i });
     expect(toggle.getAttribute('aria-expanded')).toBe('false');
-    expect(screen.queryByText('Determina la capacidad jurídica y el régimen aplicable.')).toBeNull();
+    expect(
+      screen.queryByText('Determina la capacidad jurídica y el régimen aplicable.')
+    ).toBeNull();
 
     // Click to expand
     fireEvent.click(toggle);
     expect(toggle.getAttribute('aria-expanded')).toBe('true');
-    expect(screen.getByText('Determina la capacidad jurídica y el régimen aplicable.')).toBeDefined();
+    expect(
+      screen.getByText('Determina la capacidad jurídica y el régimen aplicable.')
+    ).toBeDefined();
 
     // Click to collapse
     fireEvent.click(toggle);
     expect(toggle.getAttribute('aria-expanded')).toBe('false');
-    expect(screen.queryByText('Determina la capacidad jurídica y el régimen aplicable.')).toBeNull();
+    expect(
+      screen.queryByText('Determina la capacidad jurídica y el régimen aplicable.')
+    ).toBeNull();
   });
 });
