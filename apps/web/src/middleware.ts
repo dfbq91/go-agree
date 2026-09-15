@@ -1,3 +1,4 @@
+import { TYPE_ID_PREFIXES, generateTypeId } from '@go-agree/domain';
 import { createServerClient } from '@supabase/ssr';
 import { type NextRequest, NextResponse } from 'next/server';
 
@@ -9,7 +10,7 @@ export async function middleware(request: NextRequest) {
   const correlationId =
     incomingCorrelationId && incomingCorrelationId.trim().length > 0
       ? incomingCorrelationId.trim()
-      : crypto.randomUUID();
+      : generateTypeId(TYPE_ID_PREFIXES.CORRELATION);
 
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set('x-correlation-id', correlationId);

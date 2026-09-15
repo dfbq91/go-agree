@@ -4,6 +4,7 @@ import { getServerAuthAdapter } from '@/lib/auth';
 import { getServerContractRepository } from '@/lib/contracts';
 import { getServerSubscriptionStatus } from '@/lib/subscription';
 import type { QuestionDTO } from '@go-agree/application';
+import { ContractId } from '@go-agree/domain';
 import { redirect } from 'next/navigation';
 
 interface QuestionnairePageProps {
@@ -37,7 +38,7 @@ export default async function QuestionnairePage({ searchParams }: QuestionnaireP
     // Create new contract generation draft
     const existing = await contractRepo.listByUserId(session.userId);
     const defaultTitle = `Mi Contrato ${existing.length + 1}`;
-    const newId = crypto.randomUUID();
+    const newId = ContractId.generate().value;
 
     contract = await contractRepo.create({
       id: newId,

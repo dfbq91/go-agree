@@ -24,7 +24,7 @@ describe('Correlation ID & API Error Envelopes (User Story 4)', () => {
     });
   });
 
-  it('generates a valid fallback UUID when x-correlation-id is absent', async () => {
+  it('generates a valid fallback UUIDv7 with corr_ prefix when x-correlation-id is absent', async () => {
     const response = await withCorrelationContext(
       new Request('http://localhost:3000/api/test'),
       async () => {
@@ -35,13 +35,16 @@ describe('Correlation ID & API Error Envelopes (User Story 4)', () => {
     expect(response.status).toBe(500);
     const headerId = response.headers.get('x-correlation-id');
     expect(headerId).toBeDefined();
-    expect(headerId).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i);
+    // Validates 'corr_' prefix and RFC 9562 UUIDv7 format (version 7 and variant 8, 9, a, or b)
+    expect(headerId).toMatch(
+      /^corr_[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+    );
 
     const body = await response.json();
     expect(body.correlationId).toBe(headerId);
   });
 
-  it('populates and retrieves userId and contractId in ambient correlation storage', async () => {
+  it('populates and retrieves userId and contractId in ambient correlation storage with TypeId prefixes', async () => {
     await withCorrelationContext(
       new Request('http://localhost:3000/api/contracts/c-999', {
         headers: { 'x-correlation-id': 'corr-abc' },
@@ -52,8 +55,8 @@ describe('Correlation ID & API Error Envelopes (User Story 4)', () => {
 
         const context = correlationStorage.getContext();
         expect(context?.correlationId).toBe('corr-abc');
-        expect(context?.userId).toBe('u-555');
-        expect(context?.contractId).toBe('c-999');
+        expect(context?.userId).toBe('user_u-555');
+        expect(context?.contractId).toBe('con_c-999');
       }
     );
   });

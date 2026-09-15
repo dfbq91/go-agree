@@ -3,16 +3,10 @@ import type {
   DynamicQuestionRepositoryPort,
   SaveDynamicQuestionsInput,
 } from '@go-agree/application';
+import { generateUuidV7 } from '@go-agree/domain';
 
 const generateId = (): string => {
-  if (
-    typeof globalThis !== 'undefined' &&
-    globalThis.crypto &&
-    typeof globalThis.crypto.randomUUID === 'function'
-  ) {
-    return globalThis.crypto.randomUUID();
-  }
-  return `dyn_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+  return generateUuidV7();
 };
 
 export class MockDynamicQuestionRepository implements DynamicQuestionRepositoryPort {

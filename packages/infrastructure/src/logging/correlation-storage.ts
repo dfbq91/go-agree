@@ -1,6 +1,6 @@
 import { AsyncLocalStorage } from 'node:async_hooks';
-import { randomUUID } from 'node:crypto';
 import type { CorrelationContext, CorrelationContextPort } from '@go-agree/application';
+import { TYPE_ID_PREFIXES, ensureTypeId, generateTypeId } from '@go-agree/domain';
 
 export class CorrelationStorage implements CorrelationContextPort {
   private readonly storage = new AsyncLocalStorage<CorrelationContext>();
@@ -11,20 +11,20 @@ export class CorrelationStorage implements CorrelationContextPort {
 
   getCorrelationId(): string {
     const store = this.storage.getStore();
-    return store?.correlationId ?? randomUUID();
+    return store?.correlationId ?? generateTypeId(TYPE_ID_PREFIXES.CORRELATION);
   }
 
   setUserId(userId: string): void {
     const store = this.storage.getStore();
     if (store) {
-      store.userId = userId;
+      store.userId = ensureTypeId(TYPE_ID_PREFIXES.USER, userId);
     }
   }
 
   setContractId(contractId: string): void {
     const store = this.storage.getStore();
     if (store) {
-      store.contractId = contractId;
+      store.contractId = ensureTypeId(TYPE_ID_PREFIXES.CONTRACT, contractId);
     }
   }
 

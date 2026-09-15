@@ -1,3 +1,4 @@
+import { TYPE_ID_PREFIXES, generateTypeId } from '@go-agree/domain';
 import { correlationStorage } from '@go-agree/infrastructure';
 import { NextResponse } from 'next/server';
 
@@ -44,7 +45,9 @@ export async function withCorrelationContext<T>(
 ): Promise<T> {
   const incomingId = request.headers.get('x-correlation-id');
   const correlationId =
-    incomingId && incomingId.trim().length > 0 ? incomingId.trim() : crypto.randomUUID();
+    incomingId && incomingId.trim().length > 0
+      ? incomingId.trim()
+      : generateTypeId(TYPE_ID_PREFIXES.CORRELATION);
 
   return correlationStorage.runWithContext(
     {

@@ -1,4 +1,5 @@
 export * from './errors/DomainErrors.js';
+export * from './value-objects/TypeId.js';
 export * from './value-objects/Email.js';
 export * from './value-objects/UserId.js';
 export * from './value-objects/ContractId.js';
