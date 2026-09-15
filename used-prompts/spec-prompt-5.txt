@@ -1,0 +1,5 @@
+Upgrade to the latest Next.js LTS version. Implement server-side logging using Pino, adding logs at various levels based on code context—displayed according to the logging level defined in an environment variable.
+
+Include log length limits (configurable via environment variable) and the obfuscation of sensitive values ​​(also configurable via environment variable), as well as correlation ID parameters to enable the retrieval of logs associated with specific users or contracts.
+
+Implement Biome as a replacement for Prettier and ESLint.

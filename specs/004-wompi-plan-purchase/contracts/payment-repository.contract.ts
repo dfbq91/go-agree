@@ -13,7 +13,13 @@ export interface PaymentTransactionDTO {
   readonly billingCycle: 'monthly' | 'annual';
   readonly amount: number;
   readonly currency: string;
-  readonly status: 'pending' | 'approved' | 'rejected' | 'rejected_duplicate' | 'expired' | 'flagged_mismatch';
+  readonly status:
+    | 'pending'
+    | 'approved'
+    | 'rejected'
+    | 'rejected_duplicate'
+    | 'expired'
+    | 'flagged_mismatch';
   readonly paymentMethodType: string | null;
   readonly rejectionReason: string | null;
   readonly createdAt: string;
@@ -36,7 +42,9 @@ export interface PaymentRepositoryPort {
   /**
    * Records an initial pending payment transaction.
    */
-  createTransaction(transaction: Omit<PaymentTransactionDTO, 'id' | 'createdAt' | 'updatedAt'>): Promise<PaymentTransactionDTO>;
+  createTransaction(
+    transaction: Omit<PaymentTransactionDTO, 'id' | 'createdAt' | 'updatedAt'>
+  ): Promise<PaymentTransactionDTO>;
 
   /**
    * Retrieves transaction by internal reference.

@@ -1,9 +1,9 @@
 /**
  * Application Port Contract: AuthPort
- * 
+ *
  * Location in Architecture: packages/application/src/ports/AuthPort.ts
  * Implemented by: packages/infrastructure/src/adapters/auth/SupabaseAuthAdapter.ts
- * 
+ *
  * Inward Dependency Rule:
  * packages/domain <-- packages/application (defines AuthPort) <-- packages/infrastructure (implements AuthPort)
  */
@@ -57,7 +57,10 @@ export interface RequestPasswordResetInput {
  * Domain-specific typed errors (Principle I: Explicit typed domain errors)
  */
 export class DomainAuthError extends Error {
-  constructor(message: string, public readonly code: string) {
+  constructor(
+    message: string,
+    public readonly code: string
+  ) {
     super(message);
     this.name = 'DomainAuthError';
   }

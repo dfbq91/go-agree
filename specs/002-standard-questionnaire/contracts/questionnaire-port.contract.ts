@@ -1,9 +1,9 @@
 /**
  * Application Port Contract: QuestionnairePort & ContractRepositoryPort
- * 
+ *
  * Location in Architecture: packages/application/src/ports/QuestionnairePort.ts
  * Implemented by: packages/infrastructure/src/adapters/storage/SupabaseContractRepository.ts
- * 
+ *
  * Inward Dependency Rule:
  * packages/domain <-- packages/application (defines Ports) <-- packages/infrastructure (implements Ports)
  */
@@ -75,7 +75,10 @@ export interface CompleteQuestionnaireInput {
  * Domain-specific typed errors (Principle I: Explicit typed domain errors)
  */
 export class QuestionnaireDomainError extends Error {
-  constructor(message: string, public readonly code: string) {
+  constructor(
+    message: string,
+    public readonly code: string
+  ) {
     super(message);
     this.name = 'QuestionnaireDomainError';
   }
@@ -89,7 +92,10 @@ export class ContractNotFoundError extends QuestionnaireDomainError {
 
 export class UnauthorizedContractAccessError extends QuestionnaireDomainError {
   constructor(contractId: string, userId: string) {
-    super(`User ${userId} does not have permission to access contract ${contractId}`, 'UNAUTHORIZED_ACCESS');
+    super(
+      `User ${userId} does not have permission to access contract ${contractId}`,
+      'UNAUTHORIZED_ACCESS'
+    );
   }
 }
 

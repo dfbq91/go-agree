@@ -40,7 +40,10 @@ export interface CountryPricingRegistry {
 export interface PricingCalculatorPort {
   calculateAnnualSavings(plan: PricingPlanConfig): number;
   formatPrice(amount: number, currency: CurrencyConfig): string;
-  getDisplayPrice(plan: PricingPlanConfig, cycle: BillingCycle): {
+  getDisplayPrice(
+    plan: PricingPlanConfig,
+    cycle: BillingCycle
+  ): {
     amount: number;
     formatted: string;
     periodLabel: string;
