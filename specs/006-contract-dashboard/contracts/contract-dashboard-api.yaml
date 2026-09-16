@@ -1,0 +1,270 @@
+openapi: 3.0.3
+info:
+  title: go-agree Contract Dashboard API
+  version: 1.0.0
+  description: Endpoints powering the Contract Dashboard (listing, renaming, downloading, deleting).
+paths:
+  /api/contracts:
+    get:
+      summary: List all contracts for the authenticated user
+      operationId: listContracts
+      responses:
+        '200':
+          description: List of contract dashboard items ordered by last modification date descending.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ContractDashboardItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/contracts/{id}:
+    delete:
+      summary: Permanently delete a contract generation and its associated documents
+      operationId: deleteContract
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Unique contract generation ID
+      responses:
+        '200':
+          description: Contract successfully deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  deletedId:
+                    type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/contracts/{id}/title:
+    patch:
+      summary: Update contract title (in-place click-to-edit)
+      operationId: updateContractTitle
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+              properties:
+                title:
+                  type: string
+                  minLength: 1
+                  maxLength: 255
+                  example: 'Contrato de Arriendo Apto 301'
+      responses:
+        '200':
+          description: Title updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractGeneration'
+        '400':
+          description: Title is empty or whitespace
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/contracts/{id}/download:
+    get:
+      summary: Download the finalized contract document in requested format
+      operationId: downloadContractDocument
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: format
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [pdf, docx]
+            default: pdf
+      responses:
+        '200':
+          description: Document file binary stream
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+                example: 'attachment; filename="Mi_Contrato_1.pdf"'
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+            application/vnd.openxmlformats-officedocument.wordprocessingml.document:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Document not yet compiled for this contract
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+components:
+  schemas:
+    ContractDashboardItem:
+      type: object
+      required:
+        - id
+        - userId
+        - title
+        - status
+        - currentQuestionIndex
+        - questionsAnsweredCount
+        - hasGeneratedDocument
+        - availableFormats
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          example: 'con_01a0a6a9-...'
+        userId:
+          type: string
+          example: 'user_01a0a6a9-...'
+        title:
+          type: string
+          example: 'Mi Contrato 1'
+        status:
+          type: string
+          enum: [in_progress, completed]
+          example: 'in_progress'
+        currentQuestionIndex:
+          type: integer
+          example: 4
+        questionsAnsweredCount:
+          type: integer
+          example: 5
+        hasGeneratedDocument:
+          type: boolean
+          example: false
+        availableFormats:
+          type: array
+          items:
+            type: string
+            enum: [pdf, docx]
+          example: []
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    ContractGeneration:
+      type: object
+      required:
+        - id
+        - userId
+        - title
+        - status
+        - currentQuestionIndex
+        - answers
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        title:
+          type: string
+        status:
+          type: string
+          enum: [in_progress, completed]
+        currentQuestionIndex:
+          type: integer
+        answers:
+          type: object
+          additionalProperties: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    ApiError:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          example: 'EMPTY_TITLE'
+        message:
+          type: string
+          example: 'El título no puede estar vacío.'
+
+  responses:
+    Unauthorized:
+      description: Missing or invalid authentication token/session
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    Forbidden:
+      description: Access denied to requested tenant resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    NotFound:
+      description: Requested contract was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+    InternalError:
+      description: Unexpected server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
