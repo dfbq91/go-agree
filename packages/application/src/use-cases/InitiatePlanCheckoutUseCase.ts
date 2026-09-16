@@ -13,6 +13,7 @@ import {
   UserId,
   UserSubscription,
 } from '@go-agree/domain';
+import type { LoggerPort } from '../ports/LoggerPort.js';
 import type { PaymentGatewayPort } from '../ports/PaymentGatewayPort.js';
 import type { PaymentRepositoryPort } from '../ports/PaymentRepositoryPort.js';
 import type { SubscriptionRepositoryPort } from '../ports/SubscriptionRepositoryPort.js';
@@ -39,7 +40,8 @@ export class InitiatePlanCheckoutUseCase {
   constructor(
     private readonly subscriptionRepo: SubscriptionRepositoryPort,
     private readonly paymentRepo: PaymentRepositoryPort,
-    private readonly gatewayResolver: (providerId: string) => PaymentGatewayPort
+    private readonly gatewayResolver: (providerId: string) => PaymentGatewayPort,
+    private readonly logger?: LoggerPort
   ) {}
 
   async execute(input: InitiatePlanCheckoutInput): Promise<InitiatePlanCheckoutResult> {
@@ -58,6 +60,9 @@ export class InitiatePlanCheckoutUseCase {
     });
 
     if (!subscription.canInitiateCheckout()) {
+      this.logger?.warn('Checkout initiation rejected: active subscription already exists', {
+        userId: input.userId,
+      });
       throw new ActiveSubscriptionExistsError();
     }
 
@@ -71,6 +76,11 @@ export class InitiatePlanCheckoutUseCase {
       (p) => p.id.toLowerCase() === input.providerId.toLowerCase()
     );
     if (!isSupported) {
+      this.logger?.warn('Checkout initiation rejected: unsupported payment provider', {
+        userId: input.userId,
+        providerId: input.providerId,
+        countryCode,
+      });
       throw new UnsupportedPaymentProviderError(input.providerId, countryCode);
     }
 
@@ -122,6 +132,16 @@ export class InitiatePlanCheckoutUseCase {
       customerEmail: input.customerEmail,
       redirectUrl,
       planName: planLabel,
+    });
+
+    this.logger?.info('Plan checkout initiated successfully', {
+      userId: input.userId,
+      planId: input.planId,
+      billingCycle: input.billingCycle,
+      providerId: input.providerId,
+      reference,
+      amount: amountInCents,
+      currency,
     });
 
     return {

@@ -41,7 +41,7 @@ describe('Asynchronous Cookie Access (Next.js 16 Active LTS)', () => {
   it('getServerContractRepository awaits cookies() when service role is not set', async () => {
     process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://example.supabase.co';
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = 'anon-key';
-    delete process.env.SUPABASE_SERVICE_ROLE_KEY;
+    process.env.SUPABASE_SERVICE_ROLE_KEY = undefined;
 
     const repo = await getServerContractRepository();
     expect(cookies).toHaveBeenCalled();
@@ -54,7 +54,7 @@ describe('Asynchronous Cookie Access (Next.js 16 Active LTS)', () => {
   it('getServerPaymentRepository awaits cookies() when service role is not set', async () => {
     process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://example.supabase.co';
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = 'anon-key';
-    delete process.env.SUPABASE_SERVICE_ROLE_KEY;
+    process.env.SUPABASE_SERVICE_ROLE_KEY = undefined;
 
     const repo = await getServerPaymentRepository();
     expect(cookies).toHaveBeenCalled();
@@ -67,7 +67,7 @@ describe('Asynchronous Cookie Access (Next.js 16 Active LTS)', () => {
   it('getServerSubscriptionRepository awaits cookies() when service role is not set', async () => {
     process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://example.supabase.co';
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = 'anon-key';
-    delete process.env.SUPABASE_SERVICE_ROLE_KEY;
+    process.env.SUPABASE_SERVICE_ROLE_KEY = undefined;
 
     const repo = await getServerSubscriptionRepository();
     expect(cookies).toHaveBeenCalled();

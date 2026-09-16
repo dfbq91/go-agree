@@ -38,6 +38,10 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
 
       // Idempotency: If contract is already completed, do not deduct quota again
       if (existing.status === 'completed') {
+        logger.debug('Contract already completed; skipping quota deduction', {
+          contractId: id,
+          userId: session.userId,
+        });
         try {
           revalidatePath('/dashboard');
         } catch {
@@ -52,10 +56,10 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
 
       // Consume contract generation quota only for uncompleted contracts
       const subRepo = await getServerSubscriptionRepository();
-      const quotaUseCase = new ConsumeContractQuotaUseCase(subRepo);
+      const quotaUseCase = new ConsumeContractQuotaUseCase(subRepo, logger);
       await quotaUseCase.execute({ userId: session.userId });
 
-      const useCase = new CompleteQuestionnaireUseCase(repo);
+      const useCase = new CompleteQuestionnaireUseCase(repo, logger);
       const completed = await useCase.execute({
         contractId: id,
         userId: session.userId,

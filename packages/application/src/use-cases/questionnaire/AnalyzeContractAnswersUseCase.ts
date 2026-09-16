@@ -4,6 +4,7 @@ import type {
   DynamicQuestionRepositoryPort,
 } from '../../ports/DynamicQuestionRepositoryPort.js';
 import type { LlmQuestionAnalysisPort } from '../../ports/LlmQuestionAnalysisPort.js';
+import type { LoggerPort } from '../../ports/LoggerPort.js';
 
 export interface AnalyzeContractAnswersInput {
   contractId: string;
@@ -23,7 +24,8 @@ export class AnalyzeContractAnswersUseCase {
   constructor(
     private readonly contractRepo: ContractRepositoryPort,
     private readonly dynamicQuestionRepo: DynamicQuestionRepositoryPort,
-    private readonly llmPort: LlmQuestionAnalysisPort
+    private readonly llmPort: LlmQuestionAnalysisPort,
+    private readonly logger?: LoggerPort
   ) {}
 
   async execute(input: AnalyzeContractAnswersInput): Promise<AnalyzeContractAnswersResult> {
@@ -47,6 +49,10 @@ export class AnalyzeContractAnswersUseCase {
     if (existingSnapshot) {
       const isUnmodified = this.areAnswersEqual(existingSnapshot, currentAnswers);
       if (isUnmodified) {
+        this.logger?.debug(
+          'Dynamic question analysis skipped: answers unchanged since last snapshot',
+          { contractId: input.contractId, userId: input.userId, stage }
+        );
         return {
           status: 'skipped',
           reason: 'unmodified_answers',
@@ -58,6 +64,10 @@ export class AnalyzeContractAnswersUseCase {
     }
 
     // 3. Llamar al LLM para generar exactamente 5 preguntas
+    this.logger?.debug('Triggering LLM dynamic question generation', {
+      contractId: input.contractId,
+      stage,
+    });
     const llmResult = await this.llmPort.generateQuestions({
       answers: currentAnswers,
       stage,
@@ -83,6 +93,12 @@ export class AnalyzeContractAnswersUseCase {
       stage,
       answersSnapshot: currentAnswers,
       questions: questionsToSave,
+    });
+
+    this.logger?.info('Dynamic questions generated and persisted', {
+      contractId: input.contractId,
+      stage,
+      questionCount: saved.length,
     });
 
     return {

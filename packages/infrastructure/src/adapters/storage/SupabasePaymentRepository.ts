@@ -4,6 +4,7 @@
  */
 
 import type {
+  LoggerPort,
   PaymentRepositoryPort,
   PaymentTransactionDTO,
   PaymentWebhookEventDTO,
@@ -29,7 +30,10 @@ interface PaymentTransactionRow {
 }
 
 export class SupabasePaymentRepository implements PaymentRepositoryPort {
-  constructor(private readonly supabase: SupabaseClient) {}
+  constructor(
+    private readonly supabase: SupabaseClient,
+    private readonly logger?: LoggerPort
+  ) {}
 
   private mapRowToDTO(row: PaymentTransactionRow): PaymentTransactionDTO {
     return {
@@ -72,6 +76,12 @@ export class SupabasePaymentRepository implements PaymentRepositoryPort {
       .single();
 
     if (error || !data) {
+      this.logger?.error('Supabase insert failed on payment_transactions.create', {
+        reference: transaction.reference,
+        userId: transaction.userId,
+        error: error?.message,
+        code: error?.code,
+      });
       throw new Error(`Failed to create payment transaction: ${error?.message}`);
     }
 
@@ -85,7 +95,16 @@ export class SupabasePaymentRepository implements PaymentRepositoryPort {
       .or(`reference.eq.${reference},gateway_transaction_id.eq.${reference}`)
       .maybeSingle();
 
-    if (error || !data) {
+    if (error) {
+      this.logger?.error('Supabase query failed on payment_transactions.getByReference', {
+        reference,
+        error: error.message,
+        code: error.code,
+      });
+      return null;
+    }
+
+    if (!data) {
       return null;
     }
 
@@ -120,6 +139,12 @@ export class SupabasePaymentRepository implements PaymentRepositoryPort {
       .eq('reference', reference);
 
     if (error) {
+      this.logger?.error('Supabase update failed on payment_transactions.updateStatus', {
+        reference,
+        status,
+        error: error.message,
+        code: error.code,
+      });
       throw new Error(`Failed to update transaction ${reference}: ${error.message}`);
     }
   }
@@ -131,7 +156,16 @@ export class SupabasePaymentRepository implements PaymentRepositoryPort {
       .eq('event_id', eventId)
       .maybeSingle();
 
-    if (error || !data) {
+    if (error) {
+      this.logger?.error('Supabase query failed on payment_webhook_events.hasWebhookEvent', {
+        eventId,
+        error: error.message,
+        code: error.code,
+      });
+      return false;
+    }
+
+    if (!data) {
       return false;
     }
 
@@ -152,6 +186,12 @@ export class SupabasePaymentRepository implements PaymentRepositoryPort {
     });
 
     if (error) {
+      this.logger?.error('Supabase insert failed on payment_webhook_events.record', {
+        eventId: event.eventId,
+        transactionReference: event.transactionReference,
+        error: error.message,
+        code: error.code,
+      });
       throw new Error(`Failed to record webhook event ${event.eventId}: ${error.message}`);
     }
   }

@@ -1,14 +1,17 @@
 import type {
+  ContractDashboardItemDTO,
   ContractGenerationDTO,
-  ContractGenerationSummaryDTO,
   ContractRepositoryPort,
 } from '../../ports/ContractRepositoryPort.js';
 
 export class ListUserContractsUseCase {
   constructor(private readonly contractRepo: ContractRepositoryPort) {}
 
-  async execute(userId: string): Promise<ContractGenerationSummaryDTO[]> {
-    return this.contractRepo.listByUserId(userId);
+  async execute(userId: string): Promise<ContractDashboardItemDTO[]> {
+    const items = await this.contractRepo.listDashboardItemsByUserId(userId);
+    return [...items].sort(
+      (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+    );
   }
 }
 

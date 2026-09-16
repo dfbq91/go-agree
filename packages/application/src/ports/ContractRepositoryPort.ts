@@ -18,11 +18,28 @@ export interface ContractGenerationSummaryDTO {
   updatedAt: Date;
 }
 
+export type DocumentFormat = 'pdf' | 'docx';
+
+export interface ContractDashboardItemDTO {
+  id: string;
+  userId: string;
+  title: string;
+  status: 'in_progress' | 'completed';
+  currentQuestionIndex: number;
+  questionsAnsweredCount: number;
+  hasGeneratedDocument: boolean;
+  availableFormats: DocumentFormat[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface ContractRepositoryPort {
   listByUserId(userId: string): Promise<ContractGenerationSummaryDTO[]>;
+  listDashboardItemsByUserId(userId: string): Promise<ContractDashboardItemDTO[]>;
   getByIdAndUserId(id: string, userId: string): Promise<ContractGenerationDTO | null>;
   save(contract: ContractGenerationDTO): Promise<void>;
   create(
     contract: Omit<ContractGenerationDTO, 'createdAt' | 'updatedAt'>
   ): Promise<ContractGenerationDTO>;
+  deleteByIdAndUserId(id: string, userId: string): Promise<void>;
 }

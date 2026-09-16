@@ -1,9 +1,12 @@
 import type {
   CompleteQuestionnaireInput,
+  ContractDashboardItemDTO,
   ContractGenerationDTO,
   ContractGenerationSummaryDTO,
   ContractProgressPort,
   ContractRepositoryPort,
+  DocumentFormat,
+  LoggerPort,
   UpdateProgressInput,
   UpdateTitleInput,
 } from '@go-agree/application';
@@ -11,6 +14,7 @@ import {
   ContractNotFoundError,
   EmptyTitleError,
   TYPE_ID_PREFIXES,
+  calculateAnsweredQuestionsCount,
   ensureTypeId,
   isUuid,
   stripTypeIdPrefix,
@@ -26,7 +30,10 @@ const formatUserId = (userId: string): string => {
 };
 
 export class SupabaseContractRepository implements ContractRepositoryPort, ContractProgressPort {
-  constructor(private readonly supabase: SupabaseClient) {}
+  constructor(
+    private readonly supabase: SupabaseClient,
+    private readonly logger?: LoggerPort
+  ) {}
 
   async listByUserId(userId: string): Promise<ContractGenerationSummaryDTO[]> {
     const rawUserId = stripTypeIdPrefix(userId);
@@ -36,7 +43,16 @@ export class SupabaseContractRepository implements ContractRepositoryPort, Contr
       .eq('user_id', rawUserId)
       .order('updated_at', { ascending: false });
 
-    if (error || !data) {
+    if (error) {
+      this.logger?.error('Supabase query failed on contract_generations.select', {
+        userId,
+        error: error.message,
+        code: error.code,
+      });
+      return [];
+    }
+
+    if (!data) {
       return [];
     }
 
@@ -48,6 +64,88 @@ export class SupabaseContractRepository implements ContractRepositoryPort, Contr
       currentQuestionIndex: row.current_question_index,
       updatedAt: new Date(row.updated_at),
     }));
+  }
+
+  async listDashboardItemsByUserId(userId: string): Promise<ContractDashboardItemDTO[]> {
+    const rawUserId = stripTypeIdPrefix(userId);
+    const { data, error } = await this.supabase
+      .from('contract_generations')
+      .select('id, user_id, title, status, current_question_index, answers, created_at, updated_at')
+      .eq('user_id', rawUserId)
+      .order('updated_at', { ascending: false });
+
+    if (error) {
+      this.logger?.error('Supabase query failed on contract_generations.listDashboardItems', {
+        userId,
+        error: error.message,
+        code: error.code,
+      });
+      return [];
+    }
+
+    if (!data || data.length === 0) {
+      return [];
+    }
+
+    let documentsMap = new Map<string, DocumentFormat[]>();
+    try {
+      const contractIds = data.map((row: any) => row.id);
+      const { data: docsData, error: docsError } = await this.supabase
+        .from('contract_documents')
+        .select('contract_id, file_format')
+        .in('contract_id', contractIds);
+
+      if (!docsError && docsData) {
+        for (const doc of docsData) {
+          const list = documentsMap.get(doc.contract_id) || [];
+          if (!list.includes(doc.file_format as DocumentFormat)) {
+            list.push(doc.file_format as DocumentFormat);
+          }
+          documentsMap.set(doc.contract_id, list);
+        }
+      }
+    } catch {
+      documentsMap = new Map();
+    }
+
+    return data.map((row: any) => {
+      const answeredCount = calculateAnsweredQuestionsCount(row.answers);
+      const formats = documentsMap.get(row.id) || [];
+
+      return {
+        id: formatContractId(row.id),
+        userId: formatUserId(row.user_id),
+        title: row.title,
+        status: row.status,
+        currentQuestionIndex: row.current_question_index,
+        questionsAnsweredCount: answeredCount,
+        hasGeneratedDocument: formats.length > 0,
+        availableFormats: formats,
+        createdAt: new Date(row.created_at),
+        updatedAt: new Date(row.updated_at),
+      };
+    });
+  }
+
+  async deleteByIdAndUserId(id: string, userId: string): Promise<void> {
+    const rawId = stripTypeIdPrefix(id);
+    const rawUserId = stripTypeIdPrefix(userId);
+
+    const { error } = await this.supabase
+      .from('contract_generations')
+      .delete()
+      .eq('id', rawId)
+      .eq('user_id', rawUserId);
+
+    if (error) {
+      this.logger?.error('Supabase delete failed on contract_generations.deleteByIdAndUserId', {
+        id,
+        userId,
+        error: error.message,
+        code: error.code,
+      });
+      throw new Error(`Failed to delete contract: ${error.message}`);
+    }
   }
 
   async getByIdAndUserId(id: string, userId: string): Promise<ContractGenerationDTO | null> {
@@ -64,11 +162,26 @@ export class SupabaseContractRepository implements ContractRepositoryPort, Contr
         ? await (query as any).maybeSingle()
         : await query.single();
 
-    if (error || !data) {
+    if (error) {
+      this.logger?.error('Supabase query failed on contract_generations.getById', {
+        id,
+        userId,
+        error: error.message,
+        code: error.code,
+      });
+      return null;
+    }
+
+    if (!data) {
       return null;
     }
 
     if (data.user_id !== rawUserId && data.user_id !== userId) {
+      this.logger?.warn('Supabase contract query tenant mismatch', {
+        id,
+        expectedUserId: rawUserId,
+        rowUserId: data.user_id,
+      });
       return null;
     }
 
@@ -104,6 +217,12 @@ export class SupabaseContractRepository implements ContractRepositoryPort, Contr
       .eq('user_id', rawUserId);
 
     if (error) {
+      this.logger?.error('Supabase update failed on contract_generations.save', {
+        id: contract.id,
+        userId: contract.userId,
+        error: error.message,
+        code: error.code,
+      });
       throw new Error(`Failed to save contract: ${error.message}`);
     }
   }
@@ -134,6 +253,12 @@ export class SupabaseContractRepository implements ContractRepositoryPort, Contr
         : await query.single();
 
     if (error || !data) {
+      this.logger?.error('Supabase insert failed on contract_generations.create', {
+        id: contract.id,
+        userId: contract.userId,
+        error: error?.message,
+        code: error?.code,
+      });
       throw new Error(`Failed to create contract: ${error?.message || 'Unknown error'}`);
     }
 
@@ -180,6 +305,12 @@ export class SupabaseContractRepository implements ContractRepositoryPort, Contr
         : await query.single();
 
     if (error) {
+      this.logger?.error('Supabase update failed on contract_generations.updateProgress', {
+        id: input.contractId,
+        userId: input.userId,
+        error: error.message,
+        code: error.code,
+      });
       throw new Error(`Failed to update progress: ${error.message}`);
     }
     if (!data) {
@@ -228,6 +359,12 @@ export class SupabaseContractRepository implements ContractRepositoryPort, Contr
         : await query.single();
 
     if (error) {
+      this.logger?.error('Supabase update failed on contract_generations.updateTitle', {
+        id: input.contractId,
+        userId: input.userId,
+        error: error.message,
+        code: error.code,
+      });
       throw new Error(`Failed to update title: ${error.message}`);
     }
     if (!data) {
@@ -272,6 +409,12 @@ export class SupabaseContractRepository implements ContractRepositoryPort, Contr
         : await query.single();
 
     if (error) {
+      this.logger?.error('Supabase update failed on contract_generations.completeQuestionnaire', {
+        id: input.contractId,
+        userId: input.userId,
+        error: error.message,
+        code: error.code,
+      });
       throw new Error(`Failed to complete questionnaire: ${error.message}`);
     }
     if (!data) {
@@ -298,6 +441,11 @@ export class SupabaseContractRepository implements ContractRepositoryPort, Contr
       .eq('user_id', rawUserId);
 
     if (error) {
+      this.logger?.warn('Supabase count query failed on contract_generations.getNextDefaultTitle', {
+        userId,
+        error: error.message,
+        code: error.code,
+      });
       return 'Mi Contrato 1';
     }
 

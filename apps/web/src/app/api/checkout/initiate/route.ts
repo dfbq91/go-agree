@@ -36,8 +36,11 @@ export async function POST(request: Request) {
 
       const redirectUrl = `${config.appUrl}/checkout/result`;
 
-      const useCase = new InitiatePlanCheckoutUseCase(subRepo, paymentRepo, (id) =>
-        resolver.resolve(id)
+      const useCase = new InitiatePlanCheckoutUseCase(
+        subRepo,
+        paymentRepo,
+        (id) => resolver.resolve(id),
+        logger
       );
 
       const result = await useCase.execute({

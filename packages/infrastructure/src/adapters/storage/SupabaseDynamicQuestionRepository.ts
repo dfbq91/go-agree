@@ -2,16 +2,12 @@ import type {
   ConditionRuleDTO,
   DynamicQuestionDTO,
   DynamicQuestionRepositoryPort,
+  LoggerPort,
   QuestionOptionDTO,
   QuestionType,
   SaveDynamicQuestionsInput,
 } from '@go-agree/application';
-import {
-  TYPE_ID_PREFIXES,
-  ensureTypeId,
-  isUuid,
-  stripTypeIdPrefix,
-} from '@go-agree/domain';
+import { TYPE_ID_PREFIXES, ensureTypeId, isUuid, stripTypeIdPrefix } from '@go-agree/domain';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 const formatContractId = (id: string): string => {
@@ -44,7 +40,10 @@ export interface ContractSnapshotRow {
 }
 
 export class SupabaseDynamicQuestionRepository implements DynamicQuestionRepositoryPort {
-  constructor(private readonly supabase: SupabaseClient) {}
+  constructor(
+    private readonly supabase: SupabaseClient,
+    private readonly logger?: LoggerPort
+  ) {}
 
   async saveQuestions(input: SaveDynamicQuestionsInput): Promise<DynamicQuestionDTO[]> {
     const rawContractId = stripTypeIdPrefix(input.contractId);
@@ -89,6 +88,13 @@ export class SupabaseDynamicQuestionRepository implements DynamicQuestionReposit
       .select<string, DynamicQuestionRow>('*');
 
     if (error || !data) {
+      this.logger?.error('Supabase insert failed on contract_dynamic_questions.saveQuestions', {
+        contractId: input.contractId,
+        userId: input.userId,
+        stage: input.stage,
+        error: error?.message,
+        code: error?.code,
+      });
       throw new Error(`Failed to save dynamic questions: ${error?.message || 'Unknown error'}`);
     }
 
@@ -108,7 +114,17 @@ export class SupabaseDynamicQuestionRepository implements DynamicQuestionReposit
       .eq('user_id', rawUserId)
       .order('order_index', { ascending: true });
 
-    if (error || !data) {
+    if (error) {
+      this.logger?.error('Supabase query failed on contract_dynamic_questions.getByContractId', {
+        contractId,
+        userId,
+        error: error.message,
+        code: error.code,
+      });
+      return [];
+    }
+
+    if (!data) {
       return [];
     }
 
@@ -129,7 +145,18 @@ export class SupabaseDynamicQuestionRepository implements DynamicQuestionReposit
       .eq('user_id', rawUserId)
       .single<ContractSnapshotRow>();
 
-    if (error || !data || !data.analysis_snapshots) {
+    if (error) {
+      this.logger?.error('Supabase query failed on contract_generations.getSnapshot', {
+        contractId,
+        userId,
+        stage,
+        error: error.message,
+        code: error.code,
+      });
+      return null;
+    }
+
+    if (!data || !data.analysis_snapshots) {
       return null;
     }
 
@@ -147,6 +174,13 @@ export class SupabaseDynamicQuestionRepository implements DynamicQuestionReposit
       .eq('stage', stage);
 
     if (error) {
+      this.logger?.error('Supabase delete failed on contract_dynamic_questions.deleteByStage', {
+        contractId,
+        userId,
+        stage,
+        error: error.message,
+        code: error.code,
+      });
       throw new Error(`Failed to delete dynamic questions: ${error.message}`);
     }
   }

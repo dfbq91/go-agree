@@ -5,6 +5,7 @@ import {
   createSupabaseServerClient,
 } from '@go-agree/infrastructure';
 import { cookies } from 'next/headers';
+import { logger } from './logger';
 
 // Singleton in-memory mock for dev fallback when Supabase credentials are not configured
 const globalMockAdapter = new MockAuthAdapter();
@@ -39,5 +40,6 @@ export async function getServerAuthAdapter(): Promise<AuthPort> {
   }
 
   // Fallback to in-memory mock adapter for local testing/dev
+  logger.warn('Supabase credentials not configured; using MockAuthAdapter');
   return globalMockAdapter;
 }

@@ -4,6 +4,7 @@
  */
 
 import { PaymentTamperError, UserId, UserSubscription } from '@go-agree/domain';
+import type { LoggerPort } from '../ports/LoggerPort.js';
 import type { PaymentGatewayPort } from '../ports/PaymentGatewayPort.js';
 import type { PaymentRepositoryPort } from '../ports/PaymentRepositoryPort.js';
 import type { SubscriptionRepositoryPort } from '../ports/SubscriptionRepositoryPort.js';
@@ -26,7 +27,8 @@ export class ProcessPaymentWebhookUseCase {
   constructor(
     private readonly subscriptionRepo: SubscriptionRepositoryPort,
     private readonly paymentRepo: PaymentRepositoryPort,
-    private readonly gatewayResolver: (providerId: string) => PaymentGatewayPort
+    private readonly gatewayResolver: (providerId: string) => PaymentGatewayPort,
+    private readonly logger?: LoggerPort
   ) {}
 
   async execute(input: ProcessPaymentWebhookInput): Promise<ProcessPaymentWebhookResult> {
@@ -41,6 +43,10 @@ export class ProcessPaymentWebhookUseCase {
 
     if (!isValid) {
       const failedEventId = `failed_verification_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
+      this.logger?.error('SECURITY ALERT: Webhook cryptographic checksum verification failed', {
+        providerId: input.providerId,
+        failedEventId,
+      });
       await this.paymentRepo.recordWebhookEvent({
         eventId: failedEventId,
         providerId: input.providerId,
@@ -64,6 +70,10 @@ export class ProcessPaymentWebhookUseCase {
     // 3. Strict Idempotency check
     const isAlreadyProcessed = await this.paymentRepo.hasWebhookEvent(event.eventId);
     if (isAlreadyProcessed) {
+      this.logger?.debug('Duplicate webhook event ignored (already processed)', {
+        eventId: event.eventId,
+        transactionReference: event.transactionReference,
+      });
       return {
         status: 'ignored_duplicate',
         message: 'Evento ya procesado previamente',
@@ -75,6 +85,10 @@ export class ProcessPaymentWebhookUseCase {
     // 4. Retrieve matching transaction
     const tx = await this.paymentRepo.getTransactionByReference(event.transactionReference);
     if (!tx) {
+      this.logger?.warn('Webhook received for unknown transaction reference', {
+        eventId: event.eventId,
+        transactionReference: event.transactionReference,
+      });
       await this.paymentRepo.recordWebhookEvent({
         eventId: event.eventId,
         providerId: input.providerId,
@@ -95,6 +109,13 @@ export class ProcessPaymentWebhookUseCase {
 
     // 5. Amount and Currency validation
     if (tx.amount !== event.amountInCents || tx.currency !== event.currency) {
+      this.logger?.error('FINANCIAL ALERT: Transaction amount or currency mismatch', {
+        reference: tx.reference,
+        expectedAmount: tx.amount,
+        receivedAmount: event.amountInCents,
+        expectedCurrency: tx.currency,
+        receivedCurrency: event.currency,
+      });
       await this.paymentRepo.updateTransactionStatus(
         tx.reference,
         'flagged_mismatch',
@@ -142,6 +163,11 @@ export class ProcessPaymentWebhookUseCase {
         !currentSub.isExpired() &&
         currentSub.lastPaymentTransactionId !== tx.id
       ) {
+        this.logger?.warn('Duplicate payment rejected for active Pro subscriber', {
+          userId: tx.userId,
+          reference: tx.reference,
+          lastPaymentTransactionId: currentSub.lastPaymentTransactionId,
+        });
         // Reject duplicate payment and mark for refund/reconciliation
         await this.paymentRepo.updateTransactionStatus(
           tx.reference,
@@ -184,6 +210,13 @@ export class ProcessPaymentWebhookUseCase {
       // Activate Pro subscription
       await this.subscriptionRepo.activateProPlan(tx.userId, tx.billingCycle, expiresAt, tx.id);
 
+      this.logger?.info('Payment approved and Pro plan activated successfully', {
+        userId: tx.userId,
+        reference: tx.reference,
+        billingCycle: tx.billingCycle,
+        expiresAt: expiresAt.toISOString(),
+      });
+
       // Record idempotency receipt
       await this.paymentRepo.recordWebhookEvent({
         eventId: event.eventId,
@@ -204,6 +237,11 @@ export class ProcessPaymentWebhookUseCase {
     }
 
     if (event.status === 'DECLINED' || event.status === 'ERROR' || event.status === 'VOIDED') {
+      this.logger?.warn('Payment transaction rejected by gateway', {
+        reference: tx.reference,
+        gatewayTransactionId: event.gatewayTransactionId,
+        rejectionReason: event.rejectionReason,
+      });
       await this.paymentRepo.updateTransactionStatus(
         tx.reference,
         'rejected',
@@ -231,6 +269,11 @@ export class ProcessPaymentWebhookUseCase {
     }
 
     // Pending or other intermediate status
+    this.logger?.info('Payment transaction in pending state', {
+      reference: tx.reference,
+      gatewayTransactionId: event.gatewayTransactionId,
+      status: event.status,
+    });
     await this.paymentRepo.recordWebhookEvent({
       eventId: event.eventId,
       providerId: input.providerId,

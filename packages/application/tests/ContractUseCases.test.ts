@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type {
+  ContractDashboardItemDTO,
   ContractGenerationDTO,
-  ContractGenerationSummaryDTO,
   ContractRepositoryPort,
 } from '../src/ports/ContractRepositoryPort';
 import {
@@ -16,32 +16,39 @@ describe('Contract Application Use Cases (Tenant Isolation)', () => {
   beforeEach(() => {
     mockRepository = {
       listByUserId: vi.fn(),
+      listDashboardItemsByUserId: vi.fn(),
       getByIdAndUserId: vi.fn(),
       save: vi.fn(),
       create: vi.fn(),
+      deleteByIdAndUserId: vi.fn(),
     };
   });
 
   describe('ListUserContractsUseCase', () => {
     it('returns only contracts owned by the requesting user', async () => {
-      const mockSummaries: ContractGenerationSummaryDTO[] = [
+      const now = new Date();
+      const mockItems: ContractDashboardItemDTO[] = [
         {
           id: 'contract-1',
           userId: 'user-123',
           title: 'NDA Estándar',
           status: 'in_progress',
           currentQuestionIndex: 2,
-          updatedAt: new Date(),
+          questionsAnsweredCount: 2,
+          hasGeneratedDocument: false,
+          availableFormats: [],
+          createdAt: now,
+          updatedAt: now,
         },
       ];
 
-      vi.mocked(mockRepository.listByUserId).mockResolvedValue(mockSummaries);
+      vi.mocked(mockRepository.listDashboardItemsByUserId).mockResolvedValue(mockItems);
       const useCase = new ListUserContractsUseCase(mockRepository);
 
       const result = await useCase.execute('user-123');
 
-      expect(mockRepository.listByUserId).toHaveBeenCalledWith('user-123');
-      expect(result).toEqual(mockSummaries);
+      expect(mockRepository.listDashboardItemsByUserId).toHaveBeenCalledWith('user-123');
+      expect(result).toEqual(mockItems);
     });
   });
 

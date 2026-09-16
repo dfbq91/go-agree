@@ -12,11 +12,15 @@ import {
 } from '@go-agree/infrastructure';
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
+import { logger } from './logger';
 
 const globalMockSubscriptionRepo = new MockSubscriptionRepository();
 
 function getServiceRoleKey(): string | undefined {
-  if (process.env.SUPABASE_SERVICE_ROLE_KEY && process.env.SUPABASE_SERVICE_ROLE_KEY !== 'undefined') {
+  if (
+    process.env.SUPABASE_SERVICE_ROLE_KEY &&
+    process.env.SUPABASE_SERVICE_ROLE_KEY !== 'undefined'
+  ) {
     return process.env.SUPABASE_SERVICE_ROLE_KEY;
   }
   try {
@@ -53,7 +57,7 @@ export async function getServerSubscriptionRepository(): Promise<SubscriptionRep
           autoRefreshToken: false,
         },
       });
-      return new SupabaseSubscriptionRepository(adminClient);
+      return new SupabaseSubscriptionRepository(adminClient, logger);
     }
 
     if (supabaseAnonKey) {
@@ -78,10 +82,11 @@ export async function getServerSubscriptionRepository(): Promise<SubscriptionRep
         },
       });
 
-      return new SupabaseSubscriptionRepository(client as any);
+      return new SupabaseSubscriptionRepository(client as any, logger);
     }
   }
 
+  logger.warn('Supabase credentials not configured; using MockSubscriptionRepository');
   return globalMockSubscriptionRepo;
 }
 

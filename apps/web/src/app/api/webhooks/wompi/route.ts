@@ -30,8 +30,11 @@ export async function POST(request: Request) {
       const paymentRepo = await getServerPaymentRepository();
       const resolver = getPaymentGatewayResolver();
 
-      const useCase = new ProcessPaymentWebhookUseCase(subRepo, paymentRepo, (id) =>
-        resolver.resolve(id)
+      const useCase = new ProcessPaymentWebhookUseCase(
+        subRepo,
+        paymentRepo,
+        (id) => resolver.resolve(id),
+        logger
       );
 
       const result = await useCase.execute({

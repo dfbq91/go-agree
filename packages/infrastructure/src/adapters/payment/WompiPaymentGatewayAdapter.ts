@@ -7,6 +7,7 @@ import { createHash } from 'node:crypto';
 import type {
   CreateCheckoutInput,
   CreateCheckoutResult,
+  LoggerPort,
   ParsedTransactionEvent,
   PaymentGatewayPort,
   WebhookVerificationInput,
@@ -19,6 +20,7 @@ export interface WompiGatewayConfig {
   readonly eventsSecret: string;
   readonly checkoutBaseUrl?: string;
   readonly apiBaseUrl?: string;
+  readonly logger?: LoggerPort;
 }
 
 export class WompiPaymentGatewayAdapter implements PaymentGatewayPort {
@@ -29,6 +31,7 @@ export class WompiPaymentGatewayAdapter implements PaymentGatewayPort {
   private readonly eventsSecret: string;
   private readonly checkoutBaseUrl: string;
   private readonly apiBaseUrl: string;
+  private readonly logger?: LoggerPort;
 
   constructor(config: WompiGatewayConfig) {
     this.publicKey = config.publicKey;
@@ -37,6 +40,7 @@ export class WompiPaymentGatewayAdapter implements PaymentGatewayPort {
     this.eventsSecret = config.eventsSecret;
     this.checkoutBaseUrl = config.checkoutBaseUrl ?? 'https://checkout.wompi.co/p/';
     this.apiBaseUrl = config.apiBaseUrl ?? 'https://production.wompi.co/v1';
+    this.logger = config.logger;
   }
 
   /**
@@ -77,6 +81,10 @@ export class WompiPaymentGatewayAdapter implements PaymentGatewayPort {
       !payload.signature.checksum ||
       !payload.signature.properties
     ) {
+      this.logger?.warn('Wompi webhook signature verification failed: missing signature metadata', {
+        hasPayload: !!payload,
+        hasSignature: !!payload?.signature,
+      });
       return false;
     }
 
@@ -98,8 +106,17 @@ export class WompiPaymentGatewayAdapter implements PaymentGatewayPort {
 
     concatValues += `${timestamp}${this.eventsSecret}`;
     const calculatedChecksum = createHash('sha256').update(concatValues).digest('hex');
+    const matches = calculatedChecksum.toLowerCase() === providedChecksum.toLowerCase();
 
-    return calculatedChecksum.toLowerCase() === providedChecksum.toLowerCase();
+    if (!matches) {
+      this.logger?.warn('Wompi webhook checksum mismatch detected', {
+        propertiesCount: properties.length,
+      });
+    } else {
+      this.logger?.debug('Wompi webhook signature verified successfully');
+    }
+
+    return matches;
   }
 
   /**
@@ -128,6 +145,8 @@ export class WompiPaymentGatewayAdapter implements PaymentGatewayPort {
    * Direct API query for current transaction status from Wompi (fallback query).
    */
   async getTransactionStatus(gatewayTransactionId: string): Promise<ParsedTransactionEvent> {
+    this.logger?.debug('Querying Wompi API for transaction status', { gatewayTransactionId });
+    const startTime = Date.now();
     const response = await fetch(`${this.apiBaseUrl}/transactions/${gatewayTransactionId}`, {
       headers: {
         Authorization: `Bearer ${this.privateKey || this.publicKey}`,
@@ -135,6 +154,12 @@ export class WompiPaymentGatewayAdapter implements PaymentGatewayPort {
     });
 
     if (!response.ok) {
+      const durationMs = Date.now() - startTime;
+      this.logger?.error('Wompi API transaction status query failed', {
+        gatewayTransactionId,
+        httpStatus: response.status,
+        durationMs,
+      });
       throw new Error(
         `Wompi API returned ${response.status} for transaction ${gatewayTransactionId}`
       );

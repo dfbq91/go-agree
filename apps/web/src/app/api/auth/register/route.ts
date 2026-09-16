@@ -40,20 +40,24 @@ export async function POST(request: Request) {
         }
       );
     } catch (error: any) {
-      logger.warn('User registration failed', { error });
       if (error instanceof UserAlreadyExistsError) {
+        logger.warn('User registration failed: user already exists', { error: error.message });
         return createApiErrorResponse(error.code, es.errors.userAlreadyExists, { status: 409 });
       }
       if (error instanceof WeakPasswordError) {
+        logger.warn('User registration failed: weak password', { error: error.message });
         return createApiErrorResponse(error.code, es.errors.weakPassword, { status: 400 });
       }
       if (error instanceof InvalidEmailError) {
+        logger.warn('User registration failed: invalid email format', { error: error.message });
         return createApiErrorResponse(error.code, es.errors.invalidEmail, { status: 400 });
       }
       if (error instanceof DomainAuthError) {
+        logger.warn('User registration failed: domain auth error', { error: error.message });
         return createApiErrorResponse(error.code, error.message, { status: 400 });
       }
 
+      logger.error('Unexpected error during user registration', { error });
       return createApiErrorResponse('INTERNAL_ERROR', es.errors.genericError, { status: 500 });
     }
   });

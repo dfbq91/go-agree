@@ -3,7 +3,11 @@
  * @description Supabase implementation of SubscriptionRepositoryPort.
  */
 
-import type { SubscriptionRepositoryPort, UserSubscriptionDTO } from '@go-agree/application';
+import type {
+  LoggerPort,
+  SubscriptionRepositoryPort,
+  UserSubscriptionDTO,
+} from '@go-agree/application';
 import { UserId, UserSubscription } from '@go-agree/domain';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
@@ -22,7 +26,10 @@ interface UserSubscriptionRow {
 }
 
 export class SupabaseSubscriptionRepository implements SubscriptionRepositoryPort {
-  constructor(private readonly supabase: SupabaseClient) {}
+  constructor(
+    private readonly supabase: SupabaseClient,
+    private readonly logger?: LoggerPort
+  ) {}
 
   private mapRowToDTO(row: UserSubscriptionRow): UserSubscriptionDTO {
     return {
@@ -46,6 +53,11 @@ export class SupabaseSubscriptionRepository implements SubscriptionRepositoryPor
       .maybeSingle();
 
     if (error) {
+      this.logger?.error('Supabase query failed on user_subscriptions.getByUserId', {
+        userId,
+        error: error.message,
+        code: error.code,
+      });
       throw new Error(`Failed to fetch subscription for user ${userId}: ${error.message}`);
     }
 
@@ -126,6 +138,11 @@ export class SupabaseSubscriptionRepository implements SubscriptionRepositoryPor
     );
 
     if (error) {
+      this.logger?.error('Supabase upsert failed on user_subscriptions.save', {
+        userId: subscription.userId,
+        error: error.message,
+        code: error.code,
+      });
       throw new Error(
         `Failed to save subscription for user ${subscription.userId}: ${error.message}`
       );
@@ -145,6 +162,14 @@ export class SupabaseSubscriptionRepository implements SubscriptionRepositoryPor
       .eq('user_id', userId);
 
     if (error) {
+      this.logger?.error(
+        'Supabase update failed on user_subscriptions.incrementFreeContractCount',
+        {
+          userId,
+          error: error.message,
+          code: error.code,
+        }
+      );
       throw new Error(
         `Failed to increment free contract count for user ${userId}: ${error.message}`
       );
@@ -172,6 +197,12 @@ export class SupabaseSubscriptionRepository implements SubscriptionRepositoryPor
       .eq('user_id', userId);
 
     if (error) {
+      this.logger?.error('Supabase update failed on user_subscriptions.activateProPlan', {
+        userId,
+        billingCycle,
+        error: error.message,
+        code: error.code,
+      });
       throw new Error(`Failed to activate Pro plan for user ${userId}: ${error.message}`);
     }
   }
@@ -189,6 +220,10 @@ export class SupabaseSubscriptionRepository implements SubscriptionRepositoryPor
       .select('id');
 
     if (error) {
+      this.logger?.error('Supabase update failed on user_subscriptions.expireSubscriptions', {
+        error: error.message,
+        code: error.code,
+      });
       throw new Error(`Failed to expire subscriptions: ${error.message}`);
     }
 

@@ -1,9 +1,4 @@
-import {
-  TYPE_ID_PREFIXES,
-  ensureTypeId,
-  isTypeId,
-  stripTypeIdPrefix,
-} from './TypeId.js';
+import { TYPE_ID_PREFIXES, ensureTypeId, isTypeId, stripTypeIdPrefix } from './TypeId.js';
 
 export class UserId {
   private readonly _value: string;

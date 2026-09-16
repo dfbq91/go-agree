@@ -3,13 +3,17 @@ import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
 import { getServerAuthAdapter } from '@/lib/auth';
 import { getServerContractRepository } from '@/lib/contracts';
 import { getServerSubscriptionStatus } from '@/lib/subscription';
-import { ListUserContractsUseCase, type SubscriptionStatusResult } from '@go-agree/application';
+import {
+  type ContractDashboardItemDTO,
+  ListUserContractsUseCase,
+  type SubscriptionStatusResult,
+} from '@go-agree/application';
 import { getFreeContractLimit } from '@go-agree/domain';
 
 export const dynamic = 'force-dynamic';
 
 export default async function DashboardPage() {
-  let contracts: any[] = [];
+  let contracts: ContractDashboardItemDTO[] = [];
   const defaultFreeLimit = getFreeContractLimit();
   let subscription: SubscriptionStatusResult = {
     planType: 'free',

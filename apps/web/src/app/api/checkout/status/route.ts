@@ -42,11 +42,18 @@ export async function GET(request: Request) {
         });
       }
 
-      logger.info('Transaction status retrieved', {
-        reference,
-        userId: session.userId,
-        status: result.status,
-      });
+      if (result.status === 'pending') {
+        logger.debug('Transaction status polled (pending)', {
+          reference,
+          userId: session.userId,
+        });
+      } else {
+        logger.info('Transaction status retrieved', {
+          reference,
+          userId: session.userId,
+          status: result.status,
+        });
+      }
 
       return NextResponse.json(result, {
         headers: {

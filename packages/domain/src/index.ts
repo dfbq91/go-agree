@@ -20,3 +20,4 @@ export * from './services/PaymentReferenceService.js';
 export * from './entities/FreeQuotaConfig.js';
 export * from './entities/UserSubscription.js';
 export * from './entities/PaymentTransaction.js';
+export * from './utils/progressCalculator.js';

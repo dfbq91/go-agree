@@ -60,6 +60,10 @@ describe('WCAG 2.1 AA Accessibility Audit (axe-core)', () => {
             title: 'Acuerdo Confidencial',
             status: 'in_progress',
             currentQuestionIndex: 1,
+            questionsAnsweredCount: 1,
+            hasGeneratedDocument: false,
+            availableFormats: [],
+            createdAt: new Date(),
             updatedAt: new Date(),
           },
         ]}

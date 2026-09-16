@@ -11,11 +11,15 @@ import {
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 import { getPaymentConfig } from './config';
+import { logger } from './logger';
 
 const globalMockPaymentRepo = new MockPaymentRepository();
 
 function getServiceRoleKey(): string | undefined {
-  if (process.env.SUPABASE_SERVICE_ROLE_KEY && process.env.SUPABASE_SERVICE_ROLE_KEY !== 'undefined') {
+  if (
+    process.env.SUPABASE_SERVICE_ROLE_KEY &&
+    process.env.SUPABASE_SERVICE_ROLE_KEY !== 'undefined'
+  ) {
     return process.env.SUPABASE_SERVICE_ROLE_KEY;
   }
   try {
@@ -52,7 +56,7 @@ export async function getServerPaymentRepository(): Promise<PaymentRepositoryPor
           autoRefreshToken: false,
         },
       });
-      return new SupabasePaymentRepository(adminClient);
+      return new SupabasePaymentRepository(adminClient, logger);
     }
 
     if (supabaseAnonKey) {
@@ -77,10 +81,11 @@ export async function getServerPaymentRepository(): Promise<PaymentRepositoryPor
         },
       });
 
-      return new SupabasePaymentRepository(client as any);
+      return new SupabasePaymentRepository(client as any, logger);
     }
   }
 
+  logger.warn('Supabase credentials not configured; using MockPaymentRepository');
   return globalMockPaymentRepo;
 }
 
@@ -92,6 +97,7 @@ export function getPaymentGatewayResolver(): PaymentGatewayResolver {
     integritySecret: config.wompiIntegritySecret,
     eventsSecret: config.wompiEventSecret,
     checkoutBaseUrl: config.wompiCheckoutUrl,
+    logger,
   });
 
   return new PaymentGatewayResolver([wompiAdapter]);

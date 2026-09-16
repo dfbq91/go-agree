@@ -2,6 +2,7 @@ import type {
   GenerateQuestionsInput,
   GenerateQuestionsOutput,
   LlmQuestionAnalysisPort,
+  LoggerPort,
   QuestionDTO,
 } from '@go-agree/application';
 import { QuestionnaireDefinition } from '@go-agree/domain';
@@ -130,11 +131,13 @@ function formatQuestionnaireTranscript(answers: Record<string, unknown>): string
 export interface AiAdapterConfig {
   model: LanguageModel;
   generateTextFn?: typeof generateText;
+  logger?: LoggerPort;
 }
 
 export class AiQuestionAnalysisAdapter implements LlmQuestionAnalysisPort {
   private readonly model: LanguageModel;
   private readonly generateTextFn: typeof generateText;
+  private readonly logger?: LoggerPort;
 
   constructor(config: AiAdapterConfig) {
     if (!config || !config.model) {
@@ -142,6 +145,7 @@ export class AiQuestionAnalysisAdapter implements LlmQuestionAnalysisPort {
     }
     this.model = config.model;
     this.generateTextFn = config.generateTextFn || generateText;
+    this.logger = config.logger;
   }
 
   async generateQuestions(input: GenerateQuestionsInput): Promise<GenerateQuestionsOutput> {
@@ -183,35 +187,55 @@ ${transcript}
 
 Con base en esta transcripción, analiza la naturaleza de la operación, detecta los riesgos y vacíos comerciales no abordados todavía, y formula exactamente las 5 preguntas de profundización más pertinentes para blindar este acuerdo en Colombia.`;
 
-    console.info('AiQuestionAnalysisAdapter: Generating questions with the following input:', {
-      systemPrompt,
-      userMessage,
-    });
-    const response = await this.generateTextFn({
-      model: this.model,
-      output: Output.object({ schema: dynamicQuestionsPayloadSchema }),
-      system: systemPrompt,
-      prompt: userMessage,
+    const answerKeysCount = Object.keys(input.answers || {}).length;
+    this.logger?.debug('Initiating LLM dynamic question generation', {
+      stage: input.stage,
+      answerKeysCount,
     });
 
-    const validatedPayload = response.output as z.infer<typeof dynamicQuestionsPayloadSchema>;
+    const startTime = Date.now();
+    try {
+      const response = await this.generateTextFn({
+        model: this.model,
+        output: Output.object({ schema: dynamicQuestionsPayloadSchema }),
+        system: systemPrompt,
+        prompt: userMessage,
+      });
 
-    const questions: QuestionDTO[] = validatedPayload.questions.map((q, index) => ({
-      id: q.id,
-      order: 20 + index,
-      prompt: q.prompt,
-      type: q.type,
-      isRequired: q.isRequired,
-      helpText: q.helpText,
-      tooltip: q.tooltip,
-      options: q.options?.map((opt) => ({
-        id: opt.id,
-        label: opt.label,
-        value: opt.value,
-        tooltip: opt.tooltip,
-      })),
-    }));
+      const validatedPayload = response.output as z.infer<typeof dynamicQuestionsPayloadSchema>;
 
-    return { questions };
+      const questions: QuestionDTO[] = validatedPayload.questions.map((q, index) => ({
+        id: q.id,
+        order: 20 + index,
+        prompt: q.prompt,
+        type: q.type,
+        isRequired: q.isRequired,
+        helpText: q.helpText,
+        tooltip: q.tooltip,
+        options: q.options?.map((opt) => ({
+          id: opt.id,
+          label: opt.label,
+          value: opt.value,
+          tooltip: opt.tooltip,
+        })),
+      }));
+
+      const durationMs = Date.now() - startTime;
+      this.logger?.info('LLM dynamic questions generated successfully', {
+        questionCount: questions.length,
+        durationMs,
+        stage: input.stage,
+      });
+
+      return { questions };
+    } catch (error) {
+      const durationMs = Date.now() - startTime;
+      this.logger?.error('LLM dynamic question generation failed', {
+        error,
+        durationMs,
+        stage: input.stage,
+      });
+      throw error;
+    }
   }
 }

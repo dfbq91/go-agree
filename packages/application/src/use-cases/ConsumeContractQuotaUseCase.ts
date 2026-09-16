@@ -4,6 +4,7 @@
  */
 
 import { FreeQuotaExceededError, UserId, UserSubscription } from '@go-agree/domain';
+import type { LoggerPort } from '../ports/LoggerPort.js';
 import type { SubscriptionRepositoryPort } from '../ports/SubscriptionRepositoryPort.js';
 
 export interface ConsumeContractQuotaInput {
@@ -17,7 +18,10 @@ export interface ConsumeContractQuotaResult {
 }
 
 export class ConsumeContractQuotaUseCase {
-  constructor(private readonly subscriptionRepo: SubscriptionRepositoryPort) {}
+  constructor(
+    private readonly subscriptionRepo: SubscriptionRepositoryPort,
+    private readonly logger?: LoggerPort
+  ) {}
 
   async execute(input: ConsumeContractQuotaInput): Promise<ConsumeContractQuotaResult> {
     const dto = await this.subscriptionRepo.getByUserId(input.userId);
@@ -36,6 +40,9 @@ export class ConsumeContractQuotaUseCase {
 
     // Active Pro plan users have unlimited contract generations
     if (subscription.planType === 'pro' && !subscription.isExpired()) {
+      this.logger?.debug('Contract quota verified for Pro subscriber (unlimited)', {
+        userId: input.userId,
+      });
       return {
         freeContractsUsed: subscription.freeContractsUsed,
         remainingQuota: 9999,
@@ -45,11 +52,21 @@ export class ConsumeContractQuotaUseCase {
 
     // Free plan users must have remaining quota
     if (!subscription.canGenerateContract()) {
+      this.logger?.warn('Contract quota consumption blocked: free limit reached', {
+        userId: input.userId,
+        freeContractsLimit: subscription.freeContractsLimit,
+      });
       throw new FreeQuotaExceededError(subscription.freeContractsLimit);
     }
 
     const updatedCount = await this.subscriptionRepo.incrementFreeContractCount(input.userId);
     const updatedSubscription = subscription.consumeFreeContract();
+
+    this.logger?.info('Contract quota consumed', {
+      userId: input.userId,
+      freeContractsUsed: updatedCount,
+      remainingQuota: updatedSubscription.remainingFreeQuota(),
+    });
 
     return {
       freeContractsUsed: updatedCount,

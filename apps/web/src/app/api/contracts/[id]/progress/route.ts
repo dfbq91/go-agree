@@ -55,7 +55,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
         answers: body.answers ?? {},
       });
 
-      logger.info('Contract progress updated', {
+      logger.debug('Contract progress updated', {
         contractId: id,
         userId: session.userId,
         questionIndex: body.questionIndex ?? 0,

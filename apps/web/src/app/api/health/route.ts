@@ -7,11 +7,6 @@ export async function GET(request: Request) {
   return withCorrelationContext(request, async () => {
     const startTime = Date.now();
 
-    logger.info('Health check received', {
-      method: request.method,
-      userAgent: request.headers.get('user-agent') || 'unknown',
-    });
-
     const healthData = {
       status: 'ok',
       uptime: process.uptime(),
@@ -19,6 +14,12 @@ export async function GET(request: Request) {
       environment: process.env.NODE_ENV || 'development',
       responseTimeMs: Date.now() - startTime,
     };
+
+    logger.debug('Health check probe processed', {
+      method: request.method,
+      userAgent: request.headers.get('user-agent') || 'unknown',
+      responseTimeMs: healthData.responseTimeMs,
+    });
 
     return NextResponse.json(healthData, {
       status: 200,

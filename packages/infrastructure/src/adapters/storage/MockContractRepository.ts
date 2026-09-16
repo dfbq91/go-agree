@@ -1,9 +1,11 @@
 import type {
   CompleteQuestionnaireInput,
+  ContractDashboardItemDTO,
   ContractGenerationDTO,
   ContractGenerationSummaryDTO,
   ContractProgressPort,
   ContractRepositoryPort,
+  DocumentFormat,
   UpdateProgressInput,
   UpdateTitleInput,
 } from '@go-agree/application';
@@ -11,10 +13,52 @@ import {
   ContractNotFoundError,
   EmptyTitleError,
   UnauthorizedContractAccessError,
+  calculateAnsweredQuestionsCount,
 } from '@go-agree/domain';
 
 export class MockContractRepository implements ContractRepositoryPort, ContractProgressPort {
   private contracts: Map<string, ContractGenerationDTO> = new Map();
+  private documents: Map<string, DocumentFormat[]> = new Map();
+
+  addMockDocument(contractId: string, format: DocumentFormat): void {
+    const existing = this.documents.get(contractId) || [];
+    if (!existing.includes(format)) {
+      this.documents.set(contractId, [...existing, format]);
+    }
+  }
+
+  async listDashboardItemsByUserId(userId: string): Promise<ContractDashboardItemDTO[]> {
+    const list: ContractDashboardItemDTO[] = [];
+    for (const contract of this.contracts.values()) {
+      if (contract.userId === userId) {
+        const formats = this.documents.get(contract.id) || [];
+        const answeredCount = calculateAnsweredQuestionsCount(contract.answers);
+
+        list.push({
+          id: contract.id,
+          userId: contract.userId,
+          title: contract.title,
+          status: contract.status,
+          currentQuestionIndex: contract.currentQuestionIndex,
+          questionsAnsweredCount: answeredCount,
+          hasGeneratedDocument: formats.length > 0,
+          availableFormats: formats,
+          createdAt: contract.createdAt,
+          updatedAt: contract.updatedAt,
+        });
+      }
+    }
+    return list.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime());
+  }
+
+  async deleteByIdAndUserId(id: string, userId: string): Promise<void> {
+    const contract = this.contracts.get(id);
+    if (!contract || contract.userId !== userId) {
+      throw new ContractNotFoundError(id);
+    }
+    this.contracts.delete(id);
+    this.documents.delete(id);
+  }
 
   async listByUserId(userId: string): Promise<ContractGenerationSummaryDTO[]> {
     const list: ContractGenerationSummaryDTO[] = [];

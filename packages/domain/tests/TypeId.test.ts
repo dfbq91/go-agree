@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { ContractId } from '../src/value-objects/ContractId.js';
 import {
   TYPE_ID_PREFIXES,
   ensureTypeId,
@@ -11,7 +12,6 @@ import {
   parseTypeId,
   stripTypeIdPrefix,
 } from '../src/value-objects/TypeId.js';
-import { ContractId } from '../src/value-objects/ContractId.js';
 import { UserId } from '../src/value-objects/UserId.js';
 
 describe('UUIDv7 & TypeID Domain Utilities', () => {

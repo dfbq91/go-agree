@@ -8,11 +8,15 @@ import {
 } from '@go-agree/infrastructure';
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
+import { logger } from './logger';
 
 const globalMockContractRepo = new MockContractRepository();
 
 function getServiceRoleKey(): string | undefined {
-  if (process.env.SUPABASE_SERVICE_ROLE_KEY && process.env.SUPABASE_SERVICE_ROLE_KEY !== 'undefined') {
+  if (
+    process.env.SUPABASE_SERVICE_ROLE_KEY &&
+    process.env.SUPABASE_SERVICE_ROLE_KEY !== 'undefined'
+  ) {
     return process.env.SUPABASE_SERVICE_ROLE_KEY;
   }
   try {
@@ -49,7 +53,7 @@ export async function getServerContractRepository(): Promise<ContractRepositoryP
           autoRefreshToken: false,
         },
       });
-      return new SupabaseContractRepository(adminClient);
+      return new SupabaseContractRepository(adminClient, logger);
     }
 
     if (supabaseAnonKey) {
@@ -74,9 +78,10 @@ export async function getServerContractRepository(): Promise<ContractRepositoryP
         },
       });
 
-      return new SupabaseContractRepository(client as any);
+      return new SupabaseContractRepository(client as any, logger);
     }
   }
 
+  logger.warn('Supabase credentials not configured; using MockContractRepository');
   return globalMockContractRepo;
 }

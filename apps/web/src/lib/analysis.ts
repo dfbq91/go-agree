@@ -13,6 +13,7 @@ import {
 } from '@go-agree/infrastructure';
 import { createClient } from '@supabase/supabase-js';
 import { getServerContractRepository } from './contracts';
+import { logger } from './logger';
 
 let globalMockDynamicRepo: MockDynamicQuestionRepository | null = null;
 
@@ -24,10 +25,11 @@ export function getServerDynamicQuestionRepository(): DynamicQuestionRepositoryP
     const adminClient = createClient(supabaseUrl, serviceRoleKey, {
       auth: { persistSession: false, autoRefreshToken: false },
     });
-    return new SupabaseDynamicQuestionRepository(adminClient);
+    return new SupabaseDynamicQuestionRepository(adminClient, logger);
   }
 
   if (!globalMockDynamicRepo) {
+    logger.warn('Supabase credentials not configured; using MockDynamicQuestionRepository');
     globalMockDynamicRepo = new MockDynamicQuestionRepository();
   }
   return globalMockDynamicRepo;
@@ -45,7 +47,7 @@ export async function getAnalyzeContractUseCase(): Promise<AnalyzeContractAnswer
     const adminClient = createClient(supabaseUrl, serviceRoleKey, {
       auth: { persistSession: false, autoRefreshToken: false },
     });
-    contractRepo = new SupabaseContractRepository(adminClient);
+    contractRepo = new SupabaseContractRepository(adminClient, logger);
   } else {
     // Fallback a repositorios en memoria para pruebas locales
     contractRepo = await getServerContractRepository();
@@ -56,7 +58,7 @@ export async function getAnalyzeContractUseCase(): Promise<AnalyzeContractAnswer
   });
   const model = google(process.env.AI_MODEL || 'gemini-3.5-flash-lite');
 
-  const llmAdapter: LlmQuestionAnalysisPort = new AiQuestionAnalysisAdapter({ model });
+  const llmAdapter: LlmQuestionAnalysisPort = new AiQuestionAnalysisAdapter({ model, logger });
 
-  return new AnalyzeContractAnswersUseCase(contractRepo, dynamicRepo, llmAdapter);
+  return new AnalyzeContractAnswersUseCase(contractRepo, dynamicRepo, llmAdapter, logger);
 }
