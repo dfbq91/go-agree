@@ -13,6 +13,8 @@ export interface QuestionnaireClientPageProps {
   initialIsReviewing?: boolean;
   isCompleted?: boolean;
   initialDynamicQuestions?: QuestionDTO[];
+  hasGeneratedDocument?: boolean;
+  isRegenerationPending?: boolean;
 }
 
 export const QuestionnaireClientPage: React.FC<QuestionnaireClientPageProps> = ({
@@ -23,6 +25,8 @@ export const QuestionnaireClientPage: React.FC<QuestionnaireClientPageProps> = (
   initialIsReviewing = false,
   isCompleted = false,
   initialDynamicQuestions = [],
+  hasGeneratedDocument,
+  isRegenerationPending,
 }) => {
   const router = useRouter();
 
@@ -99,6 +103,8 @@ export const QuestionnaireClientPage: React.FC<QuestionnaireClientPageProps> = (
       initialIsReviewing={initialIsReviewing}
       isCompleted={isCompleted}
       initialDynamicQuestions={initialDynamicQuestions}
+      hasGeneratedDocument={hasGeneratedDocument}
+      isRegenerationPending={isRegenerationPending}
       onSaveProgress={handleSaveProgress}
       onSaveTitle={handleSaveTitle}
       onComplete={handleComplete}

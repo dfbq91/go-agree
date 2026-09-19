@@ -21,9 +21,12 @@ export interface QuestionnaireContainerProps {
   initialIsReviewing?: boolean;
   isCompleted?: boolean;
   initialDynamicQuestions?: QuestionDTO[];
+  hasGeneratedDocument?: boolean;
+  isRegenerationPending?: boolean;
   onSaveProgress?: (index: number, answers: Record<string, unknown>) => Promise<void>;
   onSaveTitle?: (newTitle: string) => Promise<void>;
   onComplete?: () => Promise<void>;
+  onDownloadFormat?: (format: 'docx' | 'pdf') => void;
 }
 
 export const QuestionnaireContainer: React.FC<QuestionnaireContainerProps> = ({
@@ -34,9 +37,12 @@ export const QuestionnaireContainer: React.FC<QuestionnaireContainerProps> = ({
   initialIsReviewing = false,
   isCompleted = false,
   initialDynamicQuestions = [],
+  hasGeneratedDocument,
+  isRegenerationPending,
   onSaveProgress,
   onSaveTitle,
   onComplete,
+  onDownloadFormat,
 }) => {
   const questionnaire = useMemo(() => QuestionnaireDefinition.createStandard(), []);
 
@@ -330,6 +336,16 @@ export const QuestionnaireContainer: React.FC<QuestionnaireContainerProps> = ({
           onBackToDashboard={handleBackToDashboard}
           isSubmitting={isCompleting}
           isCompleted={isCompleted}
+          hasGeneratedDocument={hasGeneratedDocument ?? isCompleted}
+          isRegenerationPending={isRegenerationPending}
+          onDownloadFormat={
+            onDownloadFormat ??
+            ((format) => {
+              if (typeof window !== 'undefined') {
+                window.location.href = `/api/contracts/${contractId}/download?format=${format}`;
+              }
+            })
+          }
         />
       ) : (
         currentQuestion && (

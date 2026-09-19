@@ -149,3 +149,45 @@ export class UnsupportedPaymentProviderError extends PaymentDomainError {
     this.name = 'UnsupportedPaymentProviderError';
   }
 }
+
+export class DocumentDomainError extends Error {
+  constructor(
+    message: string,
+    public readonly code: string
+  ) {
+    super(message);
+    this.name = 'DocumentDomainError';
+    Object.setPrototypeOf(this, new.target.prototype);
+  }
+}
+
+export class IncompleteQuestionnaireError extends DocumentDomainError {
+  constructor(unansweredQuestionIds?: string[]) {
+    const details = unansweredQuestionIds?.length
+      ? `: faltan ${unansweredQuestionIds.join(', ')}`
+      : '';
+    super(
+      `No se puede generar el contrato porque existen cláusulas o preguntas sin responder${details}.`,
+      'INCOMPLETE_QUESTIONNAIRE'
+    );
+    this.name = 'IncompleteQuestionnaireError';
+  }
+}
+
+export class DocumentGenerationError extends DocumentDomainError {
+  constructor(reason: string) {
+    super(`Error durante la compilación del documento: ${reason}`, 'DOCUMENT_GENERATION_ERROR');
+    this.name = 'DocumentGenerationError';
+  }
+}
+
+export class DocumentNotFoundError extends DocumentDomainError {
+  constructor(contractId: string, format: string) {
+    super(
+      `El documento en formato ${format} para el contrato ${contractId} no ha sido generado o no existe.`,
+      'DOCUMENT_NOT_FOUND'
+    );
+    this.name = 'DocumentNotFoundError';
+  }
+}
+

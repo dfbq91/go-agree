@@ -87,21 +87,25 @@ export class SupabaseContractRepository implements ContractRepositoryPort, Contr
       return [];
     }
 
-    let documentsMap = new Map<string, DocumentFormat[]>();
+    let documentsMap = new Map<string, { formats: DocumentFormat[]; latestDocCreatedAt: Date | null }>();
     try {
       const contractIds = data.map((row: any) => row.id);
       const { data: docsData, error: docsError } = await this.supabase
         .from('contract_documents')
-        .select('contract_id, file_format')
+        .select('contract_id, file_format, created_at')
         .in('contract_id', contractIds);
 
       if (!docsError && docsData) {
         for (const doc of docsData) {
-          const list = documentsMap.get(doc.contract_id) || [];
-          if (!list.includes(doc.file_format as DocumentFormat)) {
-            list.push(doc.file_format as DocumentFormat);
+          const entry = documentsMap.get(doc.contract_id) || { formats: [], latestDocCreatedAt: null };
+          if (!entry.formats.includes(doc.file_format as DocumentFormat)) {
+            entry.formats.push(doc.file_format as DocumentFormat);
           }
-          documentsMap.set(doc.contract_id, list);
+          const docDate = new Date(doc.created_at);
+          if (!entry.latestDocCreatedAt || docDate > entry.latestDocCreatedAt) {
+            entry.latestDocCreatedAt = docDate;
+          }
+          documentsMap.set(doc.contract_id, entry);
         }
       }
     } catch {
@@ -110,7 +114,15 @@ export class SupabaseContractRepository implements ContractRepositoryPort, Contr
 
     return data.map((row: any) => {
       const answeredCount = calculateAnsweredQuestionsCount(row.answers);
-      const formats = documentsMap.get(row.id) || [];
+      const docEntry = documentsMap.get(row.id);
+      const formats = docEntry?.formats || [];
+      const contractUpdatedAt = new Date(row.updated_at);
+      const isRegenerationPending =
+        row.status === 'completed' &&
+        formats.length > 0 &&
+        docEntry?.latestDocCreatedAt !== null &&
+        docEntry?.latestDocCreatedAt !== undefined &&
+        contractUpdatedAt.getTime() > docEntry.latestDocCreatedAt.getTime();
 
       return {
         id: formatContractId(row.id),
@@ -121,8 +133,9 @@ export class SupabaseContractRepository implements ContractRepositoryPort, Contr
         questionsAnsweredCount: answeredCount,
         hasGeneratedDocument: formats.length > 0,
         availableFormats: formats,
+        isRegenerationPending,
         createdAt: new Date(row.created_at),
-        updatedAt: new Date(row.updated_at),
+        updatedAt: contractUpdatedAt,
       };
     });
   }

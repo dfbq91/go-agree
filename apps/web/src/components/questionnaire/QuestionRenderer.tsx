@@ -1,7 +1,6 @@
 import type { QuestionDTO } from '@go-agree/application';
 import type React from 'react';
 import { es } from '../../locales/es';
-import { CheckboxQuestion } from './types/CheckboxQuestion';
 import { MultipleChoiceQuestion } from './types/MultipleChoiceQuestion';
 import { OpenTextQuestion } from './types/OpenTextQuestion';
 import { SingleChoiceQuestion } from './types/SingleChoiceQuestion';
@@ -70,9 +69,6 @@ export const QuestionRenderer: React.FC<QuestionRendererProps> = ({
           prompt={prompt}
         />
       );
-
-    case 'checkbox':
-      return <CheckboxQuestion id={question.id} label={prompt} value={value} onChange={onChange} />;
 
     default:
       return null;

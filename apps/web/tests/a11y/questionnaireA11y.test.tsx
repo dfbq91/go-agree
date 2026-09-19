@@ -66,15 +66,6 @@ describe('Questionnaire WCAG 2.1 AA Accessibility Audit (axe-core)', () => {
     ],
   };
 
-  const mockCheckboxQuestion: QuestionDTO = {
-    id: 'q10_penalty_clause',
-    order: 12,
-    prompt: '¿Deseas incluir una cláusula penal por incumplimiento?',
-    type: 'checkbox',
-    isRequired: false,
-    helpText: 'Establece una sanción económica directa en caso de incumplimiento.',
-  };
-
   it('QuestionCard with OpenTextQuestion passes accessibility audit', async () => {
     const { container } = render(
       <QuestionCard
@@ -103,13 +94,6 @@ describe('Questionnaire WCAG 2.1 AA Accessibility Audit (axe-core)', () => {
     expect(results.violations).toEqual([]);
   });
 
-  it('QuestionCard with CheckboxQuestion passes accessibility audit', async () => {
-    const { container } = render(
-      <QuestionCard question={mockCheckboxQuestion} value={true} onChange={vi.fn()} />
-    );
-    const results = await axe.run(container, axeOptions);
-    expect(results.violations).toEqual([]);
-  });
 
   it('QuestionCard with validation error alert passes accessibility audit', async () => {
     const { container } = render(

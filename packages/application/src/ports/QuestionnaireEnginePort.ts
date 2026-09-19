@@ -1,4 +1,4 @@
-export type QuestionType = 'open_text' | 'single_choice' | 'multiple_choice' | 'checkbox';
+export type QuestionType = 'open_text' | 'single_choice' | 'multiple_choice';
 
 export interface QuestionOptionDTO {
   id: string;

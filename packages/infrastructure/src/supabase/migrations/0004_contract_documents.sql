@@ -30,3 +30,8 @@ CREATE POLICY "Users can delete own documents"
     ON public.contract_documents FOR DELETE
     TO authenticated
     USING (auth.uid() = user_id);
+
+-- Ensure storage bucket exists and is private
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('contracts', 'contracts', false)
+ON CONFLICT (id) DO NOTHING;

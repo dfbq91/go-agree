@@ -40,9 +40,13 @@ describe('AiQuestionAnalysisAdapter (Unified Vercel AI SDK Adapter)', () => {
         id: 'dyn_confidentiality',
         order: 23,
         prompt: '¿Se requiere cláusula de confidencialidad estricta?',
-        type: 'checkbox' as const,
+        type: 'single_choice' as const,
         isRequired: true,
         helpText: 'Protege secretos industriales y datos del cliente.',
+        options: [
+          { id: 'opt_conf_yes', label: 'Sí, acuerdo estricto con penalidad', value: 'strict' },
+          { id: 'opt_conf_no', label: 'No se requiere confidencialidad adicional', value: 'none' },
+        ],
       },
       {
         id: 'dyn_warranty_period',

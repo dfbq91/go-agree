@@ -1,7 +1,9 @@
 import { createApiErrorResponse, withCorrelationContext } from '@/lib/api-error';
 import { getServerAuthAdapter } from '@/lib/auth';
 import { getServerContractRepository } from '@/lib/contracts';
+import { getGetContractDocumentDownloadUseCase } from '@/lib/document-generation';
 import { logger } from '@/lib/logger';
+import { ContractNotFoundError, DocumentNotFoundError } from '@go-agree/domain';
 import { correlationStorage } from '@go-agree/infrastructure';
 import { NextResponse } from 'next/server';
 
@@ -55,32 +57,31 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
         );
       }
 
-      // Generate downloadable representation
-      const correlationId = correlationStorage.getCorrelationId();
-      if (format === 'pdf') {
-        const dummyPdfContent = `%PDF-1.4\n1 0 obj\n<< /Title (${contract.title}) >>\nendobj\ntrailer\n<< /Root 1 0 R >>\n%%EOF`;
-        return new NextResponse(dummyPdfContent, {
-          status: 200,
-          headers: {
-            'Content-Type': 'application/pdf',
-            'Content-Disposition': `attachment; filename="contrato-${id}.pdf"`,
-            'x-correlation-id': correlationId,
-          },
-        });
-      }
+      const downloadUseCase = await getGetContractDocumentDownloadUseCase();
+      const documentBuffer = await downloadUseCase.execute({
+        contractId: id,
+        userId: session.userId,
+        format,
+      });
 
-      // format === 'docx'
-      const dummyDocxContent = `PK\x03\x04Contract Document: ${contract.title}`;
-      return new NextResponse(dummyDocxContent, {
+      const correlationId = correlationStorage.getCorrelationId();
+      return new NextResponse(documentBuffer.content as any, {
         status: 200,
         headers: {
-          'Content-Type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-          'Content-Disposition': `attachment; filename="contrato-${id}.docx"`,
+          'Content-Type': documentBuffer.mimeType,
+          'Content-Disposition': `attachment; filename="${documentBuffer.filename}"`,
           'x-correlation-id': correlationId,
         },
       });
     } catch (err: any) {
       logger.error('Failed to download contract document', { error: err });
+
+      if (err instanceof DocumentNotFoundError || err?.code === 'DOCUMENT_NOT_FOUND') {
+        return createApiErrorResponse('DOCUMENT_NOT_FOUND', err.message, { status: 404 });
+      }
+      if (err instanceof ContractNotFoundError || err?.code === 'CONTRACT_NOT_FOUND') {
+        return createApiErrorResponse('CONTRACT_NOT_FOUND', err.message, { status: 404 });
+      }
       return createApiErrorResponse(
         'INTERNAL_ERROR',
         err.message || 'Failed to download contract document',

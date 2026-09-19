@@ -71,6 +71,8 @@ export const es = {
       docx: 'Descargar Word (.docx)',
       notAvailable: 'No disponible',
       tooltipNotGenerated: 'El documento aún no ha sido generado',
+      pendingRegenerationBadge: 'Actualización pendiente',
+      pendingRegenerationTooltip: 'Respuestas modificadas. Haz clic para revisar y regenerar el documento.',
     },
     deleteModal: {
       title: '¿Eliminar contrato?',
@@ -131,7 +133,19 @@ export const es = {
       subtitle:
         'Revisa las respuestas del cuestionario estándar antes de continuar con la generación de tu contrato.',
       notAnswered: 'No respondido',
-      confirmAction: 'Confirmar y continuar',
+      confirmAction: 'Confirmar y generar contrato',
+      generatingContract: 'Generando contrato...',
+      downloadWord: 'Descargar Word (.docx)',
+      downloadPdf: 'Descargar PDF (.pdf)',
+      legalDisclaimerTitle: 'Aviso importante sobre el contenido del contrato',
+      legalDisclaimerText:
+        'El presente documento se ensambla y redacta automáticamente a partir de las respuestas suministradas en este cuestionario. No constituye asesoría legal profesional ni sustituye la consulta con un abogado titulado.',
+      pendingRegenerationBannerTitle: 'Actualización pendiente',
+      pendingRegenerationBannerText:
+        'Has modificado una o más respuestas después de haber generado el contrato. Debes regenerar el documento para que los cambios se reflejen en los archivos Word y PDF.',
+      regenerateAction: 'Regenerar documento',
+      regenerating: 'Regenerando documento...',
+      incompleteError: 'Debes responder todas las preguntas antes de generar el contrato.',
       backToDraft: 'Volver a la última pregunta',
       backToDashboard: 'Volver al panel',
     },

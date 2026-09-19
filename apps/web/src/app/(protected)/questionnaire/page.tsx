@@ -77,6 +77,7 @@ export default async function QuestionnairePage({ searchParams }: QuestionnaireP
       initialIsReviewing={shouldReview}
       isCompleted={isCompleted}
       initialDynamicQuestions={initialDynamicQuestions}
+      hasGeneratedDocument={isCompleted}
     />
   );
 }

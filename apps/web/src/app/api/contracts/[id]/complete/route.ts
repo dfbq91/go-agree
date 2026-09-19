@@ -1,13 +1,11 @@
 import { createApiErrorResponse, withCorrelationContext } from '@/lib/api-error';
 import { getServerAuthAdapter } from '@/lib/auth';
-import { getServerContractRepository } from '@/lib/contracts';
+import { getGenerateContractDocumentUseCase } from '@/lib/document-generation';
 import { logger } from '@/lib/logger';
-import { getServerSubscriptionRepository } from '@/lib/subscription';
-import { CompleteQuestionnaireUseCase, ConsumeContractQuotaUseCase } from '@go-agree/application';
-import type { ContractProgressPort } from '@go-agree/application';
 import {
   ContractNotFoundError,
   FreeQuotaExceededError,
+  IncompleteQuestionnaireError,
   UnauthorizedContractAccessError,
 } from '@go-agree/domain';
 import { correlationStorage } from '@go-agree/infrastructure';
@@ -30,42 +28,17 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
 
       correlationStorage.setUserId(session.userId);
 
-      const repo = (await getServerContractRepository()) as unknown as ContractProgressPort;
-      const existing = await repo.getContractById(id, session.userId);
-      if (!existing) {
-        return createApiErrorResponse('CONTRACT_NOT_FOUND', 'Contract not found', { status: 404 });
-      }
-
-      // Idempotency: If contract is already completed, do not deduct quota again
-      if (existing.status === 'completed') {
-        logger.debug('Contract already completed; skipping quota deduction', {
-          contractId: id,
-          userId: session.userId,
-        });
-        try {
-          revalidatePath('/dashboard');
-        } catch {
-          // Safe fallback in test environments
-        }
-        return NextResponse.json(existing, {
-          headers: {
-            'x-correlation-id': correlationStorage.getCorrelationId(),
-          },
-        });
-      }
-
-      // Consume contract generation quota only for uncompleted contracts
-      const subRepo = await getServerSubscriptionRepository();
-      const quotaUseCase = new ConsumeContractQuotaUseCase(subRepo, logger);
-      await quotaUseCase.execute({ userId: session.userId });
-
-      const useCase = new CompleteQuestionnaireUseCase(repo, logger);
-      const completed = await useCase.execute({
+      const useCase = await getGenerateContractDocumentUseCase();
+      const result = await useCase.execute({
         contractId: id,
         userId: session.userId,
       });
 
-      logger.info('Contract completed successfully', { contractId: id, userId: session.userId });
+      logger.info('Contract document generated successfully upon completion', {
+        contractId: id,
+        userId: session.userId,
+        formats: result.availableFormats,
+      });
 
       try {
         revalidatePath('/dashboard');
@@ -73,15 +46,23 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
         // Safe fallback in test environments
       }
 
-      return NextResponse.json(completed, {
+      return NextResponse.json(result, {
         headers: {
           'x-correlation-id': correlationStorage.getCorrelationId(),
         },
       });
     } catch (error: any) {
-      logger.error('Failed to complete contract', { error });
+      logger.error('Failed to complete contract and generate documents', { error });
+
+      if (error instanceof IncompleteQuestionnaireError || error?.code === 'INCOMPLETE_QUESTIONNAIRE') {
+        return createApiErrorResponse('INCOMPLETE_QUESTIONNAIRE', error.message, {
+          status: 400,
+        });
+      }
       if (error instanceof FreeQuotaExceededError || error?.code === 'FREE_QUOTA_EXCEEDED') {
-        return createApiErrorResponse('FREE_QUOTA_EXCEEDED', error.message, { status: 403 });
+        return createApiErrorResponse('FREE_QUOTA_EXCEEDED', error.message, {
+          status: 403,
+        });
       }
       if (error instanceof ContractNotFoundError || error?.code === 'CONTRACT_NOT_FOUND') {
         return createApiErrorResponse(error.code || 'CONTRACT_NOT_FOUND', error.message, {

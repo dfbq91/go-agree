@@ -2,7 +2,6 @@ import type { QuestionDTO } from '@go-agree/application';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { QuestionRenderer } from '../../src/components/questionnaire/QuestionRenderer';
-import { CheckboxQuestion } from '../../src/components/questionnaire/types/CheckboxQuestion';
 import { MultipleChoiceQuestion } from '../../src/components/questionnaire/types/MultipleChoiceQuestion';
 import { OpenTextQuestion } from '../../src/components/questionnaire/types/OpenTextQuestion';
 import { SingleChoiceQuestion } from '../../src/components/questionnaire/types/SingleChoiceQuestion';
@@ -69,21 +68,6 @@ describe('Polymorphic Question Renderers', () => {
     expect(onChange).toHaveBeenCalledWith(['employs_people']);
   });
 
-  it('renders CheckboxQuestion and toggles boolean', () => {
-    const onChange = vi.fn();
-    render(
-      <CheckboxQuestion
-        id="q_check"
-        label="Acepto los términos"
-        value={false}
-        onChange={onChange}
-      />
-    );
-
-    const checkbox = screen.getByRole('checkbox');
-    fireEvent.click(checkbox);
-    expect(onChange).toHaveBeenCalledWith(true);
-  });
 
   it('dispatches polymorphic rendering through QuestionRenderer', () => {
     const question: QuestionDTO = {

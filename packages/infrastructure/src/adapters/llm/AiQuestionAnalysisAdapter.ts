@@ -23,7 +23,7 @@ const dynamicQuestionSchema = z.object({
   order: z.number().describe('Orden sugerido'),
   prompt: z.string().describe('Pregunta clara, directa y profesional en español'),
   type: z
-    .enum(['open_text', 'single_choice', 'multiple_choice', 'checkbox'])
+    .enum(['open_text', 'single_choice', 'multiple_choice'])
     .describe('Tipo de entrada'),
   isRequired: z.boolean().default(true).describe('Si la respuesta es obligatoria'),
   helpText: z
@@ -171,7 +171,6 @@ Tu objetivo NO es redactar el contrato final todavía. Tu misión es analizar la
    - 'single_choice': Para decisiones donde solo una opción es válida. Incluye tantas opciones coherentes como sean necesarias para cubrir el escenario de negocio.
    - 'multiple_choice': Cuando varias condiciones o coberturas pueden coexistir a la vez.
    - 'open_text': Cuando se requiere que el usuario redacte especificaciones técnicas, montos monetarios o detalles libres.
-   - 'checkbox': Para confirmaciones o autorizaciones binarias directas.
 4. Opción "Otro (a especificar)":
    - En preguntas de tipo 'single_choice' o 'multiple_choice', cuando la lista de opciones no pueda cubrir de forma exhaustiva todas las posibilidades del negocio del usuario, DEBES incluir una opción con valor "other" y etiqueta similar a "Otro (por favor especifica)".
 5. Justificación obligatoria ("helpText"):

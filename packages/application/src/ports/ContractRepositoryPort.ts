@@ -1,3 +1,5 @@
+import type { DocumentFormat } from './DocumentGeneratorPort.js';
+
 export interface ContractGenerationDTO {
   id: string;
   userId: string;
@@ -18,8 +20,6 @@ export interface ContractGenerationSummaryDTO {
   updatedAt: Date;
 }
 
-export type DocumentFormat = 'pdf' | 'docx';
-
 export interface ContractDashboardItemDTO {
   id: string;
   userId: string;
@@ -29,6 +29,7 @@ export interface ContractDashboardItemDTO {
   questionsAnsweredCount: number;
   hasGeneratedDocument: boolean;
   availableFormats: DocumentFormat[];
+  isRegenerationPending?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

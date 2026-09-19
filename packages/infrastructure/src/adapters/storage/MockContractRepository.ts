@@ -43,6 +43,7 @@ export class MockContractRepository implements ContractRepositoryPort, ContractP
           questionsAnsweredCount: answeredCount,
           hasGeneratedDocument: formats.length > 0,
           availableFormats: formats,
+          isRegenerationPending: false,
           createdAt: contract.createdAt,
           updatedAt: contract.updatedAt,
         });

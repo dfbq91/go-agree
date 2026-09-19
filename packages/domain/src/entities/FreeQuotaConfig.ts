@@ -13,12 +13,19 @@ export const DEFAULT_FREE_CONTRACT_LIMIT = 3;
  */
 export function getFreeContractLimit(): number {
   if (typeof process !== 'undefined' && process.env) {
-    const raw = process.env.NEXT_PUBLIC_FREE_CONTRACTS_LIMIT;
+    const candidates = [
+      process.env.NEXT_PUBLIC_FREE_CONTRACTS_LIMIT,
+      process.env.NEXT_PUBLIC_FREE_CONTRACT_LIMIT,
+      process.env.FREE_CONTRACTS_LIMIT,
+      process.env.FREE_CONTRACT_LIMIT,
+    ];
 
-    if (raw !== undefined && raw !== null && raw !== '') {
-      const parsed = Number(raw);
-      if (!Number.isNaN(parsed) && parsed >= 0) {
-        return Math.floor(parsed);
+    for (const raw of candidates) {
+      if (raw !== undefined && raw !== null && raw.trim() !== '') {
+        const parsed = Number(raw);
+        if (!Number.isNaN(parsed) && parsed >= 0) {
+          return Math.floor(parsed);
+        }
       }
     }
   }

@@ -18,6 +18,25 @@ vi.mock('@/lib/contracts', () => ({
   }),
 }));
 
+vi.mock('@/lib/document-generation', () => ({
+  getGetContractDocumentDownloadUseCase: vi.fn().mockResolvedValue({
+    execute: vi.fn().mockImplementation(async ({ format, contractId }) => {
+      if (format === 'pdf') {
+        return {
+          filename: `contrato-${contractId}.pdf`,
+          mimeType: 'application/pdf',
+          content: Buffer.from('%PDF-1.4 mock pdf'),
+        };
+      }
+      return {
+        filename: `contrato-${contractId}.docx`,
+        mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        content: Buffer.from('mock docx content'),
+      };
+    }),
+  }),
+}));
+
 describe('GET /api/contracts/[id]/download Route Handler (User Story 3)', () => {
   beforeEach(() => {
     vi.clearAllMocks();

@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS public.contract_dynamic_questions (
     stage INTEGER NOT NULL DEFAULT 1,
     question_key VARCHAR(100) NOT NULL,
     prompt TEXT NOT NULL,
-    type VARCHAR(50) NOT NULL, -- 'open_text' | 'single_choice' | 'multiple_choice' | 'checkbox'
+    type VARCHAR(50) NOT NULL, -- 'open_text' | 'single_choice' | 'multiple_choice'
     order_index INTEGER NOT NULL,
     is_required BOOLEAN NOT NULL DEFAULT true,
     help_text TEXT,

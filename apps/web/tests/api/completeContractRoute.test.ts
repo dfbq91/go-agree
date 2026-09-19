@@ -1,17 +1,18 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { POST } from '../../src/app/api/contracts/[id]/complete/route';
+import {
+  ContractNotFoundError,
+  FreeQuotaExceededError,
+  IncompleteQuestionnaireError,
+} from '@go-agree/domain';
 
 const {
-  mockGetContractById,
-  mockCompleteQuestionnaire,
-  mockGetByUserId,
-  mockIncrementFreeContractCount,
+  mockExecute,
+  mockGetCurrentSession,
   mockRevalidatePath,
 } = vi.hoisted(() => ({
-  mockGetContractById: vi.fn(),
-  mockCompleteQuestionnaire: vi.fn(),
-  mockGetByUserId: vi.fn(),
-  mockIncrementFreeContractCount: vi.fn(),
+  mockExecute: vi.fn(),
+  mockGetCurrentSession: vi.fn(),
   mockRevalidatePath: vi.fn(),
 }));
 
@@ -21,21 +22,13 @@ vi.mock('next/cache', () => ({
 
 vi.mock('@/lib/auth', () => ({
   getServerAuthAdapter: vi.fn().mockResolvedValue({
-    getCurrentSession: vi.fn().mockResolvedValue({ userId: 'user-123' }),
+    getCurrentSession: mockGetCurrentSession,
   }),
 }));
 
-vi.mock('@/lib/contracts', () => ({
-  getServerContractRepository: vi.fn().mockResolvedValue({
-    getContractById: mockGetContractById,
-    completeQuestionnaire: mockCompleteQuestionnaire,
-  }),
-}));
-
-vi.mock('@/lib/subscription', () => ({
-  getServerSubscriptionRepository: vi.fn().mockResolvedValue({
-    getByUserId: mockGetByUserId,
-    incrementFreeContractCount: mockIncrementFreeContractCount,
+vi.mock('@/lib/document-generation', () => ({
+  getGenerateContractDocumentUseCase: vi.fn().mockResolvedValue({
+    execute: mockExecute,
   }),
 }));
 
@@ -44,41 +37,13 @@ describe('POST /api/contracts/[id]/complete Route Handler', () => {
     vi.clearAllMocks();
   });
 
-  it('completes an in_progress contract and consumes 1 quota credit', async () => {
-    mockGetContractById.mockResolvedValue({
-      id: 'contract-1',
-      userId: 'user-123',
-      title: 'Mi Contrato 1',
-      status: 'in_progress',
-      currentQuestionIndex: 11,
-      answers: {},
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
-
-    mockGetByUserId.mockResolvedValue({
-      id: 'sub-1',
-      userId: 'user-123',
-      planType: 'free',
-      status: 'active',
-      freeContractsUsed: 1,
-      startedAt: new Date().toISOString(),
-      expiresAt: null,
-      currentPeriodBillingCycle: null,
-      lastPaymentTransactionId: null,
-    });
-
-    mockIncrementFreeContractCount.mockResolvedValue(2);
-
-    mockCompleteQuestionnaire.mockResolvedValue({
-      id: 'contract-1',
-      userId: 'user-123',
-      title: 'Mi Contrato 1',
+  it('completes an in_progress contract and generates document formats', async () => {
+    mockGetCurrentSession.mockResolvedValue({ userId: 'user-123' });
+    mockExecute.mockResolvedValue({
+      contractId: 'contract-1',
       status: 'completed',
-      currentQuestionIndex: 11,
-      answers: {},
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      availableFormats: ['docx', 'pdf'],
+      regenerated: false,
     });
 
     const request = new Request('http://localhost:3000/api/contracts/contract-1/complete', {
@@ -90,25 +55,17 @@ describe('POST /api/contracts/[id]/complete Route Handler', () => {
 
     expect(response.status).toBe(200);
     expect(json.status).toBe('completed');
-    expect(mockIncrementFreeContractCount).toHaveBeenCalledWith('user-123');
-    expect(mockCompleteQuestionnaire).toHaveBeenCalledWith({
+    expect(json.availableFormats).toEqual(['docx', 'pdf']);
+    expect(mockExecute).toHaveBeenCalledWith({
       contractId: 'contract-1',
       userId: 'user-123',
     });
     expect(mockRevalidatePath).toHaveBeenCalledWith('/dashboard');
   });
 
-  it('is idempotent: does NOT consume quota if contract is already completed', async () => {
-    mockGetContractById.mockResolvedValue({
-      id: 'contract-1',
-      userId: 'user-123',
-      title: 'Mi Contrato 1',
-      status: 'completed',
-      currentQuestionIndex: 11,
-      answers: {},
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
+  it('returns 400 INCOMPLETE_QUESTIONNAIRE when not all questions are answered', async () => {
+    mockGetCurrentSession.mockResolvedValue({ userId: 'user-123' });
+    mockExecute.mockRejectedValue(new IncompleteQuestionnaireError(['q1_party_legal_nature']));
 
     const request = new Request('http://localhost:3000/api/contracts/contract-1/complete', {
       method: 'POST',
@@ -117,38 +74,13 @@ describe('POST /api/contracts/[id]/complete Route Handler', () => {
     const response = await POST(request as any, { params: Promise.resolve({ id: 'contract-1' }) });
     const json = await response.json();
 
-    expect(response.status).toBe(200);
-    expect(json.status).toBe('completed');
-    // Crucial: Quota MUST NOT be incremented
-    expect(mockIncrementFreeContractCount).not.toHaveBeenCalled();
-    expect(mockGetByUserId).not.toHaveBeenCalled();
-    expect(mockCompleteQuestionnaire).not.toHaveBeenCalled();
-    expect(mockRevalidatePath).toHaveBeenCalledWith('/dashboard');
+    expect(response.status).toBe(400);
+    expect(json.code).toBe('INCOMPLETE_QUESTIONNAIRE');
   });
 
   it('returns 403 FREE_QUOTA_EXCEEDED when user has exhausted free quota on an in_progress contract', async () => {
-    mockGetContractById.mockResolvedValue({
-      id: 'contract-4',
-      userId: 'user-123',
-      title: 'Mi Contrato 4',
-      status: 'in_progress',
-      currentQuestionIndex: 11,
-      answers: {},
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
-
-    mockGetByUserId.mockResolvedValue({
-      id: 'sub-1',
-      userId: 'user-123',
-      planType: 'free',
-      status: 'active',
-      freeContractsUsed: 3,
-      startedAt: new Date().toISOString(),
-      expiresAt: null,
-      currentPeriodBillingCycle: null,
-      lastPaymentTransactionId: null,
-    });
+    mockGetCurrentSession.mockResolvedValue({ userId: 'user-123' });
+    mockExecute.mockRejectedValue(new FreeQuotaExceededError(3));
 
     const request = new Request('http://localhost:3000/api/contracts/contract-4/complete', {
       method: 'POST',
@@ -159,12 +91,11 @@ describe('POST /api/contracts/[id]/complete Route Handler', () => {
 
     expect(response.status).toBe(403);
     expect(json.code).toBe('FREE_QUOTA_EXCEEDED');
-    expect(mockIncrementFreeContractCount).not.toHaveBeenCalled();
-    expect(mockCompleteQuestionnaire).not.toHaveBeenCalled();
   });
 
   it('returns 404 when contract does not exist', async () => {
-    mockGetContractById.mockResolvedValue(null);
+    mockGetCurrentSession.mockResolvedValue({ userId: 'user-123' });
+    mockExecute.mockRejectedValue(new ContractNotFoundError('non-existent'));
 
     const request = new Request('http://localhost:3000/api/contracts/non-existent/complete', {
       method: 'POST',
@@ -177,6 +108,19 @@ describe('POST /api/contracts/[id]/complete Route Handler', () => {
 
     expect(response.status).toBe(404);
     expect(json.code).toBe('CONTRACT_NOT_FOUND');
-    expect(mockIncrementFreeContractCount).not.toHaveBeenCalled();
+  });
+
+  it('returns 401 when no authenticated session is present', async () => {
+    mockGetCurrentSession.mockResolvedValue(null);
+
+    const request = new Request('http://localhost:3000/api/contracts/contract-1/complete', {
+      method: 'POST',
+    });
+
+    const response = await POST(request as any, { params: Promise.resolve({ id: 'contract-1' }) });
+    const json = await response.json();
+
+    expect(response.status).toBe(401);
+    expect(json.code).toBe('UNAUTHORIZED');
   });
 });
