@@ -1,0 +1,10 @@
+This specifies the context for the go-agree Document Generation feature. Objective: to produce the final contract in Word and PDF formats based on all responses (standard and dynamic) captured for a specific generation instance. Scope:
+
+The document is generated when the user marks the questionnaire as complete.
+The contract generation feature is available for both free and Pro accounts; however, free accounts are limited to creating a specific number of contracts as defined by the environment variable.
+The output includes both .docx and .pdf formats, which can be downloaded from the dashboard and the contract summary screen (immediately after answering all questions).
+If the user edits responses after generating the document, they must be able to regenerate it to reflect those changes.
+The document does not include an electronic signature mechanism; it is ready for the parties to sign outside the application.
+The document content is assembled based on the provided responses; this stage does not assume the use of a library of legal clauses pre-validated by a lawyer—it must be explicitly stated that the generated content does not constitute legal advice. Out of scope: electronic signatures, human legal validation of content, and historical versioning of generated documents (only the most recent version per generation is retained). Acceptance criteria:
+Upon completing a questionnaire, the user can download the contract in Word and PDF formats, with content reflecting their responses.
+Editing a response and regenerating the document produces an updated version consistent with the new state of the responses.

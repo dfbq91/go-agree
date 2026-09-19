@@ -1,0 +1,149 @@
+openapi: 3.0.3
+info:
+  title: go-agree Document Generation API
+  description: Endpoints for completing questionnaires, compiling contracts into Word/PDF, regenerating documents, and downloading files.
+  version: 1.0.0
+
+paths:
+  /api/contracts/{id}/complete:
+    post:
+      summary: Mark questionnaire as complete and compile initial contract documents (.docx and .pdf)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Unique contract generation ID
+      responses:
+        '200':
+          description: Questionnaire completed and contract documents successfully compiled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractGenerationResponse'
+        '400':
+          description: Incomplete questionnaire (not all questions answered) or invalid state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Free tier quota exceeded or access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Contract not found
+
+  /api/contracts/{id}/regenerate:
+    post:
+      summary: Regenerate contract documents (.docx and .pdf) reflecting modified answers
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Unique contract generation ID
+      responses:
+        '200':
+          description: Contract documents regenerated and overwritten successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractGenerationResponse'
+        '400':
+          description: Incomplete questionnaire or invalid state
+        '401':
+          description: Unauthorized
+        '404':
+          description: Contract not found
+
+  /api/contracts/{id}/download:
+    get:
+      summary: Download the latest compiled contract document in Word or PDF format
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Unique contract generation ID
+        - name: format
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [pdf, docx]
+          description: Desired document export format
+      responses:
+        '200':
+          description: Document binary stream
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+                example: attachment; filename="contrato-123.pdf"
+            x-correlation-id:
+              schema:
+                type: string
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+            application/vnd.openxmlformats-officedocument.wordprocessingml.document:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid format or document has not been generated yet
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Contract not found
+
+components:
+  schemas:
+    ContractGenerationResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        title:
+          type: string
+        status:
+          type: string
+          enum: [in_progress, completed]
+        hasGeneratedDocument:
+          type: boolean
+        availableFormats:
+          type: array
+          items:
+            type: string
+            enum: [pdf, docx]
+        isRegenerationPending:
+          type: boolean
+        updatedAt:
+          type: string
+          format: date-time
+
+    ApiError:
+      type: object
+      properties:
+        code:
+          type: string
+          example: FREE_QUOTA_EXCEEDED
+        message:
+          type: string
+          example: Has alcanzado el límite de contratos gratuitos de tu plan.
