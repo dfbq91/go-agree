@@ -110,7 +110,7 @@ export class PaymentDomainError extends Error {
 }
 
 export class FreeQuotaExceededError extends PaymentDomainError {
-  constructor(limit: number = getFreeContractLimit()) {
+  constructor(public readonly limit: number = getFreeContractLimit()) {
     super(
       `Has alcanzado el límite de ${limit} contratos gratuitos. Actualiza a Plan Pro para continuar.`,
       'FREE_QUOTA_EXCEEDED'

@@ -137,12 +137,11 @@ describe('ContractTableRow Component - Download Column Integration (User Story 2
     status: 'completed',
     currentQuestionIndex: 11,
     questionsAnsweredCount: 11,
-    totalQuestionsCount: 11,
     hasGeneratedDocument: true,
     isRegenerationPending: false,
     availableFormats: ['pdf', 'docx'],
-    createdAt: '2026-09-16T10:00:00.000Z',
-    updatedAt: '2026-09-16T10:00:00.000Z',
+    createdAt: new Date('2026-09-16T10:00:00.000Z'),
+    updatedAt: new Date('2026-09-16T10:00:00.000Z'),
   };
 
   it('renders active download dropdown in contract row when documents are generated', () => {

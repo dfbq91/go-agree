@@ -61,6 +61,7 @@ export const QuestionnaireContainer: React.FC<QuestionnaireContainerProps> = ({
     isRegenerationPending ?? false
   );
   const [isRegenerating, setIsRegenerating] = useState<boolean>(false);
+  const [isQuotaModalOpen, setIsQuotaModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (isRegenerationPending !== undefined) {
@@ -345,8 +346,20 @@ export const QuestionnaireContainer: React.FC<QuestionnaireContainerProps> = ({
     }
     if (onComplete) {
       setIsCompleting(true);
+      setError(undefined);
       try {
         await onComplete();
+      } catch (err: any) {
+        if (
+          err?.code === 'FREE_QUOTA_EXCEEDED' ||
+          err?.message?.includes('FREE_QUOTA_EXCEEDED') ||
+          err?.status === 403
+        ) {
+          setIsQuotaModalOpen(true);
+        } else {
+          setError(err.message || 'Error al completar el contrato');
+        }
+        throw err;
       } finally {
         setIsCompleting(false);
       }
@@ -381,6 +394,9 @@ export const QuestionnaireContainer: React.FC<QuestionnaireContainerProps> = ({
           isRegenerationPending={isRegenerationPendingState}
           onRegenerate={handleRegenerate}
           isRegenerating={isRegenerating}
+          quotaModalOpen={isQuotaModalOpen}
+          onCloseQuotaModal={() => setIsQuotaModalOpen(false)}
+          errorMessage={error}
           onDownloadFormat={
             onDownloadFormat ??
             ((format) => {

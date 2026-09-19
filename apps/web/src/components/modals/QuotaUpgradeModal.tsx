@@ -3,6 +3,7 @@
 import { getFreeContractLimit } from '@go-agree/domain';
 import { useRouter } from 'next/navigation';
 import type React from 'react';
+import { useEffect } from 'react';
 import { es } from '../../locales/es';
 
 export interface QuotaUpgradeModalProps {
@@ -12,15 +13,28 @@ export interface QuotaUpgradeModalProps {
   readonly freeContractsLimit?: number;
 }
 
-export const QuotaUpgradeModal: React.FC<QuotaUpgradeModalProps> = ({
-  isOpen,
+const QuotaUpgradeModalContent: React.FC<QuotaUpgradeModalProps> = ({
   onClose,
   onUpgrade,
   freeContractsLimit,
 }) => {
-  const router = useRouter();
+  let router: any = null;
+  try {
+    router = useRouter();
+  } catch {
+    router = null;
+  }
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
 
   const limit = freeContractsLimit ?? getFreeContractLimit();
   const modalDescription =
@@ -31,8 +45,10 @@ export const QuotaUpgradeModal: React.FC<QuotaUpgradeModalProps> = ({
   const handleUpgrade = () => {
     if (onUpgrade) {
       onUpgrade();
-    } else {
+    } else if (router && typeof router.push === 'function') {
       router.push('/checkout');
+    } else if (typeof window !== 'undefined') {
+      window.location.href = '/checkout';
     }
   };
 
@@ -43,8 +59,13 @@ export const QuotaUpgradeModal: React.FC<QuotaUpgradeModalProps> = ({
       aria-modal="true"
       aria-labelledby="modal-title"
     >
-      <div className="fixed inset-0" aria-hidden="true" onClick={onClose} />
-      <div className="relative w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-xl z-10">
+      <div
+        className="fixed inset-0"
+        aria-hidden="true"
+        data-testid="quota-modal-backdrop"
+        onClick={onClose}
+      />
+      <div className="relative w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-xl z-10 bg-white">
         <div className="flex items-center gap-3 mb-4">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
             <svg
@@ -62,25 +83,27 @@ export const QuotaUpgradeModal: React.FC<QuotaUpgradeModalProps> = ({
               />
             </svg>
           </div>
-          <h2 id="modal-title" className="text-lg font-bold text-foreground">
+          <h2 id="modal-title" className="text-lg font-bold text-foreground text-gray-900">
             {es.plans.upgradeModalTitle}
           </h2>
         </div>
 
-        <p className="text-sm text-muted-foreground mb-6 leading-relaxed">{modalDescription}</p>
+        <p className="text-sm text-muted-foreground text-gray-600 mb-6 leading-relaxed">
+          {modalDescription}
+        </p>
 
         <div className="flex flex-col gap-2.5 sm:flex-row-reverse">
           <button
             type="button"
             onClick={handleUpgrade}
-            className="inline-flex w-full sm:w-auto items-center justify-center rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            className="inline-flex w-full sm:w-auto items-center justify-center rounded-xl bg-primary bg-blue-600 hover:bg-blue-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
           >
             {es.plans.upgradeModalCta}
           </button>
           <button
             type="button"
             onClick={onClose}
-            className="inline-flex w-full sm:w-auto items-center justify-center rounded-xl border border-input bg-background px-4 py-2.5 text-sm font-medium text-foreground hover:bg-muted/60 transition-colors"
+            className="inline-flex w-full sm:w-auto items-center justify-center rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
           >
             {es.plans.upgradeModalClose}
           </button>
@@ -88,4 +111,9 @@ export const QuotaUpgradeModal: React.FC<QuotaUpgradeModalProps> = ({
       </div>
     </div>
   );
+};
+
+export const QuotaUpgradeModal: React.FC<QuotaUpgradeModalProps> = (props) => {
+  if (!props.isOpen) return null;
+  return <QuotaUpgradeModalContent {...props} />;
 };

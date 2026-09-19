@@ -116,14 +116,14 @@
 
 ### Tests for User Story 4
 
-- [ ] T037 [P] [US4] Unit tests for quota evaluation in `GenerateContractDocumentUseCase` and exemption in `RegenerateContractDocumentUseCase` in `packages/application/tests/ContractQuotaEnforcement.test.ts`
-- [ ] T038 [P] [US4] Component tests for quota limit notification modal and checkout CTA link in `apps/web/tests/components/QuotaUpgradeModal.test.tsx`
+- [X] T037 [P] [US4] Unit tests for quota evaluation in `GenerateContractDocumentUseCase` and exemption in `RegenerateContractDocumentUseCase` in `packages/application/tests/ContractQuotaEnforcement.test.ts`
+- [X] T038 [P] [US4] Component tests for quota limit notification modal and checkout CTA link in `apps/web/tests/components/QuotaUpgradeModal.test.tsx`
 
 ### Implementation for User Story 4
 
-- [ ] T039 [US4] Integrate `FreeQuotaConfig` validation in `GenerateContractDocumentUseCase` in `packages/application/src/use-cases/documents/GenerateContractDocumentUseCase.ts`
-- [ ] T040 [US4] Implement `QuotaUpgradeModal` in `apps/web/src/components/modals/QuotaUpgradeModal.tsx` linking to `/checkout`
-- [ ] T041 [US4] Integrate quota modal handling in summary review view in `apps/web/src/components/questionnaire/SummaryReview.tsx` upon receiving `FREE_QUOTA_EXCEEDED` error
+- [X] T039 [US4] Integrate `FreeQuotaConfig` validation in `GenerateContractDocumentUseCase` in `packages/application/src/use-cases/documents/GenerateContractDocumentUseCase.ts`
+- [X] T040 [US4] Implement `QuotaUpgradeModal` in `apps/web/src/components/modals/QuotaUpgradeModal.tsx` linking to `/checkout`
+- [X] T041 [US4] Integrate quota modal handling in summary review view in `apps/web/src/components/questionnaire/SummaryReview.tsx` upon receiving `FREE_QUOTA_EXCEEDED` error
 
 **Checkpoint**: Quota enforcement and upgrade flow fully functional.
 
@@ -137,13 +137,13 @@
 
 ### Tests for User Story 5
 
-- [ ] T042 [P] [US5] Unit tests verifying that LLM prompt and document generators omit platform disclaimers and include structured signature blocks in `packages/infrastructure/tests/adapters/ContractAnatomyAndSignatures.test.ts`
-- [ ] T043 [P] [US5] Component and accessibility tests for the Spanish legal advice disclaimer callout (`role="note"`) in `apps/web/tests/questionnaire/LegalDisclaimerCallout.test.tsx`
+- [X] T042 [P] [US5] Unit tests verifying that LLM prompt and document generators omit platform disclaimers and include structured signature blocks in `packages/infrastructure/tests/adapters/ContractAnatomyAndSignatures.test.ts`
+- [X] T043 [P] [US5] Component and accessibility tests for the Spanish legal advice disclaimer callout (`role="note"`) in `apps/web/tests/questionnaire/LegalDisclaimerCallout.test.tsx`
 
 ### Implementation for User Story 5
 
-- [ ] T044 [US5] Update `SummaryReview.tsx` in `apps/web/src/components/questionnaire/SummaryReview.tsx` to render the prominent Spanish legal advice disclaimer callout before the confirmation action
-- [ ] T045 [US5] Verify signature block rendering for Contratante and Contratista (printed name, ID line, date) in `DocxDocumentGeneratorAdapter.ts` and `PdfDocumentGeneratorAdapter.ts`
+- [X] T044 [US5] Update `SummaryReview.tsx` in `apps/web/src/components/questionnaire/SummaryReview.tsx` to render the prominent Spanish legal advice disclaimer callout before the confirmation action
+- [X] T045 [US5] Verify signature block rendering for Contratante and Contratista (printed name, ID line, date) in `DocxDocumentGeneratorAdapter.ts` and `PdfDocumentGeneratorAdapter.ts`
 
 **Checkpoint**: All user stories implemented and verified.
 
@@ -153,10 +153,10 @@
 
 **Purpose**: Accessibility validation, special character resilience, and full verification
 
-- [ ] T046 [P] Automated accessibility audit (WCAG 2.1 AA) for all document generation and download controls in `apps/web/tests/a11y/DocumentGenerationA11y.test.tsx`
-- [ ] T047 [P] Special characters and long open-text edge case tests in `packages/infrastructure/tests/adapters/SpecialCharactersAndEdgeCases.test.ts`
-- [ ] T048 End-to-end verification of all 6 scenarios in `specs/007-document-generation/quickstart.md`
-- [ ] T049 Run monorepo typecheck, linting, and test suite across all workspace packages via `package.json` scripts (`pnpm test && pnpm typecheck && pnpm lint`)
+- [X] T046 [P] Automated accessibility audit (WCAG 2.1 AA) for all document generation and download controls in `apps/web/tests/a11y/DocumentGenerationA11y.test.tsx`
+- [X] T047 [P] Special characters and long open-text edge case tests in `packages/infrastructure/tests/adapters/SpecialCharactersAndEdgeCases.test.ts`
+- [X] T048 End-to-end verification of all 6 scenarios in `specs/007-document-generation/quickstart.md`
+- [X] T049 Run monorepo typecheck, linting, and test suite across all workspace packages via `package.json` scripts (`pnpm test && pnpm typecheck && pnpm lint`)
 
 ---
 

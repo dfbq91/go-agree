@@ -80,7 +80,10 @@ export const QuestionnaireClientPage: React.FC<QuestionnaireClientPageProps> = (
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        throw new Error(data.message || 'Failed to complete questionnaire');
+        const error = new Error(data.message || 'Failed to complete questionnaire');
+        (error as any).code = data.code;
+        (error as any).status = res.status;
+        throw error;
       }
       if (typeof window !== 'undefined') {
         window.location.href = '/dashboard';

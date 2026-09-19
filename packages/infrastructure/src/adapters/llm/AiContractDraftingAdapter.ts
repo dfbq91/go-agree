@@ -3,15 +3,15 @@
  * @description Adapter invoking Google Gemini via Vercel AI SDK to draft structured legal contract clauses.
  */
 
-import {
-  type AssembledContractDTO,
-  type DraftContractInput,
-  type LlmContractDraftingPort,
+import type {
+  AssembledContractDTO,
+  DraftContractInput,
+  LlmContractDraftingPort,
 } from '@go-agree/application';
 import { generateText as defaultGenerateText, Output, type LanguageModel } from 'ai';
 import { z } from 'zod';
 
-export const CONTRACT_DRAFTING_SYSTEM_PROMPT = `Eres un abogado experto en redacción de contratos comerciales y civiles en Colombia.
+export const CONTRACT_DRAFTING_SYSTEM_PROMPT = `Eres un abogado experto en redacción de contratos en Colombia.
 Tu objetivo es redactar un contrato formal, completo y jurídicamente sólido con base en las respuestas suministradas por el usuario en el cuestionario.
 
 ### Estructura Contractual Obligatoria:
@@ -32,9 +32,7 @@ Tu objetivo es redactar un contrato formal, completo y jurídicamente sólido co
 6. Bloques de Firma: Espacios formales con líneas de firma, nombre, documento de identidad y fecha para ambas partes.
 
 ### Reglas Estrictas:
-- NO incluyas descargos de responsabilidad ("disclaimers") dentro del cuerpo del contrato. Los avisos legales de la plataforma se muestran exclusivamente en la interfaz de usuario.
 - Redacta en español formal y jurídico colombiano.
-- No inventes obligaciones que contradigan las respuestas suministradas.`;
 
 export const contractDraftSchema = z.object({
   title: z.string(),

@@ -16,7 +16,6 @@ import {
   AiContractDraftingAdapter,
   DocxDocumentGeneratorAdapter,
   MockContractDraftingAdapter,
-  MockDocumentGeneratorAdapter,
   PdfDocumentGeneratorAdapter,
   SupabaseDocumentStorageAdapter,
 } from '@go-agree/infrastructure';

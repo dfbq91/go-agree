@@ -6,7 +6,7 @@ import type React from 'react';
 import { useState } from 'react';
 import { es } from '../../locales/es';
 import { PlanQuotaBadge } from './PlanQuotaBadge';
-import { QuotaUpgradeModal } from './QuotaUpgradeModal';
+import { QuotaUpgradeModal } from '../modals/QuotaUpgradeModal';
 
 export interface DashboardHeaderProps {
   readonly subscription: SubscriptionStatusResult;

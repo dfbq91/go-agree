@@ -111,11 +111,19 @@ export class GenerateContractDocumentUseCase {
 
     // 3. Quota Evaluation (if subscription repository is provided and contract is not already completed)
     const wasCompletedBefore = contract.status === 'completed';
+    let isUserActivePro = false;
+
     if (this.deps.subscriptionRepository && !wasCompletedBefore) {
       const subscription = await this.deps.subscriptionRepository.getByUserId(userId);
-      const isPro = subscription.planType === 'pro' && subscription.status === 'active';
+      const isExpired =
+        subscription.planType === 'pro' &&
+        subscription.expiresAt !== null &&
+        new Date(subscription.expiresAt).getTime() <= Date.now();
 
-      if (!isPro) {
+      isUserActivePro =
+        subscription.planType === 'pro' && subscription.status === 'active' && !isExpired;
+
+      if (!isUserActivePro) {
         const freeLimit = getFreeContractLimit();
         if (subscription.freeContractsUsed >= freeLimit) {
           this.deps.logger?.warn('Contract generation blocked: Free quota exceeded', {
@@ -186,8 +194,8 @@ export class GenerateContractDocumentUseCase {
     contract.updatedAt = now;
     await this.deps.contractRepository.save(contract);
 
-    // 9. Increment free contract quota usage if applicable
-    if (this.deps.subscriptionRepository && !wasCompletedBefore) {
+    // 9. Increment free contract quota usage if applicable (only for non-Pro users on initial completion)
+    if (this.deps.subscriptionRepository && !wasCompletedBefore && !isUserActivePro) {
       await this.deps.subscriptionRepository.incrementFreeContractCount(userId);
     }
 

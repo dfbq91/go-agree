@@ -6,7 +6,7 @@ import { PaymentProviderSelector } from '../../src/components/checkout/PaymentPr
 import { PaymentResultView } from '../../src/components/checkout/PaymentResultView';
 import { PlanCheckoutCard } from '../../src/components/checkout/PlanCheckoutCard';
 import { PlanQuotaBadge } from '../../src/components/dashboard/PlanQuotaBadge';
-import { QuotaUpgradeModal } from '../../src/components/dashboard/QuotaUpgradeModal';
+import { QuotaUpgradeModal } from '../../src/components/modals/QuotaUpgradeModal';
 
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: vi.fn() }),

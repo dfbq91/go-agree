@@ -1,12 +1,14 @@
 import type { QuestionDTO } from '@go-agree/application';
 import type React from 'react';
+import { useState } from 'react';
+import { QuotaUpgradeModal } from '../modals/QuotaUpgradeModal';
 import { es } from '../../locales/es';
 
 export interface SummaryReviewProps {
   questions: QuestionDTO[];
   answers: Record<string, unknown>;
   onEdit: (questionId: string) => void;
-  onConfirm: () => void;
+  onConfirm: () => void | Promise<void>;
   onBackToDashboard?: () => void;
   isSubmitting?: boolean;
   isCompleted?: boolean;
@@ -15,6 +17,10 @@ export interface SummaryReviewProps {
   isRegenerationPending?: boolean;
   onRegenerate?: () => void;
   isRegenerating?: boolean;
+  quotaModalOpen?: boolean;
+  onCloseQuotaModal?: () => void;
+  freeContractsLimit?: number;
+  errorMessage?: string;
 }
 
 export const SummaryReview: React.FC<SummaryReviewProps> = ({
@@ -30,7 +36,37 @@ export const SummaryReview: React.FC<SummaryReviewProps> = ({
   isRegenerationPending = false,
   onRegenerate,
   isRegenerating = false,
+  quotaModalOpen,
+  onCloseQuotaModal,
+  freeContractsLimit,
+  errorMessage,
 }) => {
+  const [internalQuotaModalOpen, setInternalQuotaModalOpen] = useState(false);
+  const [summaryError, setSummaryError] = useState<string | null>(null);
+
+  const isModalOpen = quotaModalOpen !== undefined ? quotaModalOpen : internalQuotaModalOpen;
+
+  const handleConfirm = async () => {
+    setSummaryError(null);
+    try {
+      await onConfirm();
+    } catch (err: any) {
+      if (
+        err?.code === 'FREE_QUOTA_EXCEEDED' ||
+        err?.message?.includes('FREE_QUOTA_EXCEEDED') ||
+        err?.status === 403
+      ) {
+        setInternalQuotaModalOpen(true);
+      } else {
+        setSummaryError(err.message || 'Error al generar contrato');
+      }
+    }
+  };
+
+  const handleCloseModal = () => {
+    setInternalQuotaModalOpen(false);
+    onCloseQuotaModal?.();
+  };
   const getAnswerDisplay = (question: QuestionDTO, answer: unknown): string => {
     if (answer === undefined || answer === null || answer === '') {
       return es.questionnaire.summary.notAnswered;
@@ -97,6 +133,22 @@ export const SummaryReview: React.FC<SummaryReviewProps> = ({
         <p className="mt-1 text-sm text-gray-500">{es.questionnaire.summary.subtitle}</p>
       </div>
 
+      {/* Error Alert */}
+      {(errorMessage || summaryError) && (
+        <div
+          role="alert"
+          className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3 text-red-800 text-sm animate-in fade-in"
+        >
+          <span className="text-lg text-red-500" aria-hidden="true">
+            ⚠️
+          </span>
+          <div>
+            <p className="font-semibold text-red-900">Error</p>
+            <p>{errorMessage || summaryError}</p>
+          </div>
+        </div>
+      )}
+
       {/* Pending Regeneration Banner */}
       {isCompleted && isRegenerationPending && (
         <div
@@ -108,9 +160,9 @@ export const SummaryReview: React.FC<SummaryReviewProps> = ({
               ⚠️
             </span>
             <div>
-              <h4 className="text-sm font-semibold text-amber-900">
+              <h3 className="text-sm font-semibold text-amber-900">
                 {es.questionnaire.summary.pendingRegenerationBannerTitle}
-              </h4>
+              </h3>
               <p className="text-xs text-amber-800 mt-0.5">
                 {es.questionnaire.summary.pendingRegenerationBannerText}
               </p>
@@ -227,7 +279,7 @@ export const SummaryReview: React.FC<SummaryReviewProps> = ({
           ) : !isCompleted ? (
             <button
               type="button"
-              onClick={onConfirm}
+              onClick={handleConfirm}
               disabled={isSubmitting}
               aria-busy={isSubmitting}
               className="w-full sm:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
@@ -239,6 +291,12 @@ export const SummaryReview: React.FC<SummaryReviewProps> = ({
           ) : null}
         </div>
       </div>
+
+      <QuotaUpgradeModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        freeContractsLimit={freeContractsLimit}
+      />
     </div>
   );
 };

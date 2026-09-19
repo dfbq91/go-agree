@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { PlanQuotaBadge } from '../../src/components/dashboard/PlanQuotaBadge';
-import { QuotaUpgradeModal } from '../../src/components/dashboard/QuotaUpgradeModal';
+import { QuotaUpgradeModal } from '../../src/components/modals/QuotaUpgradeModal';
 import { es } from '../../src/locales/es';
 
 vi.mock('next/navigation', () => ({
