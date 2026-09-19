@@ -27,6 +27,7 @@ export interface QuestionnaireContainerProps {
   onSaveTitle?: (newTitle: string) => Promise<void>;
   onComplete?: () => Promise<void>;
   onDownloadFormat?: (format: 'docx' | 'pdf') => void;
+  onRegenerate?: () => Promise<void>;
 }
 
 export const QuestionnaireContainer: React.FC<QuestionnaireContainerProps> = ({
@@ -43,6 +44,7 @@ export const QuestionnaireContainer: React.FC<QuestionnaireContainerProps> = ({
   onSaveTitle,
   onComplete,
   onDownloadFormat,
+  onRegenerate,
 }) => {
   const questionnaire = useMemo(() => QuestionnaireDefinition.createStandard(), []);
 
@@ -55,6 +57,16 @@ export const QuestionnaireContainer: React.FC<QuestionnaireContainerProps> = ({
   const [isCompleting, setIsCompleting] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle');
+  const [isRegenerationPendingState, setIsRegenerationPendingState] = useState<boolean>(
+    isRegenerationPending ?? false
+  );
+  const [isRegenerating, setIsRegenerating] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (isRegenerationPending !== undefined) {
+      setIsRegenerationPendingState(isRegenerationPending);
+    }
+  }, [isRegenerationPending]);
   const [dynamicQuestions, setDynamicQuestions] = useState<Question[]>(() => {
     if (!initialDynamicQuestions || initialDynamicQuestions.length === 0) return [];
     return initialDynamicQuestions.map(
@@ -201,6 +213,9 @@ export const QuestionnaireContainer: React.FC<QuestionnaireContainerProps> = ({
       try {
         await onSaveProgress(nextIndex, answers);
         setSaveStatus('saved');
+        if (isCompleted) {
+          setIsRegenerationPendingState(true);
+        }
 
         // Detectar si la pregunta que acabamos de responder es un checkpoint de análisis
         const checkpoint = ANALYSIS_CHECKPOINTS.find(
@@ -278,6 +293,9 @@ export const QuestionnaireContainer: React.FC<QuestionnaireContainerProps> = ({
       try {
         await onSaveProgress(safeIndex, answers);
         setSaveStatus('saved');
+        if (isCompleted) {
+          setIsRegenerationPendingState(true);
+        }
       } catch (_err) {
         setSaveStatus('error');
         setError('Error al guardar tu respuesta. Por favor intenta de nuevo.');
@@ -289,6 +307,29 @@ export const QuestionnaireContainer: React.FC<QuestionnaireContainerProps> = ({
 
     setIsReviewing(true);
     setIsEditingFromSummary(false);
+  };
+
+  const handleRegenerate = async () => {
+    setIsRegenerating(true);
+    setError(undefined);
+    try {
+      if (onRegenerate) {
+        await onRegenerate();
+      } else {
+        const res = await fetch(`/api/contracts/${contractId}/regenerate`, {
+          method: 'POST',
+        });
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          throw new Error(data.message || 'Error al regenerar el documento');
+        }
+      }
+      setIsRegenerationPendingState(false);
+    } catch (err: any) {
+      setError(err.message || 'Error al regenerar el documento');
+    } finally {
+      setIsRegenerating(false);
+    }
   };
 
   const handleBackToDashboard = () => {
@@ -337,7 +378,9 @@ export const QuestionnaireContainer: React.FC<QuestionnaireContainerProps> = ({
           isSubmitting={isCompleting}
           isCompleted={isCompleted}
           hasGeneratedDocument={hasGeneratedDocument ?? isCompleted}
-          isRegenerationPending={isRegenerationPending}
+          isRegenerationPending={isRegenerationPendingState}
+          onRegenerate={handleRegenerate}
+          isRegenerating={isRegenerating}
           onDownloadFormat={
             onDownloadFormat ??
             ((format) => {

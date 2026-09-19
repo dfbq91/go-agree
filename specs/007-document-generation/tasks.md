@@ -94,15 +94,15 @@
 
 ### Tests for User Story 3
 
-- [ ] T031 [P] [US3] Unit test for `RegenerateContractDocumentUseCase` verifying answer re-synthesis, single version overwrite, and zero quota deduction in `packages/application/tests/RegenerateContractDocumentUseCase.test.ts`
-- [ ] T032 [P] [US3] Component tests for answer modification, regeneration banner, and download re-enablement in `apps/web/tests/questionnaire/SummaryReviewRegeneration.test.tsx`
+- [X] T031 [P] [US3] Unit test for `RegenerateContractDocumentUseCase` verifying answer re-synthesis, single version overwrite, and zero quota deduction in `packages/application/tests/RegenerateContractDocumentUseCase.test.ts`
+- [X] T032 [P] [US3] Component tests for answer modification, regeneration banner, and download re-enablement in `apps/web/tests/questionnaire/SummaryReviewRegeneration.test.tsx`
 
 ### Implementation for User Story 3
 
-- [ ] T033 [US3] Implement `RegenerateContractDocumentUseCase` in `packages/application/src/use-cases/documents/RegenerateContractDocumentUseCase.ts`
-- [ ] T034 [US3] Implement API endpoint `POST /api/contracts/[id]/regenerate` in `apps/web/src/app/api/contracts/[id]/regenerate/route.ts`
-- [ ] T035 [US3] Update `SummaryReview.tsx` in `apps/web/src/components/questionnaire/SummaryReview.tsx` to display the "Actualización pendiente" banner, pause downloads when answers modified, and trigger regeneration
-- [ ] T036 [US3] Update dashboard contract row in `apps/web/src/components/dashboard/ContractTableRow.tsx` to render the "Actualización pendiente" badge linking to `/questionnaire?id={id}&mode=summary`
+- [X] T033 [US3] Implement `RegenerateContractDocumentUseCase` in `packages/application/src/use-cases/documents/RegenerateContractDocumentUseCase.ts`
+- [X] T034 [US3] Implement API endpoint `POST /api/contracts/[id]/regenerate` in `apps/web/src/app/api/contracts/[id]/regenerate/route.ts`
+- [X] T035 [US3] Update `SummaryReview.tsx` in `apps/web/src/components/questionnaire/SummaryReview.tsx` to display the "Actualización pendiente" banner, pause downloads when answers modified, and trigger regeneration
+- [X] T036 [US3] Update dashboard contract row in `apps/web/src/components/dashboard/ContractTableRow.tsx` to render the "Actualización pendiente" badge linking to `/questionnaire?id={id}&mode=summary`
 
 **Checkpoint**: User Stories 1, 2, and 3 work independently and cohesively.
 

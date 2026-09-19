@@ -6,6 +6,7 @@
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import {
   GenerateContractDocumentUseCase,
+  RegenerateContractDocumentUseCase,
   GetContractDocumentDownloadUseCase,
   type DocumentGeneratorPort,
   type DocumentStoragePort,
@@ -151,6 +152,23 @@ export async function getGetContractDocumentDownloadUseCase(): Promise<GetContra
 
   return new GetContractDocumentDownloadUseCase({
     contractRepository: contractRepo,
+    documentStorage: docStorage,
+    logger,
+  });
+}
+
+export async function getRegenerateContractDocumentUseCase(): Promise<RegenerateContractDocumentUseCase> {
+  const contractRepo = await getServerContractRepository();
+  const dynamicRepo = getServerDynamicQuestionRepository();
+  const llmPort = getServerLlmContractDraftingPort();
+  const docGen = getServerDocumentGeneratorPort();
+  const docStorage = getServerDocumentStorageAdapter();
+
+  return new RegenerateContractDocumentUseCase({
+    contractRepository: contractRepo,
+    dynamicQuestionRepository: dynamicRepo,
+    llmContractDrafting: llmPort,
+    documentGenerator: docGen,
     documentStorage: docStorage,
     logger,
   });

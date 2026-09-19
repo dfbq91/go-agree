@@ -3,6 +3,7 @@ import { getServerDynamicQuestionRepository } from '@/lib/analysis';
 import { getServerAuthAdapter } from '@/lib/auth';
 import { getServerContractRepository } from '@/lib/contracts';
 import { getServerSubscriptionStatus } from '@/lib/subscription';
+import { getServerDocumentStorageAdapter } from '@/lib/document-generation';
 import type { QuestionDTO } from '@go-agree/application';
 import { ContractId } from '@go-agree/domain';
 import { redirect } from 'next/navigation';
@@ -68,6 +69,18 @@ export default async function QuestionnairePage({ searchParams }: QuestionnaireP
     condition: q.condition,
   }));
 
+  let isRegenerationPending = false;
+  if (isCompleted) {
+    const docStorage = getServerDocumentStorageAdapter();
+    const { formats, lastGeneratedAt } = await docStorage.getAvailableFormats({
+      contractId: contract.id,
+      userId: session.userId,
+    });
+    if (formats.length > 0 && lastGeneratedAt && contract.updatedAt) {
+      isRegenerationPending = new Date(contract.updatedAt).getTime() > new Date(lastGeneratedAt).getTime();
+    }
+  }
+
   return (
     <QuestionnaireClientPage
       contractId={contract.id}
@@ -78,6 +91,7 @@ export default async function QuestionnairePage({ searchParams }: QuestionnaireP
       isCompleted={isCompleted}
       initialDynamicQuestions={initialDynamicQuestions}
       hasGeneratedDocument={isCompleted}
+      isRegenerationPending={isRegenerationPending}
     />
   );
 }

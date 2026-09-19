@@ -94,6 +94,22 @@ export const QuestionnaireClientPage: React.FC<QuestionnaireClientPageProps> = (
     }
   };
 
+  const handleRegenerate = async () => {
+    try {
+      const res = await fetch(`/api/contracts/${contractId}/regenerate`, {
+        method: 'POST',
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.message || 'Failed to regenerate contract documents');
+      }
+      router.refresh();
+    } catch (err) {
+      console.error('Failed to regenerate contract documents:', err);
+      throw err;
+    }
+  };
+
   return (
     <QuestionnaireContainer
       contractId={contractId}
@@ -108,6 +124,7 @@ export const QuestionnaireClientPage: React.FC<QuestionnaireClientPageProps> = (
       onSaveProgress={handleSaveProgress}
       onSaveTitle={handleSaveTitle}
       onComplete={handleComplete}
+      onRegenerate={handleRegenerate}
     />
   );
 };

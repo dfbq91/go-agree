@@ -18,6 +18,7 @@ export * from './use-cases/auth/RegisterUserUseCase.js';
 export * from './use-cases/auth/RequestPasswordResetUseCase.js';
 export * from './use-cases/auth/SessionUseCases.js';
 export * from './use-cases/documents/GenerateContractDocumentUseCase.js';
+export * from './use-cases/documents/RegenerateContractDocumentUseCase.js';
 export * from './use-cases/documents/GetContractDocumentDownloadUseCase.js';
 export * from './use-cases/ConsumeContractQuotaUseCase.js';
 export * from './use-cases/contracts/ContractUseCases.js';
