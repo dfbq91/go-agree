@@ -116,6 +116,7 @@ export function ContractCardMobile({
               contractId={contract.id}
               hasGeneratedDocument={contract.hasGeneratedDocument}
               availableFormats={contract.availableFormats}
+              isRegenerationPending={contract.isRegenerationPending}
             />
           )}
         </div>

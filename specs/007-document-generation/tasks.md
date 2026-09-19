@@ -74,13 +74,13 @@
 
 ### Tests for User Story 2
 
-- [ ] T027 [P] [US2] Component tests for `DownloadDropdown` and `ContractTableRow` download column in `apps/web/tests/components/DownloadDropdown.test.tsx`
+- [X] T027 [P] [US2] Component tests for `DownloadDropdown` and `ContractTableRow` download column in `apps/web/tests/components/DownloadDropdown.test.tsx`
 
 ### Implementation for User Story 2
 
-- [ ] T028 [P] [US2] Implement accessible `DownloadDropdown` component with keyboard navigation and format selection in `apps/web/src/components/dashboard/DownloadDropdown.tsx`
-- [ ] T029 [US2] Update dashboard row component in `apps/web/src/components/dashboard/ContractTableRow.tsx` to render `DownloadDropdown` or disabled download state
-- [ ] T030 [US2] Integrate document download triggers into dashboard list view in `apps/web/src/app/(dashboard)/dashboard/page.tsx`
+- [X] T028 [P] [US2] Implement accessible `DownloadDropdown` component with keyboard navigation and format selection in `apps/web/src/components/dashboard/DownloadDropdown.tsx`
+- [X] T029 [US2] Update dashboard row component in `apps/web/src/components/dashboard/ContractTableRow.tsx` to render `DownloadDropdown` or disabled download state
+- [X] T030 [US2] Integrate document download triggers into dashboard list view in `apps/web/src/app/(dashboard)/dashboard/page.tsx`
 
 **Checkpoint**: User Stories 1 AND 2 work independently.
 

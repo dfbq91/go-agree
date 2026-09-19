@@ -73,6 +73,7 @@ export function ContractTableRow({
             contractId={contract.id}
             hasGeneratedDocument={contract.hasGeneratedDocument}
             availableFormats={contract.availableFormats}
+            isRegenerationPending={contract.isRegenerationPending}
           />
         )}
       </td>
