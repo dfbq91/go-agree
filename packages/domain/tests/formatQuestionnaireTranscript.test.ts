@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { formatQuestionnaireTranscript } from '../src/formatters/formatQuestionnaireTranscript.js';
 import { QuestionnaireDefinition } from '../src/entities/QuestionnaireDefinition.js';
+import { formatQuestionnaireTranscript } from '../src/formatters/formatQuestionnaireTranscript.js';
 
 describe('formatQuestionnaireTranscript', () => {
   const questionnaire = QuestionnaireDefinition.createStandard();
@@ -9,7 +9,8 @@ describe('formatQuestionnaireTranscript', () => {
     const answers = {
       q0_party_role: 'contratante',
       q1_legal_personality: 'persona_juridica',
-      q2_description_conditions: 'Empresa Demo S.A.S. requiere servicios de desarrollo de Juan Pérez.',
+      q2_description_conditions:
+        'Empresa Demo S.A.S. requiere servicios de desarrollo de Juan Pérez.',
     };
 
     const transcript = formatQuestionnaireTranscript({

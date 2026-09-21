@@ -68,7 +68,6 @@ describe('Polymorphic Question Renderers', () => {
     expect(onChange).toHaveBeenCalledWith(['employs_people']);
   });
 
-
   it('dispatches polymorphic rendering through QuestionRenderer', () => {
     const question: QuestionDTO = {
       id: 'q0_test',

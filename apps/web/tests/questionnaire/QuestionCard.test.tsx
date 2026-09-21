@@ -100,7 +100,9 @@ describe('QuestionCard Component', () => {
     render(<QuestionCard question={mockGuidanceQuestion} value="" onChange={vi.fn()} />);
 
     expect(screen.getByText('Recomendaciones para describir el bien o servicio')).toBeDefined();
-    expect(screen.getByText(/Esta descripción es fundamental porque se enviará como prompt/i)).toBeDefined();
+    expect(
+      screen.getByText(/Esta descripción es fundamental porque se enviará como prompt/i)
+    ).toBeDefined();
     expect(screen.getByText('Detalla el objeto')).toBeDefined();
     expect(screen.getByText('Condiciones de entrega y plazos')).toBeDefined();
     expect(screen.getByText('Criterios de calidad y aceptación')).toBeDefined();

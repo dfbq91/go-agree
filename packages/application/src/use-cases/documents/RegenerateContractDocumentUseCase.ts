@@ -163,10 +163,12 @@ export class RegenerateContractDocumentUseCase {
       }),
     ]);
 
-    // 7. Update contract updatedAt timestamp and ensure completed status
-    contract.status = 'completed';
-    contract.updatedAt = now;
-    await this.deps.contractRepository.save(contract);
+    // 7. Ensure contract status is completed if not already (do not bump updatedAt past document creation)
+    if (contract.status !== 'completed') {
+      contract.status = 'completed';
+      contract.updatedAt = contract.updatedAt || now;
+      await this.deps.contractRepository.save(contract);
+    }
 
     this.deps.logger?.info('Contract document regeneration completed successfully', {
       contractId,

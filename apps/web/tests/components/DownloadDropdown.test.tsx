@@ -1,8 +1,8 @@
+import type { ContractDashboardItemDTO } from '@go-agree/application';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import type { ContractDashboardItemDTO } from '@go-agree/application';
-import { DownloadDropdown } from '../../src/components/dashboard/DownloadDropdown';
 import { ContractTableRow } from '../../src/components/dashboard/ContractTableRow';
+import { DownloadDropdown } from '../../src/components/dashboard/DownloadDropdown';
 import { es } from '../../src/locales/es';
 
 describe('DownloadDropdown Component (User Story 2 - Dashboard Retrieval)', () => {
@@ -93,7 +93,9 @@ describe('DownloadDropdown Component (User Story 2 - Dashboard Retrieval)', () =
     );
 
     // Should NOT render the standard download button
-    expect(screen.queryByRole('button', { name: new RegExp(es.dashboard.download.action, 'i') })).toBeNull();
+    expect(
+      screen.queryByRole('button', { name: new RegExp(es.dashboard.download.action, 'i') })
+    ).toBeNull();
 
     // Should render the badge link
     const badge = screen.getByRole('link', {

@@ -242,8 +242,7 @@ export class DocxDocumentGeneratorAdapter implements DocumentGeneratorPort {
     return {
       format: 'docx',
       content: buffer,
-      mimeType:
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
       filename,
     };
   }

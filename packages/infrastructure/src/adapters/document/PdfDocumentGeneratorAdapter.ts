@@ -94,10 +94,7 @@ export class PdfDocumentGeneratorAdapter implements DocumentGeneratorPort {
             .font('Helvetica-Bold')
             .fontSize(10)
             .text(`${clause.title.toUpperCase()}: `, { continued: true });
-          doc
-            .font('Helvetica')
-            .fontSize(10)
-            .text(clause.text, { align: 'justify', lineGap: 2 });
+          doc.font('Helvetica').fontSize(10).text(clause.text, { align: 'justify', lineGap: 2 });
           doc.moveDown(0.8);
         }
 
@@ -108,10 +105,7 @@ export class PdfDocumentGeneratorAdapter implements DocumentGeneratorPort {
               .font('Helvetica-Bold')
               .fontSize(10)
               .text(`${clause.title.toUpperCase()}: `, { continued: true });
-            doc
-              .font('Helvetica')
-              .fontSize(10)
-              .text(clause.text, { align: 'justify', lineGap: 2 });
+            doc.font('Helvetica').fontSize(10).text(clause.text, { align: 'justify', lineGap: 2 });
             doc.moveDown(0.8);
           }
         }
@@ -144,17 +138,9 @@ export class PdfDocumentGeneratorAdapter implements DocumentGeneratorPort {
           .text(clientBlock?.partyName || contract.client.name, leftX, startY + 15);
         doc
           .font('Helvetica')
-          .text(
-            clientBlock?.representativeName || 'EL CONTRATANTE',
-            leftX,
-            startY + 30
-          );
+          .text(clientBlock?.representativeName || 'EL CONTRATANTE', leftX, startY + 30);
         if (clientBlock?.idNumber || contract.client.idNumber) {
-          doc.text(
-            clientBlock?.idNumber || contract.client.idNumber || '',
-            leftX,
-            startY + 45
-          );
+          doc.text(clientBlock?.idNumber || contract.client.idNumber || '', leftX, startY + 45);
         }
 
         // Right signature (Provider)
@@ -167,11 +153,7 @@ export class PdfDocumentGeneratorAdapter implements DocumentGeneratorPort {
           .text(providerBlock?.partyName || contract.provider.name, rightX, startY + 15);
         doc
           .font('Helvetica')
-          .text(
-            providerBlock?.representativeName || 'EL CONTRATISTA',
-            rightX,
-            startY + 30
-          );
+          .text(providerBlock?.representativeName || 'EL CONTRATISTA', rightX, startY + 30);
         if (providerBlock?.idNumber || contract.provider.idNumber) {
           doc.text(
             providerBlock?.idNumber || contract.provider.idNumber || '',

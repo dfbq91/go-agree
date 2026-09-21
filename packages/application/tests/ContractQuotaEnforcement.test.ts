@@ -1,15 +1,12 @@
+import { FreeQuotaExceededError, QuestionnaireDefinition } from '@go-agree/domain';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
+  type ContractGenerationDTO,
   GenerateContractDocumentUseCase,
   RegenerateContractDocumentUseCase,
-  type ContractGenerationDTO,
   type SubscriptionRepositoryPort,
   type UserSubscriptionDTO,
 } from '../src/index.js';
-import {
-  FreeQuotaExceededError,
-  QuestionnaireDefinition,
-} from '@go-agree/domain';
 
 class MockContractRepo {
   public contracts = new Map<string, ContractGenerationDTO>();

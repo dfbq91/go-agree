@@ -22,7 +22,11 @@ describe('AiContractDraftingAdapter', () => {
         { number: 2, title: 'Precio', text: 'El valor total es de diez millones de pesos.' },
       ],
       dynamicClauses: [
-        { number: 3, title: 'Propiedad Intelectual', text: 'Los derechos patrimoniales se ceden al cliente.' },
+        {
+          number: 3,
+          title: 'Propiedad Intelectual',
+          text: 'Los derechos patrimoniales se ceden al cliente.',
+        },
       ],
       signatureBlocks: [
         { role: 'client' as const, partyName: 'Inversiones ABC S.A.S.', idNumber: '900.123.456-7' },

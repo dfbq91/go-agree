@@ -72,7 +72,8 @@ export const es = {
       notAvailable: 'No disponible',
       tooltipNotGenerated: 'El documento aún no ha sido generado',
       pendingRegenerationBadge: 'Actualización pendiente',
-      pendingRegenerationTooltip: 'Respuestas modificadas. Haz clic para revisar y regenerar el documento.',
+      pendingRegenerationTooltip:
+        'Respuestas modificadas. Haz clic para revisar y regenerar el documento.',
     },
     deleteModal: {
       title: '¿Eliminar contrato?',

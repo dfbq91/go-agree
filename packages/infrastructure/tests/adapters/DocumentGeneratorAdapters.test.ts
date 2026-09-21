@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
 import type { AssembledContractDTO } from '@go-agree/application';
+import { describe, expect, it } from 'vitest';
 import { DocxDocumentGeneratorAdapter } from '../../src/adapters/document/DocxDocumentGeneratorAdapter.js';
 import { PdfDocumentGeneratorAdapter } from '../../src/adapters/document/PdfDocumentGeneratorAdapter.js';
 

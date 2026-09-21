@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { SummaryReview } from '../../src/components/questionnaire/SummaryReview';
 import { es } from '../../src/locales/es';
@@ -30,9 +30,7 @@ describe('SummaryReview - Generation & Download Controls (US1)', () => {
 
     const disclaimer = screen.getByRole('note');
     expect(disclaimer).toBeDefined();
-    expect(disclaimer.textContent).toContain(
-      es.questionnaire.summary.legalDisclaimerText
-    );
+    expect(disclaimer.textContent).toContain(es.questionnaire.summary.legalDisclaimerText);
   });
 
   it('displays loading state with aria-busy="true" during document generation', () => {

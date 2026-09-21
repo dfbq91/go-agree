@@ -90,18 +90,16 @@ export class SupabaseDocumentStorageAdapter implements DocumentStoragePort {
     const cleanContractId = stripTypeIdPrefix(params.contractId);
     const cleanUserId = stripTypeIdPrefix(params.userId);
 
-    const { error: dbError } = await this.supabase
-      .from('contract_documents')
-      .upsert(
-        {
-          contract_id: cleanContractId,
-          user_id: cleanUserId,
-          file_format: params.format,
-          storage_path: storagePath,
-          created_at: now.toISOString(),
-        },
-        { onConflict: 'contract_id, file_format' }
-      );
+    const { error: dbError } = await this.supabase.from('contract_documents').upsert(
+      {
+        contract_id: cleanContractId,
+        user_id: cleanUserId,
+        file_format: params.format,
+        storage_path: storagePath,
+        created_at: now.toISOString(),
+      },
+      { onConflict: 'contract_id, file_format' }
+    );
 
     if (dbError) {
       this.logger?.error('Failed to upsert contract_documents row', {

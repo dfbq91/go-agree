@@ -121,12 +121,12 @@ export function ClickToEditTitle({
           {resumeUrl ? (
             <Link
               href={resumeUrl}
-              className="text-sm font-semibold text-gray-900 hover:text-primary-600 hover:underline truncate max-w-xs md:max-w-sm transition-colors"
+              className="text-sm font-semibold text-gray-900 hover:text-primary-600 hover:underline truncate max-w-[200px] sm:max-w-xs xl:max-w-sm transition-colors"
             >
               {title}
             </Link>
           ) : (
-            <span className="text-sm font-semibold text-gray-900 truncate max-w-xs md:max-w-sm">
+            <span className="text-sm font-semibold text-gray-900 truncate max-w-[200px] sm:max-w-xs xl:max-w-sm">
               {title}
             </span>
           )}

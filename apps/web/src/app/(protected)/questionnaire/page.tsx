@@ -2,8 +2,8 @@ import { QuestionnaireClientPage } from '@/components/questionnaire/Questionnair
 import { getServerDynamicQuestionRepository } from '@/lib/analysis';
 import { getServerAuthAdapter } from '@/lib/auth';
 import { getServerContractRepository } from '@/lib/contracts';
-import { getServerSubscriptionStatus } from '@/lib/subscription';
 import { getServerDocumentStorageAdapter } from '@/lib/document-generation';
+import { getServerSubscriptionStatus } from '@/lib/subscription';
 import type { QuestionDTO } from '@go-agree/application';
 import { ContractId } from '@go-agree/domain';
 import { redirect } from 'next/navigation';
@@ -77,7 +77,8 @@ export default async function QuestionnairePage({ searchParams }: QuestionnaireP
       userId: session.userId,
     });
     if (formats.length > 0 && lastGeneratedAt && contract.updatedAt) {
-      isRegenerationPending = new Date(contract.updatedAt).getTime() > new Date(lastGeneratedAt).getTime();
+      isRegenerationPending =
+        new Date(contract.updatedAt).getTime() > new Date(lastGeneratedAt).getTime();
     }
   }
 

@@ -24,8 +24,7 @@ export class MockDocumentGeneratorAdapter implements DocumentGeneratorPort {
     return {
       format: 'docx',
       content: dummyContent,
-      mimeType:
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
       filename: `${contract.title.replace(/\s+/g, '_')}.docx`,
     };
   }

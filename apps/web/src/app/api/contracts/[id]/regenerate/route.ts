@@ -55,7 +55,10 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     } catch (error: any) {
       logger.error('Failed to regenerate contract documents', { error });
 
-      if (error instanceof IncompleteQuestionnaireError || error?.code === 'INCOMPLETE_QUESTIONNAIRE') {
+      if (
+        error instanceof IncompleteQuestionnaireError ||
+        error?.code === 'INCOMPLETE_QUESTIONNAIRE'
+      ) {
         return createApiErrorResponse('INCOMPLETE_QUESTIONNAIRE', error.message, {
           status: 400,
         });

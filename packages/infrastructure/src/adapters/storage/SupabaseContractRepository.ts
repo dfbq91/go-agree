@@ -87,7 +87,10 @@ export class SupabaseContractRepository implements ContractRepositoryPort, Contr
       return [];
     }
 
-    let documentsMap = new Map<string, { formats: DocumentFormat[]; latestDocCreatedAt: Date | null }>();
+    let documentsMap = new Map<
+      string,
+      { formats: DocumentFormat[]; latestDocCreatedAt: Date | null }
+    >();
     try {
       const contractIds = data.map((row: any) => row.id);
       const { data: docsData, error: docsError } = await this.supabase
@@ -97,7 +100,10 @@ export class SupabaseContractRepository implements ContractRepositoryPort, Contr
 
       if (!docsError && docsData) {
         for (const doc of docsData) {
-          const entry = documentsMap.get(doc.contract_id) || { formats: [], latestDocCreatedAt: null };
+          const entry = documentsMap.get(doc.contract_id) || {
+            formats: [],
+            latestDocCreatedAt: null,
+          };
           if (!entry.formats.includes(doc.file_format as DocumentFormat)) {
             entry.formats.push(doc.file_format as DocumentFormat);
           }
@@ -224,7 +230,10 @@ export class SupabaseContractRepository implements ContractRepositoryPort, Contr
         status: contract.status,
         current_question_index: contract.currentQuestionIndex,
         answers: contract.answers,
-        updated_at: new Date().toISOString(),
+        updated_at:
+          contract.updatedAt instanceof Date
+            ? contract.updatedAt.toISOString()
+            : new Date().toISOString(),
       })
       .eq('id', rawId)
       .eq('user_id', rawUserId);

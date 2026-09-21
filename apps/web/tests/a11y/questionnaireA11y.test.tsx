@@ -94,7 +94,6 @@ describe('Questionnaire WCAG 2.1 AA Accessibility Audit (axe-core)', () => {
     expect(results.violations).toEqual([]);
   });
 
-
   it('QuestionCard with validation error alert passes accessibility audit', async () => {
     const { container } = render(
       <QuestionCard

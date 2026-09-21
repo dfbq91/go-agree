@@ -22,9 +22,7 @@ const dynamicQuestionSchema = z.object({
     .describe('Identificador semántico descriptivo en snake_case, ej. dyn_payment_terms'),
   order: z.number().describe('Orden sugerido'),
   prompt: z.string().describe('Pregunta clara, directa y profesional en español'),
-  type: z
-    .enum(['open_text', 'single_choice', 'multiple_choice'])
-    .describe('Tipo de entrada'),
+  type: z.enum(['open_text', 'single_choice', 'multiple_choice']).describe('Tipo de entrada'),
   isRequired: z.boolean().default(true).describe('Si la respuesta es obligatoria'),
   helpText: z
     .string()

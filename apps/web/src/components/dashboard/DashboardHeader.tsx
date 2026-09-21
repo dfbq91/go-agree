@@ -5,8 +5,8 @@ import Link from 'next/link';
 import type React from 'react';
 import { useState } from 'react';
 import { es } from '../../locales/es';
-import { PlanQuotaBadge } from './PlanQuotaBadge';
 import { QuotaUpgradeModal } from '../modals/QuotaUpgradeModal';
+import { PlanQuotaBadge } from './PlanQuotaBadge';
 
 export interface DashboardHeaderProps {
   readonly subscription: SubscriptionStatusResult;

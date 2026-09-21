@@ -1,13 +1,10 @@
-import { beforeEach, describe, expect, it } from 'vitest';
-import {
-  GenerateContractDocumentUseCase,
-  type ContractGenerationDTO,
-} from '../src/index.js';
 import {
   ContractNotFoundError,
   IncompleteQuestionnaireError,
   QuestionnaireDefinition,
 } from '@go-agree/domain';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { type ContractGenerationDTO, GenerateContractDocumentUseCase } from '../src/index.js';
 
 class MockContractRepo {
   public contracts = new Map<string, ContractGenerationDTO>();
@@ -89,7 +86,8 @@ describe('GenerateContractDocumentUseCase', () => {
   const standardQ = QuestionnaireDefinition.createStandard();
   const allAnswers: Record<string, unknown> = {};
   for (const q of standardQ.questions) {
-    allAnswers[q.id] = q.type === 'single_choice' && q.options?.[0] ? q.options[0].value : 'Respuesta válida';
+    allAnswers[q.id] =
+      q.type === 'single_choice' && q.options?.[0] ? q.options[0].value : 'Respuesta válida';
   }
 
   beforeEach(() => {
@@ -152,6 +150,9 @@ describe('GenerateContractDocumentUseCase', () => {
     expect(storagePort.saved).toHaveLength(2);
     const updatedContract = await contractRepo.getByIdAndUserId('cnt_complete', 'usr_1');
     expect(updatedContract?.status).toBe('completed');
+    expect(result.generatedAt.getTime()).toBeGreaterThanOrEqual(
+      updatedContract!.updatedAt.getTime()
+    );
   });
 
   it('validates dynamic questions keyed by questionKey and passes answers to transcript', async () => {

@@ -1,12 +1,6 @@
+import { ContractNotFoundError, DocumentNotFoundError } from '@go-agree/domain';
 import { beforeEach, describe, expect, it } from 'vitest';
-import {
-  GetContractDocumentDownloadUseCase,
-  type ContractGenerationDTO,
-} from '../src/index.js';
-import {
-  ContractNotFoundError,
-  DocumentNotFoundError,
-} from '@go-agree/domain';
+import { type ContractGenerationDTO, GetContractDocumentDownloadUseCase } from '../src/index.js';
 
 class MockContractRepo {
   public contracts = new Map<string, ContractGenerationDTO>();

@@ -5,12 +5,12 @@
 
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import {
-  GenerateContractDocumentUseCase,
-  RegenerateContractDocumentUseCase,
-  GetContractDocumentDownloadUseCase,
   type DocumentGeneratorPort,
   type DocumentStoragePort,
+  GenerateContractDocumentUseCase,
+  GetContractDocumentDownloadUseCase,
   type LlmContractDraftingPort,
+  RegenerateContractDocumentUseCase,
 } from '@go-agree/application';
 import {
   AiContractDraftingAdapter,
@@ -112,7 +112,10 @@ export function getServerLlmContractDraftingPort(): LlmContractDraftingPort {
       const model = google(process.env.AI_MODEL || 'gemini-3.5-flash-lite');
       return new AiContractDraftingAdapter({ model });
     } catch (e) {
-      logger.warn('Failed to initialize Google Gemini; falling back to MockContractDraftingAdapter', { error: e });
+      logger.warn(
+        'Failed to initialize Google Gemini; falling back to MockContractDraftingAdapter',
+        { error: e }
+      );
     }
   }
 

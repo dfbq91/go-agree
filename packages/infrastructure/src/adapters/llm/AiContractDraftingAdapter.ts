@@ -8,7 +8,7 @@ import type {
   DraftContractInput,
   LlmContractDraftingPort,
 } from '@go-agree/application';
-import { generateText as defaultGenerateText, Output, type LanguageModel } from 'ai';
+import { type LanguageModel, Output, generateText as defaultGenerateText } from 'ai';
 import { z } from 'zod';
 
 export const CONTRACT_DRAFTING_SYSTEM_PROMPT = `Eres un abogado experto en redacción de contratos en Colombia.
@@ -32,7 +32,9 @@ Tu objetivo es redactar un contrato formal, completo y jurídicamente sólido co
 6. Bloques de Firma: Espacios formales con líneas de firma, nombre, documento de identidad y fecha para ambas partes.
 
 ### Reglas Estrictas:
+- NO incluyas descargos de responsabilidad ("disclaimers") dentro del cuerpo del contrato. Los avisos legales de la plataforma se muestran exclusivamente en la interfaz de usuario.
 - Redacta en español formal y jurídico colombiano.
+- No inventes obligaciones que contradigan las respuestas suministradas.`;
 
 export const contractDraftSchema = z.object({
   title: z.string(),

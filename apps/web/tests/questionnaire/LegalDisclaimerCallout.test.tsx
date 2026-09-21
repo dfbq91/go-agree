@@ -37,12 +37,8 @@ describe('Legal Disclaimer Callout (US5 / FR-003)', () => {
     const disclaimerCallout = screen.getByRole('note', { name: /aviso legal/i });
     expect(disclaimerCallout).toBeDefined();
 
-    expect(
-      screen.getByText(es.questionnaire.summary.legalDisclaimerTitle)
-    ).toBeDefined();
-    expect(
-      screen.getByText(es.questionnaire.summary.legalDisclaimerText)
-    ).toBeDefined();
+    expect(screen.getByText(es.questionnaire.summary.legalDisclaimerTitle)).toBeDefined();
+    expect(screen.getByText(es.questionnaire.summary.legalDisclaimerText)).toBeDefined();
   });
 
   it('renders disclaimer callout even when reviewing a completed contract', () => {
@@ -59,9 +55,7 @@ describe('Legal Disclaimer Callout (US5 / FR-003)', () => {
 
     const disclaimerCallout = screen.getByRole('note');
     expect(disclaimerCallout).toBeDefined();
-    expect(
-      screen.getByText(es.questionnaire.summary.legalDisclaimerTitle)
-    ).toBeDefined();
+    expect(screen.getByText(es.questionnaire.summary.legalDisclaimerTitle)).toBeDefined();
   });
 
   it('has accessible heading structure inside the callout', () => {
@@ -76,8 +70,6 @@ describe('Legal Disclaimer Callout (US5 / FR-003)', () => {
 
     const disclaimerCallout = screen.getByRole('note');
     expect(disclaimerCallout.getAttribute('aria-label')).toMatch(/aviso legal/i);
-    expect(disclaimerCallout.textContent).toContain(
-      'No constituye asesoría legal profesional'
-    );
+    expect(disclaimerCallout.textContent).toContain('No constituye asesoría legal profesional');
   });
 });

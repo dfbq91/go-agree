@@ -251,54 +251,68 @@ export function ContractList({
 
   return (
     <div>
-      {/* Desktop / Tablet: Semantic Table */}
-      <div className="hidden md:block overflow-hidden shadow ring-1 ring-black ring-opacity-5 rounded-lg bg-white">
-        <table className="min-w-full divide-y divide-gray-300" role="table">
-          <thead className="bg-gray-50">
-            <tr>
-              <th
-                scope="col"
-                className="py-3.5 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
-              >
-                {es.dashboard.columns.title}
-              </th>
-              <th scope="col" className="px-3 py-3.5 text-left text-xs font-semibold text-gray-900">
-                {es.dashboard.columns.questionsAnswered}
-              </th>
-              <th scope="col" className="px-3 py-3.5 text-left text-xs font-semibold text-gray-900">
-                {es.dashboard.columns.download}
-              </th>
-              <th scope="col" className="px-3 py-3.5 text-left text-xs font-semibold text-gray-900">
-                {es.dashboard.columns.createdAt}
-              </th>
-              <th scope="col" className="px-3 py-3.5 text-left text-xs font-semibold text-gray-900">
-                {es.dashboard.columns.updatedAt}
-              </th>
-              <th
-                scope="col"
-                className="relative py-3.5 pl-3 pr-4 sm:pr-6 text-right text-xs font-semibold text-gray-900"
-              >
-                {es.dashboard.columns.actions}
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200 bg-white">
-            {sortedContracts.map((contract) => (
-              <ContractTableRow
-                key={contract.id}
-                contract={contract}
-                onDeleteClick={handleDeleteClick}
-                onRename={handleRename}
-                renderTitle={renderTitle}
-                renderDownload={renderDownload}
-              />
-            ))}
-          </tbody>
-        </table>
+      {/* Desktop: Semantic Table with horizontal scroll support */}
+      <div className="hidden lg:block shadow ring-1 ring-black ring-opacity-5 rounded-lg bg-white overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-300" role="table">
+            <thead className="bg-gray-50">
+              <tr>
+                <th
+                  scope="col"
+                  className="py-3.5 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
+                >
+                  {es.dashboard.columns.title}
+                </th>
+                <th
+                  scope="col"
+                  className="px-3 py-3.5 text-left text-xs font-semibold text-gray-900"
+                >
+                  {es.dashboard.columns.questionsAnswered}
+                </th>
+                <th
+                  scope="col"
+                  className="px-3 py-3.5 text-left text-xs font-semibold text-gray-900"
+                >
+                  {es.dashboard.columns.download}
+                </th>
+                <th
+                  scope="col"
+                  className="px-3 py-3.5 text-left text-xs font-semibold text-gray-900"
+                >
+                  {es.dashboard.columns.createdAt}
+                </th>
+                <th
+                  scope="col"
+                  className="px-3 py-3.5 text-left text-xs font-semibold text-gray-900"
+                >
+                  {es.dashboard.columns.updatedAt}
+                </th>
+                <th
+                  scope="col"
+                  className="relative py-3.5 pl-3 pr-4 sm:pr-6 text-right text-xs font-semibold text-gray-900"
+                >
+                  {es.dashboard.columns.actions}
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200 bg-white">
+              {sortedContracts.map((contract) => (
+                <ContractTableRow
+                  key={contract.id}
+                  contract={contract}
+                  onDeleteClick={handleDeleteClick}
+                  onRename={handleRename}
+                  renderTitle={renderTitle}
+                  renderDownload={renderDownload}
+                />
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      {/* Mobile: Adaptive Cards */}
-      <div className="grid grid-cols-1 gap-4 md:hidden" role="list">
+      {/* Mobile & Tablet: Adaptive Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:hidden" role="list">
         {sortedContracts.map((contract) => (
           <div key={contract.id} role="listitem">
             <ContractCardMobile

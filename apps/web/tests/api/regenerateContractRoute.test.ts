@@ -1,16 +1,12 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { POST } from '../../src/app/api/contracts/[id]/regenerate/route';
 import {
   ContractNotFoundError,
   IncompleteQuestionnaireError,
   UnauthorizedContractAccessError,
 } from '@go-agree/domain';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { POST } from '../../src/app/api/contracts/[id]/regenerate/route';
 
-const {
-  mockExecute,
-  mockGetCurrentSession,
-  mockRevalidatePath,
-} = vi.hoisted(() => ({
+const { mockExecute, mockGetCurrentSession, mockRevalidatePath } = vi.hoisted(() => ({
   mockExecute: vi.fn(),
   mockGetCurrentSession: vi.fn(),
   mockRevalidatePath: vi.fn(),

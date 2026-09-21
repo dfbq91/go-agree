@@ -40,7 +40,7 @@ export function ContractTableRow({
   return (
     <tr className="hover:bg-gray-50 transition-colors border-b border-gray-200">
       {/* 1. Título */}
-      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+      <td className="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
         {renderTitle ? (
           renderTitle(contract)
         ) : (
@@ -58,14 +58,14 @@ export function ContractTableRow({
       </td>
 
       {/* 2. Preguntas respondidas */}
-      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+      <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">
         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700">
           {es.dashboard.questionsAnsweredCount(contract.questionsAnsweredCount)}
         </span>
       </td>
 
       {/* 3. Descargar */}
-      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+      <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">
         {renderDownload ? (
           renderDownload(contract)
         ) : (
@@ -79,13 +79,13 @@ export function ContractTableRow({
       </td>
 
       {/* 4. Fecha de creación */}
-      <td className="px-6 py-4 whitespace-nowrap text-xs text-gray-500">{formattedCreatedAt}</td>
+      <td className="px-3 py-4 whitespace-nowrap text-xs text-gray-500">{formattedCreatedAt}</td>
 
       {/* 5. Última modificación */}
-      <td className="px-6 py-4 whitespace-nowrap text-xs text-gray-500">{formattedUpdatedAt}</td>
+      <td className="px-3 py-4 whitespace-nowrap text-xs text-gray-500">{formattedUpdatedAt}</td>
 
       {/* 6. Acciones */}
-      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+      <td className="py-4 pl-3 pr-4 text-right text-sm font-medium space-x-2 whitespace-nowrap sm:pr-6">
         {isInProgress ? (
           <Link
             href={`/questionnaire?id=${contract.id}`}

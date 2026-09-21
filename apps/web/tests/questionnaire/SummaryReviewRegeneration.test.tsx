@@ -1,6 +1,6 @@
+import type { QuestionDTO } from '@go-agree/application';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import type { QuestionDTO } from '@go-agree/application';
 import { SummaryReview } from '../../src/components/questionnaire/SummaryReview';
 import { es } from '../../src/locales/es';
 
@@ -54,12 +54,8 @@ describe('SummaryReview - Answer Modification and Document Regeneration (US3)', 
     // Banner is rendered
     const banner = screen.getByRole('alert');
     expect(banner).toBeDefined();
-    expect(
-      screen.getByText(es.questionnaire.summary.pendingRegenerationBannerTitle)
-    ).toBeDefined();
-    expect(
-      screen.getByText(es.questionnaire.summary.pendingRegenerationBannerText)
-    ).toBeDefined();
+    expect(screen.getByText(es.questionnaire.summary.pendingRegenerationBannerTitle)).toBeDefined();
+    expect(screen.getByText(es.questionnaire.summary.pendingRegenerationBannerText)).toBeDefined();
 
     // Regenerate action button is present
     const regenBtn = screen.getByRole('button', {
@@ -68,12 +64,8 @@ describe('SummaryReview - Answer Modification and Document Regeneration (US3)', 
     expect(regenBtn).toBeDefined();
 
     // Word and PDF download buttons MUST be paused / hidden while regeneration is pending
-    expect(
-      screen.queryByRole('button', { name: /Descargar Word/i })
-    ).toBeNull();
-    expect(
-      screen.queryByRole('button', { name: /Descargar PDF/i })
-    ).toBeNull();
+    expect(screen.queryByRole('button', { name: /Descargar Word/i })).toBeNull();
+    expect(screen.queryByRole('button', { name: /Descargar PDF/i })).toBeNull();
   });
 
   it('calls onRegenerate when clicking "Regenerar documento"', () => {

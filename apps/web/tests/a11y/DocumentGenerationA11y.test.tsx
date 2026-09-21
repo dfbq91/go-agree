@@ -188,11 +188,7 @@ describe('Document Generation WCAG 2.1 AA Accessibility Audit (axe-core)', () =>
   describe('QuotaUpgradeModal Accessibility', () => {
     it('passes audit when rendered open to prompt Free user quota upgrade', async () => {
       const { container } = render(
-        <QuotaUpgradeModal
-          isOpen={true}
-          onClose={vi.fn()}
-          freeContractsLimit={3}
-        />
+        <QuotaUpgradeModal isOpen={true} onClose={vi.fn()} freeContractsLimit={3} />
       );
 
       const results = await axe.run(container, axeOptions);

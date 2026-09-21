@@ -110,7 +110,10 @@ export function DownloadDropdown({
           title={es.dashboard.download.pendingRegenerationTooltip}
           className="inline-flex items-center text-xs font-medium text-amber-800 bg-amber-50 hover:bg-amber-100 border border-amber-300 rounded px-2.5 py-1.5 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-1"
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1.5 animate-pulse" aria-hidden="true" />
+          <span
+            className="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1.5 animate-pulse"
+            aria-hidden="true"
+          />
           {es.dashboard.download.pendingRegenerationBadge}
         </Link>
       </div>

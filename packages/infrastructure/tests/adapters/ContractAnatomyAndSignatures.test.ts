@@ -73,7 +73,9 @@ describe('Contract Anatomy, Legal Disclaimers, and Signature Blocks (US5)', () =
       // Must instruct prompt to omit disclaimer
       expect(CONTRACT_DRAFTING_SYSTEM_PROMPT).toContain('NO incluyas descargos de responsabilidad');
       expect(CONTRACT_DRAFTING_SYSTEM_PROMPT).toContain('Bloques de Firma');
-      expect(CONTRACT_DRAFTING_SYSTEM_PROMPT).toContain('Comparecientes / Identificación de Partes');
+      expect(CONTRACT_DRAFTING_SYSTEM_PROMPT).toContain(
+        'Comparecientes / Identificación de Partes'
+      );
       expect(CONTRACT_DRAFTING_SYSTEM_PROMPT).toContain('Cláusulas Operativas Numeradas');
     });
   });

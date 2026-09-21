@@ -190,4 +190,3 @@ export class DocumentNotFoundError extends DocumentDomainError {
     this.name = 'DocumentNotFoundError';
   }
 }
-

@@ -1,8 +1,8 @@
 import type { QuestionDTO } from '@go-agree/application';
 import type React from 'react';
 import { useState } from 'react';
-import { QuotaUpgradeModal } from '../modals/QuotaUpgradeModal';
 import { es } from '../../locales/es';
+import { QuotaUpgradeModal } from '../modals/QuotaUpgradeModal';
 
 export interface SummaryReviewProps {
   questions: QuestionDTO[];

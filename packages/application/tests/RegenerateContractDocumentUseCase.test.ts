@@ -1,13 +1,10 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import {
-  RegenerateContractDocumentUseCase,
-  type ContractGenerationDTO,
-} from '../src/index.js';
 import {
   ContractNotFoundError,
   IncompleteQuestionnaireError,
   QuestionnaireDefinition,
 } from '@go-agree/domain';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { type ContractGenerationDTO, RegenerateContractDocumentUseCase } from '../src/index.js';
 
 class MockContractRepo {
   public contracts = new Map<string, ContractGenerationDTO>();
@@ -89,7 +86,10 @@ describe('RegenerateContractDocumentUseCase (User Story 3 - Document Regeneratio
   const standardQ = QuestionnaireDefinition.createStandard();
   const allAnswers: Record<string, unknown> = {};
   for (const q of standardQ.questions) {
-    allAnswers[q.id] = q.type === 'single_choice' && q.options?.[0] ? q.options[0].value : 'Respuesta válida inicial';
+    allAnswers[q.id] =
+      q.type === 'single_choice' && q.options?.[0]
+        ? q.options[0].value
+        : 'Respuesta válida inicial';
   }
 
   beforeEach(() => {
@@ -158,7 +158,9 @@ describe('RegenerateContractDocumentUseCase (User Story 3 - Document Regeneratio
     expect(llmPort.lastInput.answers.q2_description_conditions).toBe(
       'Servicio de auditoría técnica avanzada modificado'
     );
-    expect(llmPort.lastInput.transcript).toContain('Servicio de auditoría técnica avanzada modificado');
+    expect(llmPort.lastInput.transcript).toContain(
+      'Servicio de auditoría técnica avanzada modificado'
+    );
 
     // Verify storage received both formats to overwrite
     expect(storagePort.saved).toHaveLength(2);
@@ -172,6 +174,10 @@ describe('RegenerateContractDocumentUseCase (User Story 3 - Document Regeneratio
     expect(updatedContract?.status).toBe('completed');
     expect(updatedContract?.updatedAt.getTime()).toBeGreaterThanOrEqual(
       new Date('2026-09-02T12:00:00Z').getTime()
+    );
+    // Verify document regeneration timestamp is >= contract updatedAt (ensuring isRegenerationPending is false)
+    expect(result.regeneratedAt.getTime()).toBeGreaterThanOrEqual(
+      updatedContract!.updatedAt.getTime()
     );
   });
 
