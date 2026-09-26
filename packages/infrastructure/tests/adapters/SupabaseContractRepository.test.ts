@@ -90,4 +90,120 @@ describe('SupabaseContractRepository (Tenant Isolation & RLS)', () => {
     expect(created.userId).toBe('user-1');
     expect(created.status).toBe('in_progress');
   });
+
+  describe('listDashboardItemsByUserId isRegenerationPending evaluation', () => {
+    it('sets isRegenerationPending to false when contract updatedAt is within the 2000ms threshold', async () => {
+      const baseTime = new Date('2026-09-26T12:00:00.000Z');
+      const docCreatedAt = new Date(baseTime.getTime());
+      // 500ms skew (simulating database trigger or generation latency)
+      const contractUpdatedAt = new Date(baseTime.getTime() + 500);
+
+      const contractRow = {
+        id: '11111111-1111-1111-1111-111111111111',
+        user_id: 'user-1',
+        title: 'Contrato Prueba',
+        status: 'completed',
+        current_question_index: 11,
+        answers: { q0_party_role: 'client' },
+        created_at: baseTime.toISOString(),
+        updated_at: contractUpdatedAt.toISOString(),
+      };
+
+      const docRows = [
+        {
+          contract_id: '11111111-1111-1111-1111-111111111111',
+          file_format: 'pdf',
+          created_at: docCreatedAt.toISOString(),
+        },
+        {
+          contract_id: '11111111-1111-1111-1111-111111111111',
+          file_format: 'docx',
+          created_at: docCreatedAt.toISOString(),
+        },
+      ];
+
+      const mockSupabase = {
+        from: vi.fn((table: string) => {
+          if (table === 'contract_generations') {
+            return {
+              select: vi.fn().mockReturnValue({
+                eq: vi.fn().mockReturnValue({
+                  order: vi.fn().mockResolvedValue({ data: [contractRow], error: null }),
+                }),
+              }),
+            };
+          }
+          if (table === 'contract_documents') {
+            return {
+              select: vi.fn().mockReturnValue({
+                in: vi.fn().mockResolvedValue({ data: docRows, error: null }),
+              }),
+            };
+          }
+          return {};
+        }),
+      };
+
+      const repo = new SupabaseContractRepository(mockSupabase as any);
+      const items = await repo.listDashboardItemsByUserId('user-1');
+
+      expect(items).toHaveLength(1);
+      expect(items[0].isRegenerationPending).toBe(false);
+      expect(items[0].hasGeneratedDocument).toBe(true);
+    });
+
+    it('sets isRegenerationPending to true when contract updatedAt is more than 2000ms after document creation', async () => {
+      const baseTime = new Date('2026-09-26T12:00:00.000Z');
+      const docCreatedAt = new Date(baseTime.getTime());
+      // 5000ms later (simulating user editing answers after generation)
+      const contractUpdatedAt = new Date(baseTime.getTime() + 5000);
+
+      const contractRow = {
+        id: '11111111-1111-1111-1111-111111111111',
+        user_id: 'user-1',
+        title: 'Contrato Prueba',
+        status: 'completed',
+        current_question_index: 11,
+        answers: { q0_party_role: 'client' },
+        created_at: baseTime.toISOString(),
+        updated_at: contractUpdatedAt.toISOString(),
+      };
+
+      const docRows = [
+        {
+          contract_id: '11111111-1111-1111-1111-111111111111',
+          file_format: 'pdf',
+          created_at: docCreatedAt.toISOString(),
+        },
+      ];
+
+      const mockSupabase = {
+        from: vi.fn((table: string) => {
+          if (table === 'contract_generations') {
+            return {
+              select: vi.fn().mockReturnValue({
+                eq: vi.fn().mockReturnValue({
+                  order: vi.fn().mockResolvedValue({ data: [contractRow], error: null }),
+                }),
+              }),
+            };
+          }
+          if (table === 'contract_documents') {
+            return {
+              select: vi.fn().mockReturnValue({
+                in: vi.fn().mockResolvedValue({ data: docRows, error: null }),
+              }),
+            };
+          }
+          return {};
+        }),
+      };
+
+      const repo = new SupabaseContractRepository(mockSupabase as any);
+      const items = await repo.listDashboardItemsByUserId('user-1');
+
+      expect(items).toHaveLength(1);
+      expect(items[0].isRegenerationPending).toBe(true);
+    });
+  });
 });

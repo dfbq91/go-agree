@@ -172,15 +172,8 @@ export class GenerateContractDocumentUseCase {
       this.deps.documentGenerator.generatePdf(assembledContract),
     ]);
 
-    // 7. Update contract status to completed and save first
-    const completedAt = new Date();
-    contract.status = 'completed';
-    contract.updatedAt = completedAt;
-    await this.deps.contractRepository.save(contract);
-
-    // 8. Persist document artifacts via DocumentStoragePort
-    const generatedAt = new Date();
-    await Promise.all([
+    // 7. Persist document artifacts via DocumentStoragePort first
+    const [docxResult, pdfResult] = await Promise.all([
       this.deps.documentStorage.saveDocument({
         contractId,
         userId,
@@ -194,6 +187,18 @@ export class GenerateContractDocumentUseCase {
         buffer: pdfBuffer.content,
       }),
     ]);
+
+    const generatedAt =
+      docxResult?.createdAt && pdfResult?.createdAt
+        ? docxResult.createdAt.getTime() >= pdfResult.createdAt.getTime()
+          ? docxResult.createdAt
+          : pdfResult.createdAt
+        : new Date();
+
+    // 8. Update contract status to completed and align updatedAt with document generation
+    contract.status = 'completed';
+    contract.updatedAt = generatedAt;
+    await this.deps.contractRepository.save(contract);
 
     // 9. Increment free contract quota usage if applicable (only for non-Pro users on initial completion)
     if (this.deps.subscriptionRepository && !wasCompletedBefore && !isUserActivePro) {

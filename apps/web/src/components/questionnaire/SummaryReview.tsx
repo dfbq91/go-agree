@@ -1,6 +1,6 @@
 import type { QuestionDTO } from '@go-agree/application';
 import type React from 'react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { es } from '../../locales/es';
 import { QuotaUpgradeModal } from '../modals/QuotaUpgradeModal';
 
@@ -15,7 +15,7 @@ export interface SummaryReviewProps {
   hasGeneratedDocument?: boolean;
   onDownloadFormat?: (format: 'pdf' | 'docx') => void;
   isRegenerationPending?: boolean;
-  onRegenerate?: () => void;
+  onRegenerate?: () => void | Promise<void>;
   isRegenerating?: boolean;
   quotaModalOpen?: boolean;
   onCloseQuotaModal?: () => void;
@@ -43,6 +43,56 @@ export const SummaryReview: React.FC<SummaryReviewProps> = ({
 }) => {
   const [internalQuotaModalOpen, setInternalQuotaModalOpen] = useState(false);
   const [summaryError, setSummaryError] = useState<string | null>(null);
+  const [hasTriggeredRegenerate, setHasTriggeredRegenerate] = useState(false);
+  const downloadActionsRef = useRef<HTMLDivElement>(null);
+  const prevIsRegenerating = useRef(isRegenerating);
+
+  useEffect(() => {
+    const wasRegenerating = prevIsRegenerating.current;
+    prevIsRegenerating.current = isRegenerating;
+
+    const canScrollToDownloads =
+      isCompleted &&
+      hasGeneratedDocument &&
+      !isRegenerationPending &&
+      !isRegenerating &&
+      !errorMessage &&
+      !summaryError;
+
+    if (((wasRegenerating && !isRegenerating) || hasTriggeredRegenerate) && canScrollToDownloads) {
+      if (hasTriggeredRegenerate) {
+        setHasTriggeredRegenerate(false);
+      }
+
+      const prefersReducedMotion =
+        typeof window !== 'undefined' &&
+        window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+
+      downloadActionsRef.current?.scrollIntoView?.({
+        behavior: prefersReducedMotion ? 'auto' : 'smooth',
+        block: 'center',
+      });
+    }
+  }, [
+    isRegenerating,
+    isRegenerationPending,
+    hasGeneratedDocument,
+    isCompleted,
+    hasTriggeredRegenerate,
+    errorMessage,
+    summaryError,
+  ]);
+
+  const handleRegenerate = async () => {
+    setSummaryError(null);
+    setHasTriggeredRegenerate(true);
+    try {
+      await onRegenerate?.();
+    } catch (err: any) {
+      setHasTriggeredRegenerate(false);
+      setSummaryError(err.message || 'Error al regenerar el documento');
+    }
+  };
 
   const isModalOpen = quotaModalOpen !== undefined ? quotaModalOpen : internalQuotaModalOpen;
 
@@ -171,7 +221,7 @@ export const SummaryReview: React.FC<SummaryReviewProps> = ({
           {onRegenerate && (
             <button
               type="button"
-              onClick={onRegenerate}
+              onClick={handleRegenerate}
               disabled={isRegenerating}
               aria-busy={isRegenerating}
               className="whitespace-nowrap px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-1 disabled:opacity-50 transition-all"
@@ -256,7 +306,11 @@ export const SummaryReview: React.FC<SummaryReviewProps> = ({
           <div />
         )}
 
-        <div className="w-full sm:w-auto flex flex-col sm:flex-row gap-3">
+        <div
+          ref={downloadActionsRef}
+          data-testid="summary-download-actions"
+          className="w-full sm:w-auto flex flex-col sm:flex-row gap-3"
+        >
           {isCompleted && hasGeneratedDocument && !isRegenerationPending ? (
             <>
               <button

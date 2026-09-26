@@ -37,6 +37,17 @@ export class AnalyzeContractAnswersUseCase {
       throw new Error(`Contract ${input.contractId} not found or unauthorized`);
     }
 
+    if (contract.status === 'completed') {
+      this.logger?.debug(
+        'Dynamic question analysis skipped: contract is already completed',
+        { contractId: input.contractId, userId: input.userId, stage }
+      );
+      return {
+        status: 'skipped',
+        reason: 'unmodified_answers',
+      };
+    }
+
     const currentAnswers = contract.answers || {};
 
     // 2. Consultar si ya existe un snapshot de respuestas para esta etapa

@@ -134,6 +134,24 @@ describe('AnalyzeContractAnswersUseCase (Idempotency & Orchestration)', () => {
     expect(mockLlmPort.generateQuestions).toHaveBeenCalledTimes(1);
   });
 
+  it('skips analysis when contract is already completed', async () => {
+    mockContractRepo.getByIdAndUserId = vi.fn().mockResolvedValue({
+      ...sampleContract,
+      status: 'completed',
+    });
+
+    const result = await useCase.execute({
+      contractId: 'contract-123',
+      userId: 'user-abc',
+      stage: 1,
+    });
+
+    expect(result.status).toBe('skipped');
+    expect(result.reason).toBe('unmodified_answers');
+    expect(mockLlmPort.generateQuestions).not.toHaveBeenCalled();
+    expect(mockDynamicQuestionRepo.saveQuestions).not.toHaveBeenCalled();
+  });
+
   it('throws error if contract does not exist or does not belong to user', async () => {
     mockContractRepo.getByIdAndUserId = vi.fn().mockResolvedValue(null);
 

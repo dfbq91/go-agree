@@ -77,8 +77,10 @@ export default async function QuestionnairePage({ searchParams }: QuestionnaireP
       userId: session.userId,
     });
     if (formats.length > 0 && lastGeneratedAt && contract.updatedAt) {
+      const REGENERATION_PENDING_THRESHOLD_MS = 2000;
       isRegenerationPending =
-        new Date(contract.updatedAt).getTime() > new Date(lastGeneratedAt).getTime();
+        new Date(contract.updatedAt).getTime() - new Date(lastGeneratedAt).getTime() >
+        REGENERATION_PENDING_THRESHOLD_MS;
     }
   }
 

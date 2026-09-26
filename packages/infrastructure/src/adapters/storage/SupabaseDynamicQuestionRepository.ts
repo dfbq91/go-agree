@@ -65,7 +65,8 @@ export class SupabaseDynamicQuestionRepository implements DynamicQuestionReposit
       .from('contract_generations')
       .update({ analysis_snapshots: updatedSnapshots })
       .eq('id', rawContractId)
-      .eq('user_id', rawUserId);
+      .eq('user_id', rawUserId)
+      .neq('status', 'completed');
 
     const rowsToInsert = input.questions.map((q) => ({
       contract_id: rawContractId,

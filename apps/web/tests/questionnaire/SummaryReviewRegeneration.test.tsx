@@ -151,4 +151,143 @@ describe('SummaryReview - Answer Modification and Document Regeneration (US3)', 
     fireEvent.click(pdfBtn);
     expect(onDownloadFormatMock).toHaveBeenCalledWith('pdf');
   });
+
+  it('smoothly scrolls down to download buttons once regeneration finishes via prop update', () => {
+    const scrollIntoViewMock = vi.fn();
+    window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock;
+
+    const { rerender } = render(
+      <SummaryReview
+        questions={mockQuestions}
+        answers={mockAnswers}
+        onEdit={vi.fn()}
+        onConfirm={vi.fn()}
+        isCompleted={true}
+        hasGeneratedDocument={true}
+        isRegenerationPending={true}
+        isRegenerating={true}
+      />
+    );
+
+    expect(scrollIntoViewMock).not.toHaveBeenCalled();
+
+    rerender(
+      <SummaryReview
+        questions={mockQuestions}
+        answers={mockAnswers}
+        onEdit={vi.fn()}
+        onConfirm={vi.fn()}
+        isCompleted={true}
+        hasGeneratedDocument={true}
+        isRegenerationPending={false}
+        isRegenerating={false}
+      />
+    );
+
+    expect(scrollIntoViewMock).toHaveBeenCalledTimes(1);
+    expect(scrollIntoViewMock).toHaveBeenCalledWith({
+      behavior: 'smooth',
+      block: 'center',
+    });
+  });
+
+  it('smoothly scrolls down to download buttons when clicking regenerate button and regeneration completes', async () => {
+    const scrollIntoViewMock = vi.fn();
+    window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock;
+
+    const onRegenerateMock = vi.fn().mockResolvedValue(undefined);
+
+    const { rerender } = render(
+      <SummaryReview
+        questions={mockQuestions}
+        answers={mockAnswers}
+        onEdit={vi.fn()}
+        onConfirm={vi.fn()}
+        isCompleted={true}
+        hasGeneratedDocument={true}
+        isRegenerationPending={true}
+        onRegenerate={onRegenerateMock}
+      />
+    );
+
+    const regenBtn = screen.getByRole('button', {
+      name: new RegExp(es.questionnaire.summary.regenerateAction, 'i'),
+    });
+    fireEvent.click(regenBtn);
+    expect(onRegenerateMock).toHaveBeenCalledTimes(1);
+
+    expect(scrollIntoViewMock).not.toHaveBeenCalled();
+
+    rerender(
+      <SummaryReview
+        questions={mockQuestions}
+        answers={mockAnswers}
+        onEdit={vi.fn()}
+        onConfirm={vi.fn()}
+        isCompleted={true}
+        hasGeneratedDocument={true}
+        isRegenerationPending={false}
+        onRegenerate={onRegenerateMock}
+      />
+    );
+
+    expect(scrollIntoViewMock).toHaveBeenCalledTimes(1);
+    expect(scrollIntoViewMock).toHaveBeenCalledWith({
+      behavior: 'smooth',
+      block: 'center',
+    });
+  });
+
+  it('does not scroll on initial mount when contract is already completed without pending regeneration', () => {
+    const scrollIntoViewMock = vi.fn();
+    window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock;
+
+    render(
+      <SummaryReview
+        questions={mockQuestions}
+        answers={mockAnswers}
+        onEdit={vi.fn()}
+        onConfirm={vi.fn()}
+        isCompleted={true}
+        hasGeneratedDocument={true}
+        isRegenerationPending={false}
+      />
+    );
+
+    expect(scrollIntoViewMock).not.toHaveBeenCalled();
+  });
+
+  it('does not scroll if regeneration completes with an error', () => {
+    const scrollIntoViewMock = vi.fn();
+    window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock;
+
+    const { rerender } = render(
+      <SummaryReview
+        questions={mockQuestions}
+        answers={mockAnswers}
+        onEdit={vi.fn()}
+        onConfirm={vi.fn()}
+        isCompleted={true}
+        hasGeneratedDocument={true}
+        isRegenerationPending={true}
+        isRegenerating={true}
+      />
+    );
+
+    rerender(
+      <SummaryReview
+        questions={mockQuestions}
+        answers={mockAnswers}
+        onEdit={vi.fn()}
+        onConfirm={vi.fn()}
+        isCompleted={true}
+        hasGeneratedDocument={true}
+        isRegenerationPending={true}
+        isRegenerating={false}
+        errorMessage="Error al regenerar el documento"
+      />
+    );
+
+    expect(scrollIntoViewMock).not.toHaveBeenCalled();
+  });
 });

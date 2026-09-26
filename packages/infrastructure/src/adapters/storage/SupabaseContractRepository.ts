@@ -123,12 +123,14 @@ export class SupabaseContractRepository implements ContractRepositoryPort, Contr
       const docEntry = documentsMap.get(row.id);
       const formats = docEntry?.formats || [];
       const contractUpdatedAt = new Date(row.updated_at);
+      const REGENERATION_PENDING_THRESHOLD_MS = 2000;
       const isRegenerationPending =
         row.status === 'completed' &&
         formats.length > 0 &&
         docEntry?.latestDocCreatedAt !== null &&
         docEntry?.latestDocCreatedAt !== undefined &&
-        contractUpdatedAt.getTime() > docEntry.latestDocCreatedAt.getTime();
+        contractUpdatedAt.getTime() - docEntry.latestDocCreatedAt.getTime() >
+          REGENERATION_PENDING_THRESHOLD_MS;
 
       return {
         id: formatContractId(row.id),
