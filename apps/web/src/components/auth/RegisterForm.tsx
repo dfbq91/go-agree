@@ -42,7 +42,7 @@ export function RegisterForm({ onSubmit, redirectUrl }: RegisterFormProps) {
         const response = await fetch('/api/auth/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: email.trim(), password }),
+          body: JSON.stringify({ email: email.trim(), password, redirect: redirectUrl }),
         });
 
         const data = await response.json();
@@ -52,7 +52,10 @@ export function RegisterForm({ onSubmit, redirectUrl }: RegisterFormProps) {
           return;
         }
 
-        const destination = redirectUrl || data.redirectTo || '/dashboard';
+        const fallbackUrl = `/confirm-email?email=${encodeURIComponent(email.trim())}${
+          redirectUrl ? `&redirect=${encodeURIComponent(redirectUrl)}` : ''
+        }`;
+        const destination = data.redirectTo || fallbackUrl;
         window.location.href = destination;
       }
     } catch {

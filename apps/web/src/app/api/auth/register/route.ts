@@ -19,18 +19,30 @@ export async function POST(request: Request) {
       const authAdapter = await getServerAuthAdapter();
       const useCase = new RegisterUserUseCase(authAdapter);
 
+      const requestUrl = new URL(request.url);
+      const origin = requestUrl.origin;
+      const nextTarget = body.redirect || '/dashboard';
+      const emailRedirectTo = `${origin}/api/auth/callback?next=${encodeURIComponent(nextTarget)}`;
+
       const result = await useCase.execute({
         email: body.email,
         password: body.password,
+        emailRedirectTo,
       });
 
       correlationStorage.setUserId(result.user.id);
       logger.info('User registered successfully', { userId: result.user.id });
 
+      const confirmEmailUrl = new URL('/confirm-email', request.url);
+      confirmEmailUrl.searchParams.set('email', result.user.email);
+      if (body.redirect) {
+        confirmEmailUrl.searchParams.set('redirect', body.redirect);
+      }
+
       return NextResponse.json(
         {
           user: result.user,
-          redirectTo: '/dashboard',
+          redirectTo: `${confirmEmailUrl.pathname}${confirmEmailUrl.search}`,
         },
         {
           status: 201,

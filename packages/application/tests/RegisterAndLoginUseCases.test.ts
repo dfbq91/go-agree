@@ -8,6 +8,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AuthPort, AuthResultDTO } from '../src/ports/AuthPort.js';
 import { LoginWithEmailUseCase } from '../src/use-cases/auth/LoginWithEmailUseCase.js';
 import { RegisterUserUseCase } from '../src/use-cases/auth/RegisterUserUseCase.js';
+import { ResendConfirmationEmailUseCase } from '../src/use-cases/auth/ResendConfirmationEmailUseCase.js';
 
 describe('RegisterUserUseCase & LoginWithEmailUseCase', () => {
   let mockAuthPort: AuthPort;
@@ -37,6 +38,7 @@ describe('RegisterUserUseCase & LoginWithEmailUseCase', () => {
       logout: vi.fn(),
       getCurrentSession: vi.fn(),
       requestPasswordReset: vi.fn(),
+      resendConfirmationEmail: vi.fn(),
     };
   });
 
@@ -54,6 +56,23 @@ describe('RegisterUserUseCase & LoginWithEmailUseCase', () => {
       expect(mockAuthPort.registerWithEmail).toHaveBeenCalledWith({
         email: 'valid@example.com',
         password: 'Password123!',
+      });
+    });
+
+    it('should pass emailRedirectTo to authPort if provided', async () => {
+      vi.mocked(mockAuthPort.registerWithEmail).mockResolvedValue(mockAuthResult);
+      const useCase = new RegisterUserUseCase(mockAuthPort);
+
+      await useCase.execute({
+        email: 'valid@example.com',
+        password: 'Password123!',
+        emailRedirectTo: 'http://localhost:3000/api/auth/callback',
+      });
+
+      expect(mockAuthPort.registerWithEmail).toHaveBeenCalledWith({
+        email: 'valid@example.com',
+        password: 'Password123!',
+        emailRedirectTo: 'http://localhost:3000/api/auth/callback',
       });
     });
 
@@ -125,6 +144,35 @@ describe('RegisterUserUseCase & LoginWithEmailUseCase', () => {
           password: 'WrongPassword!',
         })
       ).rejects.toThrow(InvalidCredentialsError);
+    });
+  });
+
+  describe('ResendConfirmationEmailUseCase', () => {
+    it('should resend confirmation email successfully for valid email', async () => {
+      vi.mocked(mockAuthPort.resendConfirmationEmail).mockResolvedValue(undefined);
+      const useCase = new ResendConfirmationEmailUseCase(mockAuthPort);
+
+      await useCase.execute({
+        email: 'valid@example.com',
+        emailRedirectTo: 'http://localhost:3000/api/auth/callback',
+      });
+
+      expect(mockAuthPort.resendConfirmationEmail).toHaveBeenCalledWith({
+        email: 'valid@example.com',
+        emailRedirectTo: 'http://localhost:3000/api/auth/callback',
+      });
+    });
+
+    it('should reject invalid email before calling authPort', async () => {
+      const useCase = new ResendConfirmationEmailUseCase(mockAuthPort);
+
+      await expect(
+        useCase.execute({
+          email: 'invalid-email-address',
+        })
+      ).rejects.toThrow(InvalidEmailError);
+
+      expect(mockAuthPort.resendConfirmationEmail).not.toHaveBeenCalled();
     });
   });
 });

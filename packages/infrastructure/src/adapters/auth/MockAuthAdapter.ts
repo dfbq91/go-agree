@@ -6,6 +6,7 @@ import type {
   LoginWithEmailInput,
   RegisterWithEmailInput,
   RequestPasswordResetInput,
+  ResendConfirmationEmailInput,
   UserSessionDTO,
 } from '@go-agree/application';
 import {
@@ -161,5 +162,9 @@ export class MockAuthAdapter implements AuthPort {
 
   async requestPasswordReset(_input: RequestPasswordResetInput): Promise<void> {
     // Enumeration-safe: completes cleanly
+  }
+
+  async resendConfirmationEmail(_input: ResendConfirmationEmailInput): Promise<void> {
+    // Mock no-op: completes cleanly
   }
 }

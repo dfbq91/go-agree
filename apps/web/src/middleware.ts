@@ -3,7 +3,7 @@ import { createServerClient } from '@supabase/ssr';
 import { type NextRequest, NextResponse } from 'next/server';
 
 export const PROTECTED_ROUTES = ['/dashboard', '/questionnaire'];
-export const AUTH_ROUTES = ['/login', '/register'];
+export const AUTH_ROUTES = ['/login', '/register', '/confirm-email'];
 
 export async function middleware(request: NextRequest) {
   const incomingCorrelationId = request.headers.get('x-correlation-id');

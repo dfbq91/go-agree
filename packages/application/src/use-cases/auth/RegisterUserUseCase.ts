@@ -16,6 +16,7 @@ export class RegisterUserUseCase {
     return this.authPort.registerWithEmail({
       email: emailVO.value,
       password: input.password,
+      emailRedirectTo: input.emailRedirectTo,
     });
   }
 }

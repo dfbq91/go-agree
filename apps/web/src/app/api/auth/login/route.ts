@@ -3,14 +3,21 @@ import { getServerAuthAdapter } from '@/lib/auth';
 import { logger } from '@/lib/logger';
 import { es } from '@/locales/es';
 import { LoginWithEmailUseCase } from '@go-agree/application';
-import { DomainAuthError, InvalidCredentialsError, InvalidEmailError } from '@go-agree/domain';
+import {
+  DomainAuthError,
+  EmailNotConfirmedError,
+  InvalidCredentialsError,
+  InvalidEmailError,
+} from '@go-agree/domain';
 import { correlationStorage } from '@go-agree/infrastructure';
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
   return withCorrelationContext(request, async () => {
+    let email: string | undefined;
     try {
       const body = await request.json();
+      email = body.email;
       const authAdapter = await getServerAuthAdapter();
       const useCase = new LoginWithEmailUseCase(authAdapter);
 
@@ -34,6 +41,13 @@ export async function POST(request: Request) {
         }
       );
     } catch (error: any) {
+      if (error instanceof EmailNotConfirmedError) {
+        logger.warn('User login failed: email not confirmed', { error: error.message });
+        return createApiErrorResponse(error.code, es.errors.emailNotConfirmed, {
+          status: 403,
+          details: { email },
+        });
+      }
       if (error instanceof InvalidCredentialsError) {
         logger.warn('User login failed: invalid credentials', { error: error.message });
         return createApiErrorResponse(error.code, es.errors.invalidCredentials, { status: 401 });

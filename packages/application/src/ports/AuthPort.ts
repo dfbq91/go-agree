@@ -23,6 +23,12 @@ export interface AuthResultDTO {
 export interface RegisterWithEmailInput {
   email: string;
   password: string;
+  emailRedirectTo?: string;
+}
+
+export interface ResendConfirmationEmailInput {
+  email: string;
+  emailRedirectTo?: string;
 }
 
 export interface LoginWithEmailInput {
@@ -51,4 +57,5 @@ export interface AuthPort {
   logout(): Promise<void>;
   getCurrentSession(): Promise<UserSessionDTO | null>;
   requestPasswordReset(input: RequestPasswordResetInput): Promise<void>;
+  resendConfirmationEmail(input: ResendConfirmationEmailInput): Promise<void>;
 }

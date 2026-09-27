@@ -1,6 +1,7 @@
 import { render } from '@testing-library/react';
 import axe from 'axe-core';
 import { describe, expect, it } from 'vitest';
+import { ConfirmEmailView } from '../../src/components/auth/ConfirmEmailView';
 import { GoogleAuthButton } from '../../src/components/auth/GoogleAuthButton';
 import { LoginForm } from '../../src/components/auth/LoginForm';
 import { RegisterForm } from '../../src/components/auth/RegisterForm';
@@ -24,6 +25,12 @@ describe('WCAG 2.1 AA Accessibility Audit (axe-core)', () => {
 
   it('RegisterForm passes accessibility checks without violations', async () => {
     const { container } = render(<RegisterForm />);
+    const results = await axe.run(container, axeOptions);
+    expect(results.violations).toEqual([]);
+  });
+
+  it('ConfirmEmailView passes accessibility checks without violations', async () => {
+    const { container } = render(<ConfirmEmailView email="usuario@ejemplo.com" />);
     const results = await axe.run(container, axeOptions);
     expect(results.violations).toEqual([]);
   });

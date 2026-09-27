@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
 import { createClient } from '@supabase/supabase-js';
 
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 const TEST_EMAIL = 'e2e_test_runner@gmail.com';
 const TEST_PASSWORD = 'Password123!';
 const TEST_USER_ID = 'e3fe3109-bc62-4eb0-ab24-d2d56050efe6';

@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { GoogleAuthButton } from '../../src/components/auth/GoogleAuthButton';
 import { LoginForm } from '../../src/components/auth/LoginForm';
@@ -29,6 +29,33 @@ describe('Auth Forms (Spanish UI & Accessibility)', () => {
       const alert = await screen.findByRole('alert');
       expect(alert.textContent).toContain(es.errors.invalidEmail);
     });
+
+    it('should display link to confirm-email when API returns EMAIL_NOT_CONFIRMED', async () => {
+      global.fetch = vi.fn().mockResolvedValue({
+        ok: false,
+        json: async () => ({
+          code: 'EMAIL_NOT_CONFIRMED',
+          message: es.errors.emailNotConfirmed,
+        }),
+      });
+
+      render(<LoginForm />);
+
+      fireEvent.change(screen.getByLabelText(es.auth.emailLabel), {
+        target: { value: 'unconfirmed@example.com' },
+      });
+      fireEvent.change(screen.getByLabelText(es.auth.passwordLabel), {
+        target: { value: 'Password123!' },
+      });
+
+      fireEvent.click(screen.getByRole('button', { name: es.auth.submitLogin }));
+
+      const alert = await screen.findByRole('alert');
+      expect(alert.textContent).toContain(es.errors.emailNotConfirmed);
+
+      const link = screen.getByRole('link', { name: es.auth.goToConfirmEmail });
+      expect(link.getAttribute('href')).toBe('/confirm-email?email=unconfirmed%40example.com');
+    });
   });
 
   describe('RegisterForm', () => {
@@ -55,6 +82,44 @@ describe('Auth Forms (Spanish UI & Accessibility)', () => {
 
       const alert = await screen.findByRole('alert');
       expect(alert.textContent).toContain(es.errors.weakPassword);
+    });
+
+    it('should submit registration and navigate to /confirm-email', async () => {
+      const originalLocation = window.location;
+      Object.defineProperty(window, 'location', {
+        configurable: true,
+        writable: true,
+        value: { href: '' },
+      });
+
+      global.fetch = vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({
+          user: { id: 'u-1', email: 'valid@example.com' },
+          redirectTo: '/confirm-email?email=valid%40example.com',
+        }),
+      });
+
+      render(<RegisterForm />);
+
+      fireEvent.change(screen.getByLabelText(es.auth.emailLabel), {
+        target: { value: 'valid@example.com' },
+      });
+      fireEvent.change(screen.getByLabelText(es.auth.passwordLabel), {
+        target: { value: 'Password123!' },
+      });
+
+      fireEvent.click(screen.getByRole('button', { name: es.auth.submitRegister }));
+
+      await waitFor(() => {
+        expect(window.location.href).toBe('/confirm-email?email=valid%40example.com');
+      });
+
+      Object.defineProperty(window, 'location', {
+        configurable: true,
+        writable: true,
+        value: originalLocation,
+      });
     });
   });
 

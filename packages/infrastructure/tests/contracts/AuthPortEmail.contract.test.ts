@@ -88,4 +88,22 @@ describe('AuthPort Email/Password Contract Tests', () => {
       authAdapter.requestPasswordReset({ email: 'anyuser@example.com' })
     ).resolves.toBeUndefined();
   });
+
+  it('should handle resend confirmation email cleanly without error', async () => {
+    await expect(
+      authAdapter.resendConfirmationEmail({
+        email: 'anyuser@example.com',
+        emailRedirectTo: 'http://localhost:3000/api/auth/callback',
+      })
+    ).resolves.toBeUndefined();
+  });
+
+  it('should allow registerWithEmail with emailRedirectTo', async () => {
+    const result = await authAdapter.registerWithEmail({
+      email: 'withredirect@example.com',
+      password: 'Password123!',
+      emailRedirectTo: 'http://localhost:3000/api/auth/callback',
+    });
+    expect(result.user.email).toBe('withredirect@example.com');
+  });
 });

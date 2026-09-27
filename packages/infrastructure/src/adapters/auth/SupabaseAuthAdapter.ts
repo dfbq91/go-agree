@@ -6,9 +6,12 @@ import type {
   LoginWithEmailInput,
   RegisterWithEmailInput,
   RequestPasswordResetInput,
+  ResendConfirmationEmailInput,
   UserSessionDTO,
 } from '@go-agree/application';
 import {
+  AuthRateLimitExceededError,
+  EmailNotConfirmedError,
   InvalidCredentialsError,
   UserAlreadyExistsError,
   WeakPasswordError,
@@ -25,11 +28,19 @@ export class SupabaseAuthAdapter implements AuthPort {
     const { data, error } = await this.supabase.auth.signUp({
       email: input.email,
       password: input.password,
+      options: input.emailRedirectTo ? { emailRedirectTo: input.emailRedirectTo } : undefined,
     });
 
     if (error) {
       if (error.message.toLowerCase().includes('already registered')) {
         throw new UserAlreadyExistsError(input.email);
+      }
+      if (
+        error.status === 429 ||
+        error.code === 'over_email_send_rate_limit' ||
+        error.message.toLowerCase().includes('rate limit')
+      ) {
+        throw new AuthRateLimitExceededError(error.message);
       }
       throw new Error(error.message);
     }
@@ -65,7 +76,21 @@ export class SupabaseAuthAdapter implements AuthPort {
       password: input.password,
     });
 
-    if (error || !data.user || !data.session) {
+    if (error) {
+      if (error.message.toLowerCase().includes('email not confirmed')) {
+        throw new EmailNotConfirmedError(input.email);
+      }
+      if (
+        error.status === 429 ||
+        error.message.toLowerCase().includes('rate limit') ||
+        error.message.toLowerCase().includes('too many requests')
+      ) {
+        throw new AuthRateLimitExceededError(error.message);
+      }
+      throw new InvalidCredentialsError();
+    }
+
+    if (!data.user || !data.session) {
       throw new InvalidCredentialsError();
     }
 
@@ -158,5 +183,24 @@ export class SupabaseAuthAdapter implements AuthPort {
     await this.supabase.auth.resetPasswordForEmail(input.email, {
       redirectTo: input.redirectToUrl,
     });
+  }
+
+  async resendConfirmationEmail(input: ResendConfirmationEmailInput): Promise<void> {
+    const { error } = await this.supabase.auth.resend({
+      type: 'signup',
+      email: input.email,
+      options: input.emailRedirectTo ? { emailRedirectTo: input.emailRedirectTo } : undefined,
+    });
+
+    if (error) {
+      if (
+        error.status === 429 ||
+        error.code === 'over_email_send_rate_limit' ||
+        error.message.toLowerCase().includes('rate limit')
+      ) {
+        throw new AuthRateLimitExceededError(error.message);
+      }
+      throw new Error(error.message);
+    }
   }
 }

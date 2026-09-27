@@ -41,6 +41,20 @@ export const es = {
     backToLogin: 'Volver a inicio de sesión',
     resetEmailSentSuccess:
       'Si el correo está registrado en go-agree, recibirás las instrucciones en tu bandeja de entrada.',
+    confirmEmailTitle: 'Revisa tu correo electrónico',
+    confirmEmailSubtitle: 'Confirma tu registro para activar tu cuenta en go-agree',
+    confirmEmailInstructions: (email?: string) =>
+      email
+        ? `Hemos enviado un enlace de confirmación a ${email}. Por favor, revisa tu bandeja de entrada y haz clic en el enlace para activar tu cuenta.`
+        : 'Hemos enviado un enlace de confirmación a tu correo electrónico. Por favor, revisa tu bandeja de entrada y haz clic en el enlace para activar tu cuenta.',
+    confirmEmailSpamNotice: '¿No recibiste el correo? Revisa tu carpeta de correo no deseado (spam).',
+    resendEmailButton: 'Reenviar correo de confirmación',
+    resendingEmail: 'Reenviando...',
+    resendEmailCooldown: (seconds: number) => `Reenviar en ${seconds}s`,
+    resendEmailSuccess: 'Hemos reenviado el enlace de confirmación a tu correo.',
+    resendEmailError: 'No se pudo reenviar el correo. Por favor intenta de nuevo más tarde.',
+    backToRegister: '¿Ingresaste un correo equivocado? Regístrate de nuevo',
+    goToConfirmEmail: 'Ver instrucciones de confirmación',
   },
   dashboard: {
     title: 'Mis Contratos',
@@ -102,6 +116,8 @@ export const es = {
     networkError:
       'Error de conexión. Por favor, verifica tu conexión a internet e inténtalo nuevamente.',
     googleAuthFailed: 'No se pudo completar la autenticación con Google. Inténtalo de nuevo.',
+    emailNotConfirmed:
+      'Debes confirmar tu correo electrónico antes de iniciar sesión. Por favor revisa tu bandeja de entrada.',
     genericError: 'Ocurrió un error inesperado. Por favor, inténtalo más tarde.',
   },
   questionnaire: {

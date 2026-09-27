@@ -56,6 +56,25 @@ export class UnauthorizedAccessError extends DomainAuthError {
   }
 }
 
+export class EmailNotConfirmedError extends DomainAuthError {
+  constructor(email?: string) {
+    super(
+      email
+        ? `Email address ${email} has not been confirmed yet`
+        : 'Email address has not been confirmed yet',
+      'EMAIL_NOT_CONFIRMED'
+    );
+    this.name = 'EmailNotConfirmedError';
+  }
+}
+
+export class AuthRateLimitExceededError extends DomainAuthError {
+  constructor(message = 'Demasiados intentos. Por favor, espera un momento antes de reintentar.') {
+    super(message, 'RATE_LIMIT_EXCEEDED');
+    this.name = 'AuthRateLimitExceededError';
+  }
+}
+
 export class QuestionnaireDomainError extends Error {
   constructor(
     message: string,

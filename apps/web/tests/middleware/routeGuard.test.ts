@@ -94,4 +94,35 @@ describe('Route Guard Middleware', () => {
 
     expect(res.status).toBe(200);
   });
+
+  it('allows unauthenticated user accessing /confirm-email to proceed', async () => {
+    (createServerClient as any).mockReturnValue({
+      auth: {
+        getUser: vi.fn().mockResolvedValue({ data: { user: null }, error: null }),
+      },
+    });
+
+    const req = createMockRequest('/confirm-email', '?email=test@example.com');
+    const res = await middleware(req);
+
+    expect(res.status).toBe(200);
+    expect(res.headers.get('location')).toBeNull();
+  });
+
+  it('redirects authenticated user accessing /confirm-email to /dashboard', async () => {
+    (createServerClient as any).mockReturnValue({
+      auth: {
+        getUser: vi.fn().mockResolvedValue({
+          data: { user: { id: 'user-123', email: 'test@example.com' } },
+          error: null,
+        }),
+      },
+    });
+
+    const req = createMockRequest('/confirm-email');
+    const res = await middleware(req);
+
+    expect(res.status).toBe(307);
+    expect(res.headers.get('location')).toContain('/dashboard');
+  });
 });

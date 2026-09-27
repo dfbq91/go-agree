@@ -15,11 +15,13 @@ export function LoginForm({ onSubmit, redirectUrl }: LoginFormProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [isUnconfirmed, setIsUnconfirmed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setIsUnconfirmed(false);
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email || !emailRegex.test(email.trim())) {
@@ -47,6 +49,9 @@ export function LoginForm({ onSubmit, redirectUrl }: LoginFormProps) {
         const data = await response.json();
 
         if (!response.ok) {
+          if (data.code === 'EMAIL_NOT_CONFIRMED') {
+            setIsUnconfirmed(true);
+          }
           setError(data.message || es.errors.invalidCredentials);
           return;
         }
@@ -67,9 +72,19 @@ export function LoginForm({ onSubmit, redirectUrl }: LoginFormProps) {
         <div
           role="alert"
           aria-live="polite"
-          className="p-3 text-sm text-red-700 bg-red-100 border border-red-300 rounded-md"
+          className="p-3 text-sm text-red-700 bg-red-100 border border-red-300 rounded-md space-y-1.5"
         >
-          {error}
+          <p>{error}</p>
+          {isUnconfirmed && (
+            <p>
+              <Link
+                href={`/confirm-email?email=${encodeURIComponent(email.trim())}`}
+                className="font-medium underline hover:text-red-900 focus:outline-none focus:ring-1 focus:ring-red-500 rounded"
+              >
+                {es.auth.goToConfirmEmail}
+              </Link>
+            </p>
+          )}
         </div>
       )}
 
