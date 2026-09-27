@@ -3,6 +3,7 @@ import { cleanup, render } from '@testing-library/react';
 import axe from 'axe-core';
 import { afterEach, describe, expect, it } from 'vitest';
 import { BillingToggle } from '../../src/components/landing/BillingToggle';
+import { FinalCTABanner } from '../../src/components/landing/FinalCTABanner';
 import { HeroSection } from '../../src/components/landing/HeroSection';
 import { HowItWorksSection } from '../../src/components/landing/HowItWorksSection';
 import { LandingFooter } from '../../src/components/landing/LandingFooter';
@@ -99,6 +100,12 @@ describe('Landing Page WCAG 2.1 AA Accessibility Audit (axe-core)', () => {
     expect(results.violations).toEqual([]);
   });
 
+  it('FinalCTABanner passes accessibility checks', async () => {
+    const { container } = render(<FinalCTABanner isAuthenticated={false} />);
+    const results = await axe.run(container, axeOptions);
+    expect(results.violations).toEqual([]);
+  });
+
   it('Full Landing Page composition passes accessibility audit', async () => {
     const { container } = render(
       <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -107,6 +114,7 @@ describe('Landing Page WCAG 2.1 AA Accessibility Audit (axe-core)', () => {
           <HeroSection isAuthenticated={false} freeContractsCount={3} />
           <HowItWorksSection />
           <PricingSection plan={samplePlan} isAuthenticated={false} />
+          <FinalCTABanner isAuthenticated={false} />
         </main>
         <LandingFooter />
       </div>

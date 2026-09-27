@@ -57,10 +57,10 @@ export function ContractCardMobile({
   }).format(updatedAtDate);
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-5 flex flex-col justify-between space-y-4">
+    <div className="bg-surface-card border border-border-subtle rounded-xl shadow-xs p-5 flex flex-col justify-between space-y-4 hover:border-border-strong transition-all">
       <div>
-        <div className="flex justify-between items-start mb-2">
-          <div className="font-semibold text-gray-900 line-clamp-1">
+        <div className="flex justify-between items-start gap-3 mb-2.5">
+          <div className="font-semibold text-gray-900 line-clamp-1 flex-1">
             {renderTitle ? (
               renderTitle(contract)
             ) : (
@@ -77,37 +77,42 @@ export function ContractCardMobile({
             )}
           </div>
           <span
-            className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
-              isInProgress ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'
+            className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold shrink-0 border ${
+              isInProgress
+                ? 'bg-status-draft-bg text-status-draft-text border-status-draft-border'
+                : 'bg-status-completed-bg text-status-completed-text border-status-completed-border'
             }`}
           >
+            {!isInProgress && (
+              <span className="w-1.5 h-1.5 rounded-full bg-status-completed-text" aria-hidden="true" />
+            )}
             {isInProgress ? es.dashboard.statusInProgress : es.dashboard.statusCompleted}
           </span>
         </div>
 
-        <div className="text-xs text-gray-500 space-y-1 mt-2">
-          <p>
+        <div className="text-xs text-gray-500 space-y-1.5 mt-3 pt-3 border-t border-gray-100">
+          <div className="flex items-center justify-between">
             <span className="font-medium text-gray-700">
               {es.dashboard.columns.questionsAnswered}:
-            </span>{' '}
-            <span className="text-blue-700 font-medium">
+            </span>
+            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200/50">
               {es.dashboard.questionsAnsweredCount(
                 contract.questionsAnsweredCount ?? contract.currentQuestionIndex ?? 0
               )}
             </span>
-          </p>
-          <p>
-            <span className="font-medium text-gray-700">{es.dashboard.columns.createdAt}:</span>{' '}
-            {formattedCreatedAt}
-          </p>
-          <p>
-            <span className="font-medium text-gray-700">{es.dashboard.columns.updatedAt}:</span>{' '}
-            {formattedUpdatedAt}
-          </p>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="font-medium text-gray-700">{es.dashboard.columns.createdAt}:</span>
+            <span className="tabular-nums text-gray-500">{formattedCreatedAt}</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="font-medium text-gray-700">{es.dashboard.columns.updatedAt}:</span>
+            <span className="tabular-nums text-gray-700 font-medium">{formattedUpdatedAt}</span>
+          </div>
         </div>
       </div>
 
-      <div className="pt-3 border-t border-gray-100 flex items-center justify-between">
+      <div className="pt-3 border-t border-border-subtle flex items-center justify-between gap-3">
         <div>
           {renderDownload ? (
             renderDownload(contract)
@@ -121,30 +126,38 @@ export function ContractCardMobile({
           )}
         </div>
 
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center gap-2">
           {isInProgress ? (
             <Link
               href={`/questionnaire?id=${contract.id}`}
-              className="text-primary-600 hover:text-primary-700 text-xs font-semibold hover:underline"
+              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-primary hover:bg-primary-hover active:bg-primary-active text-white text-xs font-semibold shadow-2xs transition-all active:scale-[0.99]"
             >
-              {es.dashboard.resumeDraft} →
+              <span>{es.dashboard.resumeDraft}</span>
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
             </Link>
           ) : (
             <Link
               href={`/questionnaire?id=${contract.id}&mode=summary`}
-              className="text-gray-700 hover:text-gray-900 text-xs font-semibold hover:underline"
+              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-surface-card hover:bg-surface-canvas border border-border-strong text-gray-800 text-xs font-semibold shadow-2xs transition-all active:scale-[0.99]"
             >
-              {es.dashboard.viewSummary} →
+              <span>{es.dashboard.viewSummary}</span>
             </Link>
           )}
 
           <button
             type="button"
             onClick={() => onDeleteClick?.(contract)}
-            className="text-red-600 hover:text-red-800 text-xs font-medium hover:underline p-1"
+            className="text-gray-500 hover:text-red-600 hover:bg-red-50 p-1.5 rounded-lg border border-transparent hover:border-red-200 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500"
             aria-label={`${es.dashboard.columns.actions} - ${contract.title}`}
           >
-            {es.dashboard.deleteModal.confirm}
+            <span className="sr-only sm:not-sr-only text-xs font-medium mr-1">
+              {es.dashboard.deleteModal.confirm}
+            </span>
+            <svg className="w-3.5 h-3.5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
           </button>
         </div>
       </div>
@@ -252,50 +265,50 @@ export function ContractList({
   return (
     <div>
       {/* Desktop: Semantic Table with horizontal scroll support */}
-      <div className="hidden lg:block shadow ring-1 ring-black ring-opacity-5 rounded-lg bg-white overflow-hidden">
+      <div className="hidden lg:block border border-border-subtle rounded-xl bg-surface-card shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-300" role="table">
-            <thead className="bg-gray-50">
+          <table className="min-w-full divide-y divide-border-subtle" role="table">
+            <thead className="bg-surface-canvas border-b border-border-subtle">
               <tr>
                 <th
                   scope="col"
-                  className="py-3.5 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
+                  className="py-3.5 pl-6 pr-3 text-left text-[11px] font-bold uppercase tracking-wider text-gray-600 font-sans"
                 >
                   {es.dashboard.columns.title}
                 </th>
                 <th
                   scope="col"
-                  className="px-3 py-3.5 text-left text-xs font-semibold text-gray-900"
+                  className="px-3 py-3.5 text-left text-[11px] font-bold uppercase tracking-wider text-gray-600 font-sans"
                 >
                   {es.dashboard.columns.questionsAnswered}
                 </th>
                 <th
                   scope="col"
-                  className="px-3 py-3.5 text-left text-xs font-semibold text-gray-900"
+                  className="px-3 py-3.5 text-left text-[11px] font-bold uppercase tracking-wider text-gray-600 font-sans"
                 >
                   {es.dashboard.columns.download}
                 </th>
                 <th
                   scope="col"
-                  className="px-3 py-3.5 text-left text-xs font-semibold text-gray-900"
+                  className="px-3 py-3.5 text-left text-[11px] font-bold uppercase tracking-wider text-gray-600 font-sans"
                 >
                   {es.dashboard.columns.createdAt}
                 </th>
                 <th
                   scope="col"
-                  className="px-3 py-3.5 text-left text-xs font-semibold text-gray-900"
+                  className="px-3 py-3.5 text-left text-[11px] font-bold uppercase tracking-wider text-gray-600 font-sans"
                 >
                   {es.dashboard.columns.updatedAt}
                 </th>
                 <th
                   scope="col"
-                  className="relative py-3.5 pl-3 pr-4 sm:pr-6 text-right text-xs font-semibold text-gray-900"
+                  className="relative py-3.5 pl-3 pr-6 text-right text-[11px] font-bold uppercase tracking-wider text-gray-600 font-sans"
                 >
                   {es.dashboard.columns.actions}
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200 bg-white">
+            <tbody className="divide-y divide-border-subtle bg-surface-card">
               {sortedContracts.map((contract) => (
                 <ContractTableRow
                   key={contract.id}

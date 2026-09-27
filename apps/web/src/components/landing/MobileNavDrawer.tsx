@@ -54,9 +54,14 @@ export const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({
         <div>
           {/* Header with Close Action */}
           <div className="flex items-center justify-between pb-6 border-b border-gray-100">
-            <span className="text-xl font-black text-primary-600 tracking-tight">
-              {es.brand.name}
-            </span>
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-lg bg-primary-600 flex items-center justify-center text-white font-bold text-base shadow-xs">
+                g
+              </div>
+              <span className="text-lg font-bold text-gray-900 tracking-tight">
+                {es.brand.name}
+              </span>
+            </div>
             <button
               type="button"
               onClick={onClose}

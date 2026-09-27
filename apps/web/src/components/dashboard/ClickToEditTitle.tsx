@@ -108,10 +108,10 @@ export function ClickToEditTitle({
               }
             }}
             aria-label={es.dashboard.rename.ariaLabel}
-            className="text-sm font-semibold text-gray-900 border-b-2 border-primary-600 focus:outline-none bg-white px-1 py-0.5 rounded shadow-sm min-w-[180px]"
+            className="text-sm font-semibold text-gray-900 border-b-2 border-primary focus:outline-none bg-white px-2 py-0.5 rounded shadow-xs min-w-[200px] ring-2 ring-primary/20"
           />
           {isSaving && (
-            <span className="text-xs text-gray-400 animate-pulse">
+            <span className="text-xs text-primary font-medium animate-pulse">
               {es.dashboard.rename.saving}
             </span>
           )}
@@ -121,7 +121,7 @@ export function ClickToEditTitle({
           {resumeUrl ? (
             <Link
               href={resumeUrl}
-              className="text-sm font-semibold text-gray-900 hover:text-primary-600 hover:underline truncate max-w-[200px] sm:max-w-xs xl:max-w-sm transition-colors"
+              className="text-sm font-semibold text-gray-900 group-hover:text-primary transition-colors hover:underline truncate max-w-[200px] sm:max-w-xs xl:max-w-sm"
             >
               {title}
             </Link>
@@ -139,7 +139,8 @@ export function ClickToEditTitle({
               setIsEditing(true);
             }}
             aria-label={es.dashboard.rename.ariaLabel}
-            className="opacity-0 group-hover:opacity-100 focus:opacity-100 text-gray-400 hover:text-primary-600 p-1 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-opacity"
+            className="opacity-0 group-hover:opacity-100 focus:opacity-100 text-gray-400 hover:text-primary p-1 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+            title="Editar título"
           >
             <svg
               className="w-3.5 h-3.5"

@@ -374,9 +374,21 @@ export const QuestionnaireContainer: React.FC<QuestionnaireContainerProps> = ({
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+    <div
+      className={
+        isReviewing
+          ? 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'
+          : 'max-w-3xl mx-auto px-4 sm:px-6 py-8'
+      }
+    >
       {/* Cabecera con título y estado visual de guardado */}
-      <QuestionnaireHeader title={title} saveStatus={saveStatus} onSaveTitle={handleTitleSave} />
+      <QuestionnaireHeader
+        title={title}
+        saveStatus={saveStatus}
+        onSaveTitle={handleTitleSave}
+        currentStep={isReviewing ? undefined : safeIndex + 1}
+        totalSteps={isReviewing ? undefined : visibleQuestions.length}
+      />
 
       <NetworkStatusBanner hasError={saveStatus === 'error'} onRetry={handleNext} />
 

@@ -78,8 +78,8 @@ export const PaymentResultView: React.FC<PaymentResultViewProps> = ({
     <div className="mx-auto max-w-xl py-8 sm:py-14 px-4 text-center">
       {/* 1. Approved State */}
       {isApproved && (
-        <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-8 shadow-sm">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 mb-5">
+        <div className="rounded-2xl border border-emerald-200 bg-emerald-50/50 p-8 shadow-xs">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-600 mb-5">
             <svg
               className="h-8 w-8"
               fill="none"
@@ -96,22 +96,22 @@ export const PaymentResultView: React.FC<PaymentResultViewProps> = ({
             </svg>
           </div>
 
-          <h2 className="text-2xl font-extrabold text-foreground">
+          <h2 className="font-serif text-2xl font-bold text-slate-900">
             {es.paymentResult.approvedTitle}
           </h2>
-          <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+          <p className="mt-2 text-sm text-slate-600 leading-relaxed">
             {es.paymentResult.approvedSubtitle}
           </p>
 
-          <div className="mt-4 rounded-xl bg-background/80 border border-border p-3 text-xs text-muted-foreground font-mono">
+          <div className="mt-4 rounded-xl bg-white border border-slate-200 p-3 text-xs text-slate-500 font-mono">
             <span>{es.paymentResult.referenceLabel} </span>
-            <span className="font-semibold text-foreground">{reference}</span>
+            <span className="font-semibold text-slate-900">{reference}</span>
           </div>
 
           <div className="mt-8">
             <Link
               href="/dashboard"
-              className="inline-flex items-center justify-center rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow hover:bg-primary/90 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              className="inline-flex items-center justify-center rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white shadow-xs hover:bg-blue-700 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
               {es.paymentResult.backToDashboard}
             </Link>
@@ -121,8 +121,8 @@ export const PaymentResultView: React.FC<PaymentResultViewProps> = ({
 
       {/* 2. Pending State */}
       {isPending && (
-        <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-8 shadow-sm">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-600 mb-5">
+        <div className="rounded-2xl border border-amber-200 bg-amber-50/50 p-8 shadow-xs">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-100 text-amber-600 mb-5">
             <svg
               className="h-8 w-8 animate-spin"
               fill="none"
@@ -145,16 +145,16 @@ export const PaymentResultView: React.FC<PaymentResultViewProps> = ({
             </svg>
           </div>
 
-          <h2 className="text-2xl font-extrabold text-foreground">
+          <h2 className="font-serif text-2xl font-bold text-slate-900">
             {es.paymentResult.pendingTitle}
           </h2>
-          <p className="mt-2 text-sm text-muted-foreground leading-relaxed max-w-md mx-auto">
+          <p className="mt-2 text-sm text-slate-600 leading-relaxed max-w-md mx-auto">
             {es.paymentResult.pendingSubtitle}
           </p>
 
-          <div className="mt-4 rounded-xl bg-background/80 border border-border p-3 text-xs text-muted-foreground font-mono">
+          <div className="mt-4 rounded-xl bg-white border border-slate-200 p-3 text-xs text-slate-500 font-mono">
             <span>{es.paymentResult.referenceLabel} </span>
-            <span className="font-semibold text-foreground">{reference}</span>
+            <span className="font-semibold text-slate-900">{reference}</span>
           </div>
 
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
@@ -162,13 +162,13 @@ export const PaymentResultView: React.FC<PaymentResultViewProps> = ({
               type="button"
               disabled={isChecking}
               onClick={checkStatus}
-              className="inline-flex w-full sm:w-auto items-center justify-center rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow hover:bg-primary/90 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-60"
+              className="inline-flex w-full sm:w-auto items-center justify-center rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white shadow-xs hover:bg-blue-700 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-60"
             >
               {isChecking ? es.paymentResult.verifying : es.paymentResult.verifyStatusButton}
             </button>
             <Link
               href="/dashboard"
-              className="inline-flex w-full sm:w-auto items-center justify-center rounded-xl border border-input bg-background px-5 py-3 text-sm font-medium text-foreground hover:bg-muted/60 transition-colors"
+              className="inline-flex w-full sm:w-auto items-center justify-center rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
             >
               {es.paymentResult.backToDashboard}
             </Link>
@@ -178,8 +178,8 @@ export const PaymentResultView: React.FC<PaymentResultViewProps> = ({
 
       {/* 3. Rejected State */}
       {isRejected && (
-        <div className="rounded-2xl border border-destructive/20 bg-destructive/5 p-8 shadow-sm">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-destructive/10 text-destructive mb-5">
+        <div className="rounded-2xl border border-red-200 bg-red-50/50 p-8 shadow-xs">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-red-100 text-red-600 mb-5">
             <svg
               className="h-8 w-8"
               fill="none"
@@ -196,32 +196,32 @@ export const PaymentResultView: React.FC<PaymentResultViewProps> = ({
             </svg>
           </div>
 
-          <h2 className="text-2xl font-extrabold text-foreground">
+          <h2 className="font-serif text-2xl font-bold text-slate-900">
             {es.paymentResult.rejectedTitle}
           </h2>
-          <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+          <p className="mt-2 text-sm text-slate-600 leading-relaxed">
             {es.paymentResult.rejectedSubtitle}
           </p>
 
-          <div className="mt-4 rounded-xl bg-destructive/10 border border-destructive/20 p-3 text-xs text-destructive max-w-md mx-auto">
+          <div className="mt-4 rounded-xl bg-red-100/60 border border-red-200 p-3 text-xs font-medium text-red-800 max-w-md mx-auto">
             {getRejectionMessage()}
           </div>
 
-          <div className="mt-3 text-xs text-muted-foreground font-mono">
+          <div className="mt-3 text-xs text-slate-500 font-mono">
             <span>{es.paymentResult.referenceLabel} </span>
-            <span className="font-semibold text-foreground">{reference}</span>
+            <span className="font-semibold text-slate-900">{reference}</span>
           </div>
 
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
               href="/checkout"
-              className="inline-flex w-full sm:w-auto items-center justify-center rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow hover:bg-primary/90 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              className="inline-flex w-full sm:w-auto items-center justify-center rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white shadow-xs hover:bg-blue-700 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
               {es.paymentResult.retryButton}
             </Link>
             <Link
               href="/dashboard"
-              className="inline-flex w-full sm:w-auto items-center justify-center rounded-xl border border-input bg-background px-5 py-3 text-sm font-medium text-foreground hover:bg-muted/60 transition-colors"
+              className="inline-flex w-full sm:w-auto items-center justify-center rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
             >
               {es.paymentResult.backToDashboard}
             </Link>

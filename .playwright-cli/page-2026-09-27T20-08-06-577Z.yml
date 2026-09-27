@@ -1,0 +1,135 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - link "G go-agree LEGAL STUDIO" [ref=e6] [cursor=pointer]:
+            - /url: /dashboard
+            - generic [ref=e7]: G
+            - generic [ref=e9]:
+              - generic [ref=e10]: go-agree
+              - generic [ref=e11]: LEGAL STUDIO
+          - navigation [ref=e12]:
+            - link "Mis Contratos" [ref=e13] [cursor=pointer]:
+              - /url: /dashboard
+        - generic [ref=e15]:
+          - generic [ref=e16]:
+            - generic [ref=e17]: U
+            - generic [ref=e18]: usuario@go-agree.co
+          - button "Cerrar sesión" [ref=e19] [cursor=pointer]:
+            - img [ref=e20]
+            - generic [ref=e22]: Cerrar sesión
+    - main [ref=e23]:
+      - generic [ref=e24]:
+        - generic [ref=e25]:
+          - navigation "Breadcrumb" [ref=e26]:
+            - link "Plataforma" [ref=e27] [cursor=pointer]:
+              - /url: /dashboard
+            - generic [ref=e28]: /
+            - generic [ref=e29]: Mis Contratos
+          - generic [ref=e30]:
+            - heading "Mis Contratos" [level=1] [ref=e31]
+            - generic [ref=e33]:
+              - generic [ref=e35]: Plan Gratuito
+              - generic [ref=e36]: ":"
+              - generic [ref=e37]: 2 de 3 contratos generados (1 restantes)
+          - paragraph [ref=e38]: Gestiona, audita, descarga y actualiza tus acuerdos comerciales con trazabilidad completa.
+        - link "Nuevo Contrato" [ref=e40] [cursor=pointer]:
+          - /url: /questionnaire
+          - img [ref=e41]
+          - generic [ref=e43]: Nuevo Contrato
+      - table [ref=e48]:
+        - rowgroup [ref=e49]:
+          - row "Título Preguntas respondidas Descargar Fecha de creación Última modificación Acciones" [ref=e50]:
+            - columnheader "Título" [ref=e51]
+            - columnheader "Preguntas respondidas" [ref=e52]
+            - columnheader "Descargar" [ref=e53]
+            - columnheader "Fecha de creación" [ref=e54]
+            - columnheader "Última modificación" [ref=e55]
+            - columnheader "Acciones" [ref=e56]
+        - rowgroup [ref=e57]:
+          - row "Contrato de Prestación de Servicios de Consultoría Técnica Hacer clic para editar el título 14 respondidas Descargar 15 sept 2026, 5:00 27 sept 2026, 7:00 Ver resumen Acciones - Contrato de Prestación de Servicios de Consultoría Técnica" [ref=e58]:
+            - cell "Contrato de Prestación de Servicios de Consultoría Técnica Hacer clic para editar el título" [ref=e59]:
+              - generic [ref=e61]:
+                - link "Contrato de Prestación de Servicios de Consultoría Técnica" [ref=e62] [cursor=pointer]:
+                  - /url: /questionnaire?id=c-1&mode=summary
+                - button "Hacer clic para editar el título" [ref=e63] [cursor=pointer]:
+                  - img [ref=e64]
+            - cell "14 respondidas" [ref=e66]:
+              - generic [ref=e67]: 14 respondidas
+            - cell "Descargar" [ref=e69]:
+              - button "Descargar" [ref=e71] [cursor=pointer]:
+                - img [ref=e72]
+                - text: Descargar
+                - img [ref=e74]
+            - cell "15 sept 2026, 5:00" [ref=e76]
+            - cell "27 sept 2026, 7:00" [ref=e77]
+            - cell "Ver resumen Acciones - Contrato de Prestación de Servicios de Consultoría Técnica" [ref=e78]:
+              - generic [ref=e79]:
+                - link "Ver resumen" [ref=e80] [cursor=pointer]:
+                  - /url: /questionnaire?id=c-1&mode=summary
+                  - generic [ref=e81]: Ver resumen
+                - button "Acciones - Contrato de Prestación de Servicios de Consultoría Técnica" [ref=e82] [cursor=pointer]:
+                  - img [ref=e83]
+                  - generic [ref=e85]: Eliminar
+          - row "Acuerdo de Confidencialidad y No Divulgación (NDA) - Proveedor Beta Hacer clic para editar el título 8 respondidas Descargar 18 sept 2026, 5:00 27 sept 2026, 5:30 Continuar borrador Acciones - Acuerdo de Confidencialidad y No Divulgación (NDA) - Proveedor Beta" [ref=e86]:
+            - cell "Acuerdo de Confidencialidad y No Divulgación (NDA) - Proveedor Beta Hacer clic para editar el título" [ref=e87]:
+              - generic [ref=e89]:
+                - link "Acuerdo de Confidencialidad y No Divulgación (NDA) - Proveedor Beta" [ref=e90] [cursor=pointer]:
+                  - /url: /questionnaire?id=c-2
+                - button "Hacer clic para editar el título" [ref=e91] [cursor=pointer]:
+                  - img [ref=e92]
+            - cell "8 respondidas" [ref=e94]:
+              - generic [ref=e95]: 8 respondidas
+            - cell "Descargar" [ref=e97]:
+              - button "Descargar" [disabled] [ref=e99]:
+                - img [ref=e100]
+                - text: Descargar
+            - cell "18 sept 2026, 5:00" [ref=e102]
+            - cell "27 sept 2026, 5:30" [ref=e103]
+            - cell "Continuar borrador Acciones - Acuerdo de Confidencialidad y No Divulgación (NDA) - Proveedor Beta" [ref=e104]:
+              - generic [ref=e105]:
+                - link "Continuar borrador" [ref=e106] [cursor=pointer]:
+                  - /url: /questionnaire?id=c-2
+                  - generic [ref=e107]: Continuar borrador
+                  - img [ref=e108]
+                - button "Acciones - Acuerdo de Confidencialidad y No Divulgación (NDA) - Proveedor Beta" [ref=e110] [cursor=pointer]:
+                  - img [ref=e111]
+                  - generic [ref=e113]: Eliminar
+          - row "Contrato Individual de Trabajo a Término Indefinido - Desarrollador Hacer clic para editar el título 12 respondidas Descargar 10 sept 2026, 5:00 22 sept 2026, 9:15 Ver resumen Acciones - Contrato Individual de Trabajo a Término Indefinido - Desarrollador" [ref=e114]:
+            - cell "Contrato Individual de Trabajo a Término Indefinido - Desarrollador Hacer clic para editar el título" [ref=e115]:
+              - generic [ref=e117]:
+                - link "Contrato Individual de Trabajo a Término Indefinido - Desarrollador" [ref=e118] [cursor=pointer]:
+                  - /url: /questionnaire?id=c-3&mode=summary
+                - button "Hacer clic para editar el título" [ref=e119] [cursor=pointer]:
+                  - img [ref=e120]
+            - cell "12 respondidas" [ref=e122]:
+              - generic [ref=e123]: 12 respondidas
+            - cell "Descargar" [ref=e125]:
+              - button "Descargar" [ref=e127] [cursor=pointer]:
+                - img [ref=e128]
+                - text: Descargar
+                - img [ref=e130]
+            - cell "10 sept 2026, 5:00" [ref=e132]
+            - cell "22 sept 2026, 9:15" [ref=e133]
+            - cell "Ver resumen Acciones - Contrato Individual de Trabajo a Término Indefinido - Desarrollador" [ref=e134]:
+              - generic [ref=e135]:
+                - link "Ver resumen" [ref=e136] [cursor=pointer]:
+                  - /url: /questionnaire?id=c-3&mode=summary
+                  - generic [ref=e137]: Ver resumen
+                - button "Acciones - Contrato Individual de Trabajo a Término Indefinido - Desarrollador" [ref=e138] [cursor=pointer]:
+                  - img [ref=e139]
+                  - generic [ref=e141]: Eliminar
+    - contentinfo [ref=e142]:
+      - generic [ref=e143]:
+        - generic [ref=e144]:
+          - generic [ref=e145]: go-agree
+          - generic [ref=e146]: •
+          - generic [ref=e147]: LegalTech Operations & Compliance
+        - generic [ref=e148]:
+          - link "Inicio" [ref=e149] [cursor=pointer]:
+            - /url: /
+          - link "Mis Contratos" [ref=e150] [cursor=pointer]:
+            - /url: /dashboard
+  - button "Open Next.js Dev Tools" [ref=e156] [cursor=pointer]:
+    - img [ref=e157]

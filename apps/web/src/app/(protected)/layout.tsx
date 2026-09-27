@@ -18,20 +18,32 @@ export default async function ProtectedLayout({ children }: { children: React.Re
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      <header className="bg-white border-b border-gray-200">
+    <div className="min-h-screen bg-surface-canvas flex flex-col font-sans text-gray-900 antialiased">
+      <header className="bg-surface-card border-b border-border-subtle sticky top-0 z-40 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center space-x-8">
             <Link
               href="/dashboard"
-              className="text-2xl font-bold text-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-500 rounded"
+              className="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-primary-500 rounded-lg p-0.5"
             >
-              {es.brand.name}
+              <div className="w-9 h-9 rounded-xl bg-primary text-white flex items-center justify-center font-bold text-base shadow-sm group-hover:bg-primary-hover transition-colors">
+                G
+              </div>
+              <div className="flex flex-col">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-base font-bold text-gray-900 tracking-tight whitespace-nowrap">
+                    {es.brand.name}
+                  </span>
+                  <span className="hidden sm:inline-block text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-surface-muted text-gray-600 font-semibold border border-border-subtle">
+                    LEGAL STUDIO
+                  </span>
+                </div>
+              </div>
             </Link>
-            <nav className="hidden md:flex space-x-4">
+            <nav className="hidden md:flex items-center space-x-6">
               <Link
                 href="/dashboard"
-                className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium"
+                className="text-primary font-semibold border-b-2 border-primary pb-1 text-sm transition-colors"
               >
                 {es.nav.myContracts}
               </Link>
@@ -43,6 +55,24 @@ export default async function ProtectedLayout({ children }: { children: React.Re
         </div>
       </header>
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">{children}</main>
+      <footer className="mt-auto border-t border-border-subtle bg-surface-card py-6 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500">
+          <div className="flex items-center gap-2">
+            <span className="font-semibold text-gray-800">{es.brand.name}</span>
+            <span>•</span>
+            <span>LegalTech Operations & Compliance</span>
+          </div>
+          <div className="flex items-center space-x-6">
+            <Link href="/" className="hover:text-primary transition-colors">
+              Inicio
+            </Link>
+            <Link href="/dashboard" className="hover:text-primary transition-colors">
+              {es.nav.myContracts}
+            </Link>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
+

@@ -108,7 +108,7 @@ export function DownloadDropdown({
         <Link
           href={`/questionnaire?id=${contractId}&mode=summary`}
           title={es.dashboard.download.pendingRegenerationTooltip}
-          className="inline-flex items-center text-xs font-medium text-amber-800 bg-amber-50 hover:bg-amber-100 border border-amber-300 rounded px-2.5 py-1.5 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-1"
+          className="inline-flex items-center text-xs font-medium text-status-draft-text bg-status-draft-bg hover:bg-amber-100 border border-status-draft-border rounded-lg px-2.5 py-1.5 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-1"
         >
           <span
             className="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1.5 animate-pulse"
@@ -127,10 +127,10 @@ export function DownloadDropdown({
           type="button"
           disabled
           title={es.dashboard.download.tooltipNotGenerated}
-          className="inline-flex items-center text-xs font-medium text-gray-400 bg-gray-50 border border-gray-200 rounded px-2.5 py-1.5 cursor-not-allowed transition-colors"
+          className="inline-flex items-center text-xs font-medium text-gray-400 bg-surface-canvas border border-border-subtle rounded-lg px-2.5 py-1.5 cursor-not-allowed transition-colors"
         >
           <svg
-            className="w-3.5 h-3.5 mr-1 text-gray-300"
+            className="w-3.5 h-3.5 mr-1.5 text-gray-300"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -158,10 +158,10 @@ export function DownloadDropdown({
         onKeyDown={handleTriggerKeyDown}
         aria-haspopup="menu"
         aria-expanded={isOpen}
-        className="inline-flex items-center text-xs font-medium text-primary-700 bg-primary-50 hover:bg-primary-100 border border-primary-200 rounded px-2.5 py-1.5 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-1"
+        className="inline-flex items-center text-xs font-semibold text-gray-800 bg-surface-card hover:bg-surface-canvas border border-border-strong rounded-lg px-2.5 py-1.5 transition-all shadow-2xs focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-1"
       >
         <svg
-          className="w-3.5 h-3.5 mr-1 text-primary-600"
+          className="w-3.5 h-3.5 mr-1.5 text-primary"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -176,7 +176,7 @@ export function DownloadDropdown({
         </svg>
         {es.dashboard.download.action}
         <svg
-          className={`w-3 h-3 ml-1 text-primary-500 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+          className={`w-3 h-3 ml-1.5 text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -193,7 +193,7 @@ export function DownloadDropdown({
           tabIndex={-1}
           onKeyDown={handleMenuKeyDown}
           aria-orientation="vertical"
-          className="absolute left-0 z-20 mt-1 w-52 origin-top-left rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none py-1 border border-gray-100 divide-y divide-gray-50 animate-in fade-in zoom-in-95 duration-100"
+          className="absolute left-0 z-30 mt-1.5 w-56 origin-top-left rounded-xl bg-surface-card shadow-md ring-1 ring-black/5 focus:outline-none p-1.5 border border-border-subtle animate-in fade-in zoom-in-95 duration-100"
         >
           {availableFormats.includes('pdf') && (
             <a
@@ -201,9 +201,9 @@ export function DownloadDropdown({
               href={`/api/contracts/${contractId}/download?format=pdf`}
               download
               onClick={() => setIsOpen(false)}
-              className="group flex items-center px-3 py-2 text-xs text-gray-700 hover:bg-gray-50 hover:text-gray-900 focus:bg-gray-100 focus:outline-none transition-colors"
+              className="group flex items-center px-3 py-2 text-xs font-medium text-gray-700 hover:bg-surface-canvas hover:text-primary rounded-lg focus:bg-surface-canvas focus:outline-none transition-colors"
             >
-              <span className="w-2 h-2 rounded-full bg-red-500 mr-2" aria-hidden="true" />
+              <span className="w-2 h-2 rounded-full bg-red-500 mr-2.5 shrink-0" aria-hidden="true" />
               {es.dashboard.download.pdf}
             </a>
           )}
@@ -213,9 +213,9 @@ export function DownloadDropdown({
               href={`/api/contracts/${contractId}/download?format=docx`}
               download
               onClick={() => setIsOpen(false)}
-              className="group flex items-center px-3 py-2 text-xs text-gray-700 hover:bg-gray-50 hover:text-gray-900 focus:bg-gray-100 focus:outline-none transition-colors"
+              className="group flex items-center px-3 py-2 text-xs font-medium text-gray-700 hover:bg-surface-canvas hover:text-primary rounded-lg focus:bg-surface-canvas focus:outline-none transition-colors"
             >
-              <span className="w-2 h-2 rounded-full bg-blue-500 mr-2" aria-hidden="true" />
+              <span className="w-2 h-2 rounded-full bg-blue-600 mr-2.5 shrink-0" aria-hidden="true" />
               {es.dashboard.download.docx}
             </a>
           )}

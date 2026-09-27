@@ -23,20 +23,23 @@ export const NavigationControls: React.FC<NavigationControlsProps> = ({
   onUpdateAnswer,
 }) => {
   return (
-    <div className="mt-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div className="pt-6 border-t border-gray-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      {/* Botón Anterior */}
       <div>
         {!isFirstQuestion && onPrevious && (
           <button
             type="button"
             onClick={onPrevious}
             disabled={isLoading}
-            className="w-full sm:w-auto px-5 py-2.5 border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 font-medium text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-2xs"
           >
-            ← {es.questionnaire.nav.previous}
+            <span className="mr-1.5">←</span>
+            <span>{es.questionnaire.nav.previous}</span>
           </button>
         )}
       </div>
 
+      {/* Botones de acción derecha y estado de error */}
       <div className="flex flex-col sm:flex-row items-end sm:items-center gap-3">
         {error && (
           <div role="alert" className="text-xs sm:text-sm text-red-600 font-medium animate-fade-in">
@@ -49,7 +52,7 @@ export const NavigationControls: React.FC<NavigationControlsProps> = ({
             type="button"
             onClick={onUpdateAnswer}
             disabled={isLoading}
-            className="w-full sm:w-auto px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white font-medium text-sm rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-1.5"
+            className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-2.5 text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all gap-1.5"
           >
             <span>{es.questionnaire.nav.updateAnswer}</span>
             <span>✓</span>
@@ -60,16 +63,19 @@ export const NavigationControls: React.FC<NavigationControlsProps> = ({
           type="button"
           onClick={onNext}
           disabled={isLoading}
-          className="w-full sm:w-auto px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
+          className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-2.5 text-sm font-semibold text-white bg-primary-600 hover:bg-primary-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
         >
           {isLoading ? (
-            <span>{es.questionnaire.savingStatus}</span>
+            <span className="inline-flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-white animate-ping" />
+              <span>{es.questionnaire.savingStatus}</span>
+            </span>
           ) : (
             <>
               <span>
                 {isLastQuestion ? es.questionnaire.nav.review : es.questionnaire.nav.next}
               </span>
-              <span>→</span>
+              <span className="ml-1.5">→</span>
             </>
           )}
         </button>

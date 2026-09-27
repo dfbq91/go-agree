@@ -72,14 +72,14 @@ export function LoginForm({ onSubmit, redirectUrl }: LoginFormProps) {
         <div
           role="alert"
           aria-live="polite"
-          className="p-3 text-sm text-red-700 bg-red-100 border border-red-300 rounded-md space-y-1.5"
+          className="p-3.5 text-sm text-red-700 bg-red-50 border border-red-200 rounded-xl space-y-1.5 shadow-2xs"
         >
           <p>{error}</p>
           {isUnconfirmed && (
             <p>
               <Link
                 href={`/confirm-email?email=${encodeURIComponent(email.trim())}`}
-                className="font-medium underline hover:text-red-900 focus:outline-none focus:ring-1 focus:ring-red-500 rounded"
+                className="font-semibold underline hover:text-red-900 focus:outline-none focus:ring-1 focus:ring-red-500 rounded"
               >
                 {es.auth.goToConfirmEmail}
               </Link>
@@ -89,7 +89,7 @@ export function LoginForm({ onSubmit, redirectUrl }: LoginFormProps) {
       )}
 
       <div>
-        <label htmlFor="login-email" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="login-email" className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">
           {es.auth.emailLabel}
         </label>
         <input
@@ -100,18 +100,18 @@ export function LoginForm({ onSubmit, redirectUrl }: LoginFormProps) {
           placeholder={es.auth.emailPlaceholder}
           required
           autoComplete="email"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+          className="w-full px-3.5 py-2.5 bg-surface-canvas/60 border border-border-strong rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all shadow-2xs"
         />
       </div>
 
       <div>
-        <div className="flex justify-between items-center mb-1">
-          <label htmlFor="login-password" className="block text-sm font-medium text-gray-700">
+        <div className="flex justify-between items-center mb-1.5">
+          <label htmlFor="login-password" className="block text-xs font-bold uppercase tracking-wider text-gray-700">
             {es.auth.passwordLabel}
           </label>
           <Link
             href="/reset-password"
-            className="text-xs text-primary-600 hover:text-primary-700 focus:outline-none focus:underline"
+            className="text-xs font-semibold text-primary hover:text-primary-hover focus:outline-none focus:underline"
           >
             {es.auth.forgotPasswordLink}
           </Link>
@@ -124,15 +124,17 @@ export function LoginForm({ onSubmit, redirectUrl }: LoginFormProps) {
           placeholder={es.auth.passwordPlaceholder}
           required
           autoComplete="current-password"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+          className="w-full px-3.5 py-2.5 bg-surface-canvas/60 border border-border-strong rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all shadow-2xs"
         />
       </div>
 
-      <AuthSubmitButton
-        isLoading={isLoading}
-        loadingText={es.auth.loadingLogin}
-        defaultText={es.auth.submitLogin}
-      />
+      <div className="pt-1">
+        <AuthSubmitButton
+          isLoading={isLoading}
+          loadingText={es.auth.loadingLogin}
+          defaultText={es.auth.submitLogin}
+        />
+      </div>
     </form>
   );
 }

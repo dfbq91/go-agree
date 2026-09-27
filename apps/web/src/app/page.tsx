@@ -1,3 +1,4 @@
+import { FinalCTABanner } from '@/components/landing/FinalCTABanner';
 import { HeroSection } from '@/components/landing/HeroSection';
 import { HowItWorksSection } from '@/components/landing/HowItWorksSection';
 import { LandingFooter } from '@/components/landing/LandingFooter';
@@ -30,6 +31,7 @@ export default async function HomePage() {
         <HeroSection isAuthenticated={isAuthenticated} freeContractsCount={freeContractsLimit} />
         <HowItWorksSection />
         <PricingSection plan={pricingPlan} isAuthenticated={isAuthenticated} />
+        <FinalCTABanner isAuthenticated={isAuthenticated} />
       </main>
 
       {/* Footer */}

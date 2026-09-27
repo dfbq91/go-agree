@@ -90,7 +90,7 @@ export const MultipleChoiceQuestion: React.FC<MultipleChoiceQuestionProps> = ({
   };
 
   return (
-    <fieldset className="space-y-2.5">
+    <fieldset className="space-y-3.5">
       <legend className="sr-only">{prompt}</legend>
       {options.map((opt) => {
         const selectedItem = rawArray.find((item) => getSelectionValue(item) === opt.value);
@@ -102,42 +102,76 @@ export const MultipleChoiceQuestion: React.FC<MultipleChoiceQuestionProps> = ({
         return (
           <div
             key={opt.id}
-            className={`flex flex-col p-4 border rounded-xl transition-all ${
+            className={`flex flex-col rounded-lg border transition-all ${
               isChecked
-                ? 'border-blue-600 bg-blue-50/50 ring-1 ring-blue-600'
-                : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50/60'
+                ? 'border-2 border-primary-600 bg-blue-50/20 shadow-xs'
+                : 'border border-gray-300 bg-white hover:border-gray-400 hover:bg-gray-50/50'
             }`}
           >
-            <div className="flex items-start justify-between">
-              <label htmlFor={inputId} className="flex items-center gap-3 cursor-pointer flex-1">
+            <div className="flex items-center justify-between p-4 sm:p-5 w-full">
+              <label
+                htmlFor={inputId}
+                className="flex items-center flex-1 cursor-pointer select-none"
+              >
                 <input
                   id={inputId}
                   type="checkbox"
                   value={opt.value}
                   checked={isChecked}
                   onChange={() => handleToggle(opt)}
-                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  className="sr-only"
                 />
-                <span className="text-sm sm:text-base font-medium text-gray-800">{opt.label}</span>
+
+                {/* Custom Checkbox */}
+                <div
+                  className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
+                    isChecked
+                      ? 'border-primary-600 bg-primary-600 text-white'
+                      : 'border-gray-300 bg-white'
+                  }`}
+                  aria-hidden="true"
+                >
+                  {isChecked && (
+                    <svg className="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  )}
+                </div>
+
+                {/* Etiqueta de la opción */}
+                <span
+                  className={`ml-4 text-sm sm:text-base ${
+                    isChecked ? 'font-semibold text-gray-900' : 'font-medium text-gray-700'
+                  }`}
+                >
+                  {opt.label}
+                </span>
               </label>
+
               {opt.tooltip && (
-                <Tooltip content={opt.tooltip}>
-                  <button
-                    type="button"
-                    aria-label={`Información sobre ${opt.label}`}
-                    className="inline-block text-gray-400 hover:text-gray-600 ml-2 cursor-help p-0.5 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  >
-                    ℹ️
-                  </button>
-                </Tooltip>
+                <div className="ml-2">
+                  <Tooltip content={opt.tooltip}>
+                    <button
+                      type="button"
+                      aria-label={`Información sobre ${opt.label}`}
+                      className="inline-block text-gray-400 hover:text-gray-600 cursor-help p-0.5 rounded focus:outline-none focus:ring-1 focus:ring-primary-500"
+                    >
+                      ℹ️
+                    </button>
+                  </Tooltip>
+                </div>
               )}
             </div>
 
             {isChecked && requiresCustom && (
-              <div className="mt-3 pt-3 border-t border-blue-200">
+              <div className="px-4 pb-4 sm:px-5 sm:pb-5 pt-2 border-t border-blue-200/80">
                 <label
                   htmlFor={`custom-input-${id}-${opt.value}`}
-                  className="block text-xs font-semibold text-blue-900 mb-1"
+                  className="block text-xs font-semibold text-blue-900 mb-1.5"
                 >
                   {es.questionnaire.specifyOtherLabel}
                 </label>
@@ -147,8 +181,7 @@ export const MultipleChoiceQuestion: React.FC<MultipleChoiceQuestionProps> = ({
                   value={customVal}
                   onChange={(e) => handleCustomTextChange(opt.value, e.target.value)}
                   placeholder={es.questionnaire.specifyOtherPlaceholder}
-                  className="w-full px-3 py-2 text-sm bg-white border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
-                  onClick={(e) => e.stopPropagation()}
+                  className="w-full px-3.5 py-2 text-sm bg-white border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-gray-900"
                 />
               </div>
             )}

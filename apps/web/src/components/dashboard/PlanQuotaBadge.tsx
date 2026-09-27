@@ -27,11 +27,11 @@ export const PlanQuotaBadge: React.FC<PlanQuotaBadgeProps> = ({
 
   if (isPro) {
     return (
-      <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3.5 py-1.5 text-xs font-semibold text-primary">
+      <div className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-blue-50/80 px-3.5 py-1 text-xs font-semibold text-primary shadow-2xs">
         <span className="inline-block h-2 w-2 rounded-full bg-primary" aria-hidden="true" />
         <span className="font-bold">{es.plans.pro}</span>
-        <span className="text-muted-foreground">•</span>
-        <span>{es.plans.unlimitedAccess}</span>
+        <span className="text-gray-400">•</span>
+        <span className="text-gray-600">{es.plans.unlimitedAccess}</span>
       </div>
     );
   }
@@ -42,12 +42,12 @@ export const PlanQuotaBadge: React.FC<PlanQuotaBadgeProps> = ({
     .replace('{remaining}', remainingQuota.toString());
 
   return (
-    <div className="flex flex-wrap items-center gap-3">
+    <div className="flex flex-wrap items-center gap-2.5">
       <div
-        className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-xs font-medium ${
+        className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-1 text-xs font-medium transition-all shadow-2xs ${
           isExhausted
-            ? 'border-amber-500/30 bg-amber-50 text-amber-900 dark:bg-amber-950/40 dark:text-amber-200'
-            : 'border-border bg-muted/50 text-foreground'
+            ? 'border-status-draft-border bg-status-draft-bg/60 text-status-draft-text'
+            : 'border-border-subtle bg-surface-card text-gray-700'
         }`}
       >
         <span
@@ -66,18 +66,25 @@ export const PlanQuotaBadge: React.FC<PlanQuotaBadgeProps> = ({
           <button
             type="button"
             onClick={onUpgradeClick}
-            className="inline-flex items-center justify-center rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            className="inline-flex items-center gap-1 justify-center rounded-full bg-primary hover:bg-primary-hover active:bg-primary-active px-3 py-1 text-xs font-semibold text-white shadow-xs transition-all active:scale-[0.99] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           >
-            {es.plans.upgradeButton}
+            <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            <span>{es.plans.upgradeButton}</span>
           </button>
         ) : (
           <Link
             href="/checkout"
-            className="inline-flex items-center justify-center rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            className="inline-flex items-center gap-1 justify-center rounded-full bg-primary hover:bg-primary-hover active:bg-primary-active px-3 py-1 text-xs font-semibold text-white shadow-xs transition-all active:scale-[0.99] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           >
-            {es.plans.upgradeButton}
+            <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            <span>{es.plans.upgradeButton}</span>
           </Link>
         ))}
     </div>
   );
 };
+

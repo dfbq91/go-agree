@@ -42,53 +42,54 @@ export const QuestionGuidance: React.FC<QuestionGuidanceProps> = ({
   };
 
   return (
-    <div className="mb-5 rounded-xl border border-blue-100 bg-gradient-to-br from-blue-50/70 via-indigo-50/40 to-white p-4 sm:p-5 shadow-xs transition-all">
-      {/* Header with Title & Badge */}
-      <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+    <div className="mb-6 rounded-xl border border-blue-100 bg-blue-50/70 p-4 sm:p-5 shadow-2xs transition-all">
+      {/* Header con icono y título */}
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
         <div className="flex items-center gap-2">
-          <span
-            className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-100 text-blue-700 font-bold text-base"
-            aria-hidden="true"
-          >
+          <span className="text-base select-none mt-0.5" aria-hidden="true">
             💡
           </span>
-          <h3 className="text-sm sm:text-base font-semibold text-gray-900">{guidance.title}</h3>
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-blue-900">
+            {guidance.title}
+          </h3>
         </div>
         {guidance.badge && (
-          <span className="inline-flex items-center rounded-full bg-blue-100/80 px-2.5 py-0.5 text-xs font-medium text-blue-800">
+          <span className="inline-flex items-center rounded-full bg-blue-100/90 px-2.5 py-0.5 text-xs font-medium text-blue-800">
             {guidance.badge}
           </span>
         )}
       </div>
 
-      {/* Contextual description */}
+      {/* Descripción contextual */}
       {guidance.context && (
-        <p className="text-xs sm:text-sm text-gray-600 mb-3.5 leading-relaxed">
+        <p className="text-xs sm:text-sm text-blue-950 mb-3.5 leading-relaxed">
           {guidance.context}
         </p>
       )}
 
-      {/* Key Tips Grid/List */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mb-3.5">
-        {guidance.tips.map((tip, index) => (
-          <div
-            key={index}
-            className="rounded-lg bg-white/90 border border-blue-100/60 p-3 shadow-2xs flex flex-col justify-start"
-          >
-            <div className="flex items-center gap-1.5 mb-1">
-              {tip.icon && (
-                <span className="text-base" aria-hidden="true">
-                  {tip.icon}
-                </span>
-              )}
-              <span className="text-xs font-semibold text-blue-950">{tip.title}</span>
+      {/* Grid de Pautas / Tips */}
+      {guidance.tips && guidance.tips.length > 0 && (
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mb-3.5">
+          {guidance.tips.map((tip, index) => (
+            <div
+              key={index}
+              className="rounded-lg bg-white/95 border border-blue-100/70 p-3 shadow-2xs flex flex-col justify-start"
+            >
+              <div className="flex items-center gap-1.5 mb-1">
+                {tip.icon && (
+                  <span className="text-sm" aria-hidden="true">
+                    {tip.icon}
+                  </span>
+                )}
+                <span className="text-xs font-semibold text-blue-950">{tip.title}</span>
+              </div>
+              <p className="text-xs text-gray-600 leading-snug">{tip.text}</p>
             </div>
-            <p className="text-xs text-gray-600 leading-snug">{tip.text}</p>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
-      {/* Suggested Examples */}
+      {/* Ejemplos prácticos de referencia */}
       {guidance.examples && guidance.examples.length > 0 && (
         <div className="border-t border-blue-100/80 pt-3">
           <div className="flex items-center justify-between mb-2">
@@ -107,12 +108,12 @@ export const QuestionGuidance: React.FC<QuestionGuidanceProps> = ({
                   onClick={() => toggleExample(idx)}
                   className={`px-2.5 py-1 text-xs rounded-md font-medium border transition-colors flex items-center gap-1.5 ${
                     isSelected
-                      ? 'bg-blue-600 text-white border-blue-600'
-                      : 'bg-white text-gray-700 border-gray-200 hover:border-blue-300 hover:bg-blue-50/50'
+                      ? 'bg-primary-600 text-white border-primary-600 shadow-2xs'
+                      : 'bg-white text-gray-700 border-gray-200 hover:border-primary-300 hover:bg-blue-50/50'
                   }`}
                   aria-expanded={isSelected}
                 >
-                  <span>{isSelected ? '▼' : '▶'}</span>
+                  <span className="text-[10px]">{isSelected ? '▼' : '▶'}</span>
                   <span>{ex.label}</span>
                 </button>
               );
@@ -127,7 +128,7 @@ export const QuestionGuidance: React.FC<QuestionGuidanceProps> = ({
                   <button
                     type="button"
                     onClick={() => onSelectExample(selectedExample.text)}
-                    className="text-xs font-medium text-blue-600 hover:text-blue-800 hover:underline inline-flex items-center gap-1"
+                    className="text-xs font-medium text-primary-600 hover:text-primary-800 hover:underline inline-flex items-center gap-1"
                   >
                     <span>
                       {es.questionnaire.guidanceAction?.useExample || 'Usar como plantilla'}

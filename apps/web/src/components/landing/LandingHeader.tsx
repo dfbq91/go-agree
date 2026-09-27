@@ -21,17 +21,14 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ isAuthenticated })
           <div className="flex items-center">
             <Link
               href="/"
-              className="text-2xl font-black text-primary-600 tracking-tight hover:opacity-90 transition-opacity flex items-center gap-2"
+              className="flex items-center gap-2.5 group hover:opacity-95 transition-opacity"
             >
-              <svg
-                className="w-8 h-8 text-primary-600"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
-              </svg>
-              <span>{es.brand.name}</span>
+              <div className="w-8 h-8 rounded-xl bg-primary-600 flex items-center justify-center text-white font-bold text-lg shadow-xs">
+                g
+              </div>
+              <span className="text-lg font-bold text-gray-900 tracking-tight group-hover:text-primary-600 transition-colors">
+                {es.brand.name}
+              </span>
             </Link>
           </div>
 
@@ -39,24 +36,24 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ isAuthenticated })
           <nav className="hidden md:flex items-center space-x-8" aria-label="Navegación principal">
             <Link
               href="#como-funciona"
-              className="text-sm font-semibold text-gray-600 hover:text-primary-600 transition-colors"
+              className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
             >
               {es.landing.nav.howItWorks}
             </Link>
             <Link
               href="#precios"
-              className="text-sm font-semibold text-gray-600 hover:text-primary-600 transition-colors"
+              className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
             >
               {es.landing.nav.pricing}
             </Link>
           </nav>
 
           {/* Desktop Auth CTAs */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-3">
             {isAuthenticated ? (
               <Link
                 href="/dashboard"
-                className="inline-flex items-center justify-center px-4 py-2.5 border border-transparent text-sm font-bold rounded-lg shadow-xs text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors min-h-[44px]"
+                className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-semibold rounded-xl shadow-xs text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all min-h-[40px]"
               >
                 {es.nav.dashboard}
               </Link>
@@ -64,13 +61,13 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ isAuthenticated })
               <>
                 <Link
                   href="/login"
-                  className="inline-flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-gray-700 hover:text-primary-600 transition-colors min-h-[44px]"
+                  className="inline-flex items-center justify-center px-3.5 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-xl transition-colors min-h-[40px]"
                 >
                   {es.nav.login}
                 </Link>
                 <Link
                   href="/register"
-                  className="inline-flex items-center justify-center px-5 py-2.5 border border-transparent text-sm font-bold rounded-lg shadow-xs text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors min-h-[44px]"
+                  className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-semibold rounded-xl shadow-xs text-white bg-primary-600 hover:bg-primary-700 active:bg-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all min-h-[40px]"
                 >
                   {es.nav.register}
                 </Link>

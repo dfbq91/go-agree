@@ -36,7 +36,7 @@ export const BillingToggle: React.FC<BillingToggleProps> = ({
     <div
       role="radiogroup"
       aria-label={es.landing.pricing.billingCycle.label}
-      className="inline-flex items-center p-1 bg-gray-100 rounded-full border border-gray-200 shadow-inner"
+      className="inline-flex items-center p-1 bg-gray-100/90 rounded-2xl border border-gray-200/80 shadow-2xs"
     >
       {/* Monthly Option */}
       <button
@@ -47,9 +47,9 @@ export const BillingToggle: React.FC<BillingToggleProps> = ({
         tabIndex={selectedCycle === 'monthly' ? 0 : -1}
         onClick={() => onCycleChange('monthly')}
         onKeyDown={(e) => handleKeyDown(e, 'monthly')}
-        className={`px-5 py-2 text-sm font-semibold rounded-full transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-primary-500 ${
+        className={`px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-primary-500 ${
           selectedCycle === 'monthly'
-            ? 'bg-white text-gray-900 shadow-sm'
+            ? 'bg-white text-gray-900 shadow-xs'
             : 'text-gray-600 hover:text-gray-900'
         }`}
       >
@@ -65,9 +65,9 @@ export const BillingToggle: React.FC<BillingToggleProps> = ({
         tabIndex={selectedCycle === 'annual' ? 0 : -1}
         onClick={() => onCycleChange('annual')}
         onKeyDown={(e) => handleKeyDown(e, 'annual')}
-        className={`inline-flex items-center gap-2 px-5 py-2 text-sm font-semibold rounded-full transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-primary-500 ${
+        className={`inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-primary-500 ${
           selectedCycle === 'annual'
-            ? 'bg-white text-gray-900 shadow-sm'
+            ? 'bg-white text-gray-900 shadow-xs'
             : 'text-gray-600 hover:text-gray-900'
         }`}
       >

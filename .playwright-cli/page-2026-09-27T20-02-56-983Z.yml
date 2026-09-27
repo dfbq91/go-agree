@@ -1,0 +1,34 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - link "go-agree" [ref=e4] [cursor=pointer]:
+        - /url: /
+      - paragraph [ref=e5]: Generación inteligente y segura de contratos legales para Colombia
+    - generic [ref=e7]:
+      - generic [ref=e8]:
+        - heading "Inicia sesión en tu cuenta" [level=1] [ref=e9]
+        - paragraph [ref=e10]: Accede a tus borradores y contratos generados
+      - generic [ref=e11]:
+        - generic [ref=e12]:
+          - generic [ref=e13]: Correo electrónico
+          - textbox "Correo electrónico" [ref=e14]:
+            - /placeholder: tu@ejemplo.com
+        - generic [ref=e15]:
+          - generic [ref=e16]:
+            - generic [ref=e17]: Contraseña
+            - link "¿Olvidaste tu contraseña?" [ref=e18] [cursor=pointer]:
+              - /url: /reset-password
+          - textbox "Contraseña" [ref=e19]:
+            - /placeholder: ••••••••
+        - button "Iniciar sesión" [ref=e20] [cursor=pointer]:
+          - generic [ref=e21]: Iniciar sesión
+      - generic [ref=e26]: o
+      - button "Continuar con Google" [ref=e29] [cursor=pointer]:
+        - img [ref=e30]
+        - generic [ref=e35]: Continuar con Google
+      - generic [ref=e36]:
+        - generic [ref=e37]: ¿Aún no tienes una cuenta?
+        - link "Regístrate aquí" [ref=e38] [cursor=pointer]:
+          - /url: /register
+  - button "Open Next.js Dev Tools" [ref=e44] [cursor=pointer]:
+    - img [ref=e45]

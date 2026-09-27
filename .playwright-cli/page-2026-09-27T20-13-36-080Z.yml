@@ -1,0 +1,62 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - link "G go-agree LEGAL STUDIO" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e6]: G
+        - generic [ref=e8]:
+          - generic [ref=e9]: go-agree
+          - generic [ref=e10]: LEGAL STUDIO
+      - generic [ref=e11]:
+        - heading "Genera contratos comerciales personalizados a partir de respuestas guiadas." [level=1] [ref=e12]
+        - paragraph [ref=e13]: Crea, guarda y descarga tus contratos legales en formato Word y PDF en minutos.
+        - generic [ref=e14]:
+          - generic [ref=e15]:
+            - img [ref=e17]
+            - generic [ref=e19]:
+              - paragraph [ref=e20]: 3 contratos gratuitos al registrarte
+              - paragraph [ref=e21]: Explora todas las funcionalidades sin costo inicial ni compromiso.
+          - generic [ref=e22]:
+            - img [ref=e24]
+            - generic [ref=e26]:
+              - paragraph [ref=e27]: Cuestionario guiado con autoguardado
+              - paragraph [ref=e28]: Retoma tus borradores en cualquier momento sin perder ningún dato.
+          - generic [ref=e29]:
+            - img [ref=e31]
+            - generic [ref=e33]:
+              - paragraph [ref=e34]: Descarga inmediata en Word (.docx) y PDF
+              - paragraph [ref=e35]: Documentos estructurados listos para revisión y formalización.
+      - generic [ref=e37]: © 2026 go-agree. Todos los derechos reservados.
+    - main [ref=e38]:
+      - link "← Volver al inicio" [ref=e41] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e42]: ← Volver al inicio
+      - generic [ref=e44]:
+        - generic [ref=e45]:
+          - heading "Inicia sesión en tu cuenta" [level=1] [ref=e46]
+          - paragraph [ref=e47]: Accede a tus borradores y contratos generados
+        - button "Continuar con Google" [ref=e50] [cursor=pointer]:
+          - img [ref=e51]
+          - generic [ref=e56]: Continuar con Google
+        - generic [ref=e61]: o continúa con tu correo y contraseña
+        - generic [ref=e62]:
+          - generic [ref=e63]:
+            - generic [ref=e64]: Correo electrónico
+            - textbox "Correo electrónico" [ref=e65]:
+              - /placeholder: tu@ejemplo.com
+          - generic [ref=e66]:
+            - generic [ref=e67]:
+              - generic [ref=e68]: Contraseña
+              - link "¿Olvidaste tu contraseña?" [ref=e69] [cursor=pointer]:
+                - /url: /reset-password
+            - textbox "Contraseña" [ref=e70]:
+              - /placeholder: ••••••••
+          - button "Iniciar sesión" [ref=e72] [cursor=pointer]:
+            - generic [ref=e73]: Iniciar sesión
+        - generic [ref=e74]:
+          - generic [ref=e75]: ¿Aún no tienes una cuenta?
+          - link "Regístrate aquí" [ref=e76] [cursor=pointer]:
+            - /url: /register
+      - generic [ref=e77]: Conexión segura SSL con cifrado estándar de datos.
+  - button "Open Next.js Dev Tools" [ref=e83] [cursor=pointer]:
+    - img [ref=e84]

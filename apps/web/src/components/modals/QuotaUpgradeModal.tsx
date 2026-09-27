@@ -54,7 +54,7 @@ const QuotaUpgradeModalContent: React.FC<QuotaUpgradeModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs animate-in fade-in duration-200"
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"
@@ -65,9 +65,9 @@ const QuotaUpgradeModalContent: React.FC<QuotaUpgradeModalProps> = ({
         data-testid="quota-modal-backdrop"
         onClick={onClose}
       />
-      <div className="relative w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-xl z-10 bg-white">
+      <div className="relative w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl z-10">
         <div className="flex items-center gap-3 mb-4">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-50 text-primary border border-blue-100 shrink-0">
             <svg
               className="h-5 w-5"
               fill="none"
@@ -83,12 +83,12 @@ const QuotaUpgradeModalContent: React.FC<QuotaUpgradeModalProps> = ({
               />
             </svg>
           </div>
-          <h2 id="modal-title" className="text-lg font-bold text-foreground text-gray-900">
+          <h2 id="modal-title" className="font-serif text-lg font-bold text-slate-900">
             {es.plans.upgradeModalTitle}
           </h2>
         </div>
 
-        <p className="text-sm text-muted-foreground text-gray-600 mb-6 leading-relaxed">
+        <p className="text-sm text-slate-600 mb-6 leading-relaxed">
           {modalDescription}
         </p>
 
@@ -96,14 +96,14 @@ const QuotaUpgradeModalContent: React.FC<QuotaUpgradeModalProps> = ({
           <button
             type="button"
             onClick={handleUpgrade}
-            className="inline-flex w-full sm:w-auto items-center justify-center rounded-xl bg-primary bg-blue-600 hover:bg-blue-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+            className="inline-flex w-full sm:w-auto items-center justify-center rounded-xl bg-primary hover:bg-blue-700 active:bg-blue-800 px-5 py-2.5 text-sm font-semibold text-white shadow-xs transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           >
             {es.plans.upgradeModalCta}
           </button>
           <button
             type="button"
             onClick={onClose}
-            className="inline-flex w-full sm:w-auto items-center justify-center rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+            className="inline-flex w-full sm:w-auto items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all"
           >
             {es.plans.upgradeModalClose}
           </button>

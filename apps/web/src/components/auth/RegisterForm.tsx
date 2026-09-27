@@ -71,14 +71,14 @@ export function RegisterForm({ onSubmit, redirectUrl }: RegisterFormProps) {
         <div
           role="alert"
           aria-live="polite"
-          className="p-3 text-sm text-red-700 bg-red-100 border border-red-300 rounded-md"
+          className="p-3.5 text-sm text-red-700 bg-red-50 border border-red-200 rounded-xl space-y-1.5 shadow-2xs"
         >
           {error}
         </div>
       )}
 
       <div>
-        <label htmlFor="register-email" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="register-email" className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">
           {es.auth.emailLabel}
         </label>
         <input
@@ -89,12 +89,12 @@ export function RegisterForm({ onSubmit, redirectUrl }: RegisterFormProps) {
           placeholder={es.auth.emailPlaceholder}
           required
           autoComplete="email"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+          className="w-full px-3.5 py-2.5 bg-surface-canvas/60 border border-border-strong rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all shadow-2xs"
         />
       </div>
 
       <div>
-        <label htmlFor="register-password" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="register-password" className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">
           {es.auth.passwordLabel}
         </label>
         <input
@@ -107,18 +107,20 @@ export function RegisterForm({ onSubmit, redirectUrl }: RegisterFormProps) {
           minLength={8}
           autoComplete="new-password"
           aria-describedby="password-hint"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+          className="w-full px-3.5 py-2.5 bg-surface-canvas/60 border border-border-strong rounded-xl text-sm text-gray-900 placeholder:text-gray-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all shadow-2xs"
         />
-        <p id="password-hint" className="text-xs text-gray-500 mt-1">
+        <p id="password-hint" className="text-xs text-gray-500 mt-1.5">
           {es.auth.passwordHint}
         </p>
       </div>
 
-      <AuthSubmitButton
-        isLoading={isLoading}
-        loadingText={es.auth.loadingRegister}
-        defaultText={es.auth.submitRegister}
-      />
+      <div className="pt-1">
+        <AuthSubmitButton
+          isLoading={isLoading}
+          loadingText={es.auth.loadingRegister}
+          defaultText={es.auth.submitRegister}
+        />
+      </div>
     </form>
   );
 }

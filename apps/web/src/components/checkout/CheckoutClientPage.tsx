@@ -65,23 +65,23 @@ export const CheckoutClientPage: React.FC<CheckoutClientPageProps> = ({
   };
 
   return (
-    <div className="mx-auto max-w-4xl py-6 sm:py-10">
+    <div className="mx-auto max-w-4xl py-6 sm:py-10 px-4 sm:px-6">
       <div className="mb-8">
         <Link
           href="/dashboard"
-          className="inline-flex items-center text-xs font-medium text-muted-foreground hover:text-foreground mb-4 transition-colors"
+          className="inline-flex items-center text-xs font-semibold text-slate-500 hover:text-slate-900 mb-4 transition-colors"
         >
           ← {es.dashboard.title}
         </Link>
-        <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
+        <h1 className="font-serif text-3xl font-bold tracking-tight text-slate-900">
           {es.checkout.title}
         </h1>
-        <p className="mt-2 text-sm text-muted-foreground">{es.checkout.subtitle}</p>
+        <p className="mt-2 text-sm text-slate-500">{es.checkout.subtitle}</p>
       </div>
 
       {isActivePro ? (
-        <div className="rounded-2xl border border-primary/20 bg-primary/5 p-6 text-center">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary mb-3">
+        <div className="rounded-2xl border border-blue-200 bg-blue-50/50 p-6 text-center">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-100 text-primary mb-3">
             <svg
               className="h-6 w-6"
               fill="none"
@@ -97,28 +97,28 @@ export const CheckoutClientPage: React.FC<CheckoutClientPageProps> = ({
               />
             </svg>
           </div>
-          <h2 className="text-lg font-bold text-foreground">{es.plans.unlimitedAccess}</h2>
-          <p className="mt-2 text-sm text-muted-foreground max-w-md mx-auto">
+          <h2 className="font-serif text-lg font-bold text-slate-900">{es.plans.unlimitedAccess}</h2>
+          <p className="mt-2 text-sm text-slate-600 max-w-md mx-auto">
             {es.checkout.duplicateWarning}
           </p>
           <div className="mt-6">
             <Link
               href="/dashboard"
-              className="inline-flex items-center justify-center rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors"
+              className="inline-flex items-center justify-center rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-blue-700 transition-colors"
             >
               {es.paymentResult.backToDashboard}
             </Link>
           </div>
         </div>
       ) : providers.length === 0 ? (
-        <div className="rounded-2xl border border-border bg-card p-8 text-center">
-          <p className="text-muted-foreground text-sm">
+        <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-xs">
+          <p className="text-slate-500 text-sm">
             {es.checkout.noProvidersForCountry.replace('{country}', countryCode)}
           </p>
           <div className="mt-6">
             <Link
               href="/dashboard"
-              className="inline-flex items-center justify-center rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors"
+              className="inline-flex items-center justify-center rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-blue-700 transition-colors"
             >
               {es.paymentResult.backToDashboard}
             </Link>

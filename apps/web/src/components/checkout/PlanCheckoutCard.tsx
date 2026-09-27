@@ -55,17 +55,17 @@ export const PlanCheckoutCard: React.FC<PlanCheckoutCardProps> = ({
   };
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
       {/* Billing Cycle Toggle */}
       <div className="flex items-center justify-center mb-6">
-        <div className="inline-flex rounded-xl bg-muted p-1 border border-border">
+        <div className="inline-flex rounded-xl bg-slate-100 p-1 border border-slate-200/80">
           <button
             type="button"
             onClick={() => setBillingCycle('monthly')}
             className={`rounded-lg px-4 py-2 text-xs font-semibold transition-all ${
               !isAnnual
-                ? 'bg-background text-foreground shadow-sm'
-                : 'text-muted-foreground hover:text-foreground'
+                ? 'bg-white text-slate-900 shadow-xs'
+                : 'text-slate-500 hover:text-slate-900'
             }`}
           >
             {es.landing.pricing.billingCycle.monthly}
@@ -75,13 +75,13 @@ export const PlanCheckoutCard: React.FC<PlanCheckoutCardProps> = ({
             onClick={() => setBillingCycle('annual')}
             className={`flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold transition-all ${
               isAnnual
-                ? 'bg-background text-foreground shadow-sm'
-                : 'text-muted-foreground hover:text-foreground'
+                ? 'bg-white text-slate-900 shadow-xs'
+                : 'text-slate-500 hover:text-slate-900'
             }`}
           >
             <span>{es.landing.pricing.billingCycle.annual}</span>
             {plan.annualDiscountPercent > 0 && (
-              <span className="rounded bg-emerald-100 dark:bg-emerald-950 px-1.5 py-0.5 text-[10px] font-bold text-emerald-700 dark:text-emerald-300">
+              <span className="rounded bg-emerald-100 px-1.5 py-0.5 text-[10px] font-bold text-emerald-800">
                 {es.landing.pricing.billingCycle.saveBadge}
               </span>
             )}
@@ -90,21 +90,21 @@ export const PlanCheckoutCard: React.FC<PlanCheckoutCardProps> = ({
       </div>
 
       {/* Price Display */}
-      <div className="text-center pb-6 border-b border-border">
-        <span className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+      <div className="text-center pb-6 border-b border-slate-100">
+        <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
           {plan.name}
         </span>
         <div className="mt-2 flex items-baseline justify-center gap-1">
-          <span className="text-4xl font-extrabold text-foreground">
+          <span className="font-serif text-4xl font-extrabold text-slate-900 tracking-tight">
             {plan.currency.symbol}
             {displayPrice}
           </span>
-          <span className="text-sm font-medium text-muted-foreground">
+          <span className="text-xs font-medium text-slate-500">
             {isAnnual ? `${plan.currency.code} / año` : `${plan.currency.code} / mes`}
           </span>
         </div>
         {isAnnual && (
-          <p className="text-xs text-muted-foreground mt-1">
+          <p className="text-xs text-slate-500 mt-1">
             Equivale a {plan.currency.symbol}
             {annualMonthlyPrice} {plan.currency.code} / mes
           </p>
@@ -113,14 +113,14 @@ export const PlanCheckoutCard: React.FC<PlanCheckoutCardProps> = ({
 
       {/* Features List */}
       <div className="py-6 space-y-3">
-        <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+        <h4 className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
           {es.landing.pricing.featuresTitle}
         </h4>
         <ul className="space-y-2.5">
           {plan.features.map((feature, idx) => (
-            <li key={idx} className="flex items-start gap-2.5 text-xs text-foreground">
+            <li key={idx} className="flex items-start gap-2.5 text-xs text-slate-700">
               <svg
-                className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5"
+                className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -141,7 +141,7 @@ export const PlanCheckoutCard: React.FC<PlanCheckoutCardProps> = ({
 
       {/* Error Message */}
       {error && (
-        <div className="mb-4 rounded-xl bg-destructive/10 border border-destructive/20 p-3 text-xs text-destructive">
+        <div className="mb-4 rounded-xl bg-red-50 border border-red-200 p-3 text-xs font-medium text-red-700">
           {error}
         </div>
       )}
@@ -151,7 +151,7 @@ export const PlanCheckoutCard: React.FC<PlanCheckoutCardProps> = ({
         type="button"
         disabled={isSubmitting}
         onClick={handlePay}
-        className="w-full flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow hover:bg-primary/90 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-60 disabled:cursor-not-allowed"
+        className="w-full flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white shadow-xs hover:bg-blue-700 active:bg-blue-800 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-60 disabled:cursor-not-allowed"
       >
         {isSubmitting ? (
           <>

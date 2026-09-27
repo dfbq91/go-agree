@@ -1,0 +1,94 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - link "go-agree" [ref=e6] [cursor=pointer]:
+            - /url: /dashboard
+          - navigation [ref=e7]:
+            - link "Mis Contratos" [ref=e8] [cursor=pointer]:
+              - /url: /dashboard
+        - generic [ref=e10]:
+          - generic [ref=e11]: usuario@go-agree.co
+          - button "Cerrar sesión" [ref=e12] [cursor=pointer]
+    - main [ref=e13]:
+      - generic [ref=e14]:
+        - generic [ref=e15]:
+          - heading "Mis Contratos" [level=1] [ref=e17]
+          - generic [ref=e20]:
+            - generic [ref=e22]: Plan Gratuito
+            - generic [ref=e23]: ":"
+            - generic [ref=e24]: 2 de 3 contratos generados (1 restantes)
+        - link "Nuevo Contrato" [ref=e26] [cursor=pointer]:
+          - /url: /questionnaire
+      - table [ref=e31]:
+        - rowgroup [ref=e32]:
+          - row "Título Preguntas respondidas Descargar Fecha de creación Última modificación Acciones" [ref=e33]:
+            - columnheader "Título" [ref=e34]
+            - columnheader "Preguntas respondidas" [ref=e35]
+            - columnheader "Descargar" [ref=e36]
+            - columnheader "Fecha de creación" [ref=e37]
+            - columnheader "Última modificación" [ref=e38]
+            - columnheader "Acciones" [ref=e39]
+        - rowgroup [ref=e40]:
+          - row "Contrato de Prestación de Servicios de Consultoría Técnica Hacer clic para editar el título 14 respondidas Descargar 15 sept 2026, 5:00 27 sept 2026, 7:00 Ver resumen Acciones - Contrato de Prestación de Servicios de Consultoría Técnica" [ref=e41]:
+            - cell "Contrato de Prestación de Servicios de Consultoría Técnica Hacer clic para editar el título" [ref=e42]:
+              - generic [ref=e44]:
+                - link "Contrato de Prestación de Servicios de Consultoría Técnica" [ref=e45] [cursor=pointer]:
+                  - /url: /questionnaire?id=c-1&mode=summary
+                - button "Hacer clic para editar el título" [ref=e46] [cursor=pointer]:
+                  - img [ref=e47]
+            - cell "14 respondidas" [ref=e49]:
+              - generic [ref=e50]: 14 respondidas
+            - cell "Descargar" [ref=e51]:
+              - button "Descargar" [ref=e53] [cursor=pointer]:
+                - img [ref=e54]
+                - text: Descargar
+                - img [ref=e56]
+            - cell "15 sept 2026, 5:00" [ref=e58]
+            - cell "27 sept 2026, 7:00" [ref=e59]
+            - cell "Ver resumen Acciones - Contrato de Prestación de Servicios de Consultoría Técnica" [ref=e60]:
+              - link "Ver resumen" [ref=e61] [cursor=pointer]:
+                - /url: /questionnaire?id=c-1&mode=summary
+              - button "Acciones - Contrato de Prestación de Servicios de Consultoría Técnica" [ref=e62] [cursor=pointer]: Eliminar
+          - row "Acuerdo de Confidencialidad y No Divulgación (NDA) - Proveedor Beta Hacer clic para editar el título 8 respondidas Descargar 18 sept 2026, 5:00 27 sept 2026, 5:30 Continuar borrador Acciones - Acuerdo de Confidencialidad y No Divulgación (NDA) - Proveedor Beta" [ref=e63]:
+            - cell "Acuerdo de Confidencialidad y No Divulgación (NDA) - Proveedor Beta Hacer clic para editar el título" [ref=e64]:
+              - generic [ref=e66]:
+                - link "Acuerdo de Confidencialidad y No Divulgación (NDA) - Proveedor Beta" [ref=e67] [cursor=pointer]:
+                  - /url: /questionnaire?id=c-2
+                - button "Hacer clic para editar el título" [ref=e68] [cursor=pointer]:
+                  - img [ref=e69]
+            - cell "8 respondidas" [ref=e71]:
+              - generic [ref=e72]: 8 respondidas
+            - cell "Descargar" [ref=e73]:
+              - button "Descargar" [disabled] [ref=e75]:
+                - img [ref=e76]
+                - text: Descargar
+            - cell "18 sept 2026, 5:00" [ref=e78]
+            - cell "27 sept 2026, 5:30" [ref=e79]
+            - cell "Continuar borrador Acciones - Acuerdo de Confidencialidad y No Divulgación (NDA) - Proveedor Beta" [ref=e80]:
+              - link "Continuar borrador" [ref=e81] [cursor=pointer]:
+                - /url: /questionnaire?id=c-2
+              - button "Acciones - Acuerdo de Confidencialidad y No Divulgación (NDA) - Proveedor Beta" [ref=e82] [cursor=pointer]: Eliminar
+          - row "Contrato Individual de Trabajo a Término Indefinido - Desarrollador Hacer clic para editar el título 12 respondidas Descargar 10 sept 2026, 5:00 22 sept 2026, 9:15 Ver resumen Acciones - Contrato Individual de Trabajo a Término Indefinido - Desarrollador" [ref=e83]:
+            - cell "Contrato Individual de Trabajo a Término Indefinido - Desarrollador Hacer clic para editar el título" [ref=e84]:
+              - generic [ref=e86]:
+                - link "Contrato Individual de Trabajo a Término Indefinido - Desarrollador" [ref=e87] [cursor=pointer]:
+                  - /url: /questionnaire?id=c-3&mode=summary
+                - button "Hacer clic para editar el título" [ref=e88] [cursor=pointer]:
+                  - img [ref=e89]
+            - cell "12 respondidas" [ref=e91]:
+              - generic [ref=e92]: 12 respondidas
+            - cell "Descargar" [ref=e93]:
+              - button "Descargar" [ref=e95] [cursor=pointer]:
+                - img [ref=e96]
+                - text: Descargar
+                - img [ref=e98]
+            - cell "10 sept 2026, 5:00" [ref=e100]
+            - cell "22 sept 2026, 9:15" [ref=e101]
+            - cell "Ver resumen Acciones - Contrato Individual de Trabajo a Término Indefinido - Desarrollador" [ref=e102]:
+              - link "Ver resumen" [ref=e103] [cursor=pointer]:
+                - /url: /questionnaire?id=c-3&mode=summary
+              - button "Acciones - Contrato Individual de Trabajo a Término Indefinido - Desarrollador" [ref=e104] [cursor=pointer]: Eliminar
+  - button "Open Next.js Dev Tools" [ref=e110] [cursor=pointer]:
+    - img [ref=e111]

@@ -55,7 +55,7 @@ export function GoogleAuthButton({ redirectUrl }: GoogleAuthButtonProps) {
         onClick={handleGoogleClick}
         disabled={isLoading}
         aria-label={es.auth.continueWithGoogle}
-        className="w-full inline-flex justify-center items-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="w-full inline-flex justify-center items-center py-2.5 px-4 border border-border-strong rounded-xl shadow-2xs bg-white text-sm font-semibold text-gray-700 hover:bg-surface-canvas hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.99]"
       >
         {isLoading ? (
           <svg
