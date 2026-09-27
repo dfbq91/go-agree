@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Go-Agree Hexagonal Architecture",
+    "output": "docs/hexagonal-architecture.html",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "driving-path",
+        "label": "Driving Request Flow",
+        "focus": ["clients", "driving_web", "use_cases", "domain_core"],
+        "note": "Incoming requests from users invoke Use Cases through Driving Web Adapters."
+      },
+      {
+        "id": "domain-isolation",
+        "label": "Domain Core Isolation",
+        "focus": ["use_cases", "domain_core", "domain_services"],
+        "note": "Pure business domain entities and calculation services with zero external dependencies."
+      },
+      {
+        "id": "driven-ports-adapters",
+        "label": "Driven Ports & Adapters",
+        "focus": ["use_cases", "driven_ports", "storage_adapters", "ai_adapters", "payment_adapters"],
+        "note": "Application Use Cases depend on Ports; Infrastructure Adapters implement them."
+      }
+    ]
+  },
+  "components": [
+    { "id": "clients", "type": "external", "label": "Client Browsers", "sublabel": "React / Next.js UI", "pos": [40, 270], "size": [120, 60] },
+    { "id": "composition", "type": "cloud", "label": "Composition Root", "sublabel": "apps/web/src/lib/*", "pos": [220, 120], "size": [130, 60] },
+    { "id": "driving_web", "type": "frontend", "label": "Driving Adapters", "sublabel": "Next.js App & API", "pos": [220, 270], "size": [130, 60] },
+    { "id": "domain_core", "type": "backend", "label": "Domain Core", "sublabel": "Entities & Value Objects", "pos": [420, 120], "size": [140, 60] },
+    { "id": "domain_services", "type": "backend", "label": "Domain Services", "sublabel": "Pricing & Pruning Logic", "pos": [630, 120], "size": [140, 60] },
+    { "id": "use_cases", "type": "backend", "label": "Application Layer", "sublabel": "Use Cases (Inbound Ports)", "pos": [420, 270], "size": [140, 60] },
+    { "id": "driven_ports", "type": "backend", "label": "Driven Ports", "sublabel": "Application Interfaces", "pos": [630, 270], "size": [140, 60] },
+    { "id": "storage_adapters", "type": "database", "label": "Storage Adapters", "sublabel": "Supabase Repositories", "pos": [860, 120], "size": [140, 60] },
+    { "id": "ai_adapters", "type": "cloud", "label": "AI & Doc Adapters", "sublabel": "Gemini + Docx/PDF", "pos": [860, 270], "size": [140, 60] },
+    { "id": "payment_adapters", "type": "security", "label": "Payment Adapters", "sublabel": "Wompi Gateway Resolver", "pos": [860, 420], "size": [140, 60] },
+    { "id": "supabase_cloud", "type": "external", "label": "Supabase Cloud", "sublabel": "PostgreSQL & Auth", "pos": [1080, 120], "size": [130, 60] },
+    { "id": "external_services", "type": "external", "label": "External APIs", "sublabel": "Google Gemini & Wompi", "pos": [1080, 340], "size": [130, 60] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "go-agree Monorepo System", "wraps": ["composition", "driving_web", "use_cases", "domain_core", "domain_services", "driven_ports", "storage_adapters", "ai_adapters", "payment_adapters"] },
+    { "kind": "security-group", "label": "Hexagonal Core (Domain & Application)", "wraps": ["use_cases", "domain_core", "domain_services", "driven_ports"] }
+  ],
+  "connections": [
+    { "id": "user-interaction", "from": "clients", "to": "driving_web", "label": "HTTPS", "variant": "emphasis" },
+    { "id": "composition-wiring", "from": "composition", "to": "driving_web", "label": "wires use cases", "variant": "dashed", "fromSide": "bottom", "toSide": "top", "labelAt": [285, 225] },
+    { "id": "web-to-use-cases", "from": "driving_web", "to": "use_cases", "label": "invokes" },
+    { "id": "use-cases-to-domain", "from": "use_cases", "to": "domain_core", "label": "operates on", "fromSide": "top", "toSide": "bottom" },
+    { "id": "domain-to-services", "from": "domain_core", "to": "domain_services", "label": "calculates" },
+    { "id": "use-cases-to-ports", "from": "use_cases", "to": "driven_ports", "label": "calls via" },
+    { "id": "storage-implements-port", "from": "storage_adapters", "to": "driven_ports", "label": "implements", "variant": "dashed", "fromSide": "left", "toSide": "top" },
+    { "id": "ai-implements-port", "from": "ai_adapters", "to": "driven_ports", "label": "implements", "variant": "dashed" },
+    { "id": "payment-implements-port", "from": "payment_adapters", "to": "driven_ports", "label": "implements", "variant": "dashed", "fromSide": "left", "toSide": "bottom" },
+    { "id": "storage-to-supabase", "from": "storage_adapters", "to": "supabase_cloud", "label": "SQL" },
+    { "id": "ai-to-external", "from": "ai_adapters", "to": "external_services", "label": "REST API" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Domain Layer (@go-agree/domain)",
+      "items": [
+        "Pure entities: ContractGeneration, ContractDocument, UserAccount, PricingConfig",
+        "Value Objects: ContractId, UserId, Email, AnswerValue, QuestionOption",
+        "Domain Services: PricingCalculatorService, AnswerPruningService, PaymentReferenceService",
+        "Zero external runtime dependencies; purely driven by business logic"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Application Layer (@go-agree/application)",
+      "items": [
+        "Use Cases act as Inbound Ports orchestrating domain logic (e.g. GenerateContractDocumentUseCase)",
+        "Defines Outbound / Driven Ports (ContractRepositoryPort, LlmContractDraftingPort, PaymentGatewayPort)",
+        "Strictly depends on @go-agree/domain; completely decoupled from infrastructure details"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Infrastructure Layer (@go-agree/infrastructure)",
+      "items": [
+        "Implements driven ports with concrete adapters (SupabaseContractRepository, PdfDocumentGeneratorAdapter)",
+        "Integrates third-party services: Google Gemini AI SDK, Wompi Payment Gateway, Pino Logger",
+        "Provides mock implementations for offline development and fast testing"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Presentation & Composition (apps/web)",
+      "items": [
+        "Next.js App Router UI pages & API route handlers serve as Driving Adapters",
+        "apps/web/src/lib/* acts as the Composition Root: instantiates adapters and injects them into Use Cases",
+        "Enforces the Dependency Inversion Principle throughout the monorepo"
+      ]
+    }
+  ]
+}

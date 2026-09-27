@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Go-Agree Infrastructure Architecture",
+    "output": "docs/infrastructure.html",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "edge-and-compute",
+        "label": "Edge & Compute Flow",
+        "focus": ["clients", "netlify_edge", "next_runtime", "logger"],
+        "note": "Client requests enter via Netlify Anycast Edge and execute on Next.js 15 Serverless runtime."
+      },
+      {
+        "id": "supabase-platform",
+        "label": "Supabase Managed Platform",
+        "focus": ["next_runtime", "supabase_auth", "supabase_db", "supabase_storage"],
+        "note": "Next.js integrates with Supabase Auth (JWT), PostgreSQL with RLS, and private S3 Storage."
+      },
+      {
+        "id": "external-services",
+        "label": "External Service Integrations",
+        "focus": ["next_runtime", "gemini_api", "wompi_gateway"],
+        "note": "AI drafting via Google Gemini SDK and payment processing via Wompi with signed webhooks."
+      }
+    ]
+  },
+  "components": [
+    { "id": "clients", "type": "external", "label": "Client Browsers", "sublabel": "Desktop & Mobile HTTPS", "pos": [40, 210], "size": [120, 60] },
+    { "id": "logger", "type": "backend", "label": "Pino Logger", "sublabel": "PII Masking & Stdout", "pos": [210, 60], "size": [130, 60] },
+    { "id": "netlify_edge", "type": "cloud", "brand": "netlify", "label": "Netlify Edge", "sublabel": "Anycast DNS, CDN & WAF", "pos": [210, 210], "size": [130, 60] },
+    { "id": "gemini_api", "type": "cloud", "brand": "google-gemini", "label": "Google Gemini", "sublabel": "AI SDK Contract Drafting", "pos": [430, 60], "size": [140, 60] },
+    { "id": "next_runtime", "type": "frontend", "brand": "next-js", "label": "Next.js Runtime", "sublabel": "Serverless SSR & API Routes", "pos": [430, 210], "size": [140, 60] },
+    { "id": "wompi_gateway", "type": "security", "label": "Wompi Gateway", "sublabel": "Checkout & Webhooks", "pos": [430, 360], "size": [140, 60] },
+    { "id": "supabase_auth", "type": "security", "brand": "supabase", "label": "Supabase Auth", "sublabel": "GoTrue JWT & Google OAuth", "pos": [700, 130], "size": [145, 60] },
+    { "id": "supabase_db", "type": "database", "brand": "postgresql", "label": "PostgreSQL DB", "sublabel": "Tables & RLS Policies", "pos": [700, 290], "size": [145, 60] },
+    { "id": "supabase_storage", "type": "cloud", "brand": "supabase", "label": "Contracts Bucket", "sublabel": "Private S3 Storage (PDF/DOCX)", "pos": [920, 290], "size": [145, 60] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "Netlify Edge & Serverless Platform", "wraps": ["logger", "netlify_edge", "next_runtime"] },
+    { "kind": "region", "label": "Supabase Cloud Platform", "wraps": ["supabase_auth", "supabase_db", "supabase_storage"] }
+  ],
+  "connections": [
+    { "id": "client-to-edge", "from": "clients", "to": "netlify_edge", "label": "HTTPS", "variant": "emphasis" },
+    { "id": "edge-to-next", "from": "netlify_edge", "to": "next_runtime", "label": "routes", "labelAt": [385, 260] },
+    { "id": "next-to-logger", "from": "next_runtime", "to": "logger", "label": "stdout", "fromSide": "left", "toSide": "right" },
+    { "id": "next-to-gemini", "from": "next_runtime", "to": "gemini_api", "label": "generateText", "fromSide": "top", "toSide": "bottom", "labelAt": [500, 135] },
+    { "id": "next-to-wompi", "from": "next_runtime", "to": "wompi_gateway", "label": "checkout API", "variant": "security", "fromSide": "bottom", "toSide": "top", "labelAt": [500, 315] },
+    { "id": "next-to-auth", "from": "next_runtime", "to": "supabase_auth", "label": "JWT / OAuth" },
+    { "id": "next-to-db", "from": "next_runtime", "to": "supabase_db", "label": "SQL / RLS" },
+    { "id": "db-to-storage", "from": "supabase_db", "to": "supabase_storage", "label": "persists files" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Edge & Compute (Netlify)",
+      "items": [
+        "Global Anycast DNS and CDN edge caching static assets and client bundles",
+        "Next.js 15 App Router deployed via @netlify/plugin-nextjs on Node.js 24",
+        "Pino structured logging with automated PII masking on stdout and log drain"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Data & Identity (Supabase)",
+      "items": [
+        "Supabase Auth manages user registration, email verification, and Google OAuth JWTs",
+        "PostgreSQL database enforces Row Level Security (RLS) across user contracts and subscriptions",
+        "Private contracts S3 bucket stores generated PDF and Word document artifacts"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "AI & Payments Integrations",
+      "items": [
+        "Google Gemini API via @ai-sdk/google generates dynamic follow-up questions and drafts legal contracts",
+        "Wompi checkout widget handles credit cards, PSE, and Nequi payments with cryptographic HMAC integrity",
+        "Asynchronous webhook notifications verify payment status transitions and activate subscription quotas"
+      ]
+    }
+  ]
+}

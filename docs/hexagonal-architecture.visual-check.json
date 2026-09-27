@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "ok": false,
+  "command": "visual-check",
+  "evidenceKind": "automated-browser",
+  "status": "fail",
+  "visualReview": "pending",
+  "artifact": {
+    "path": "/Users/dbetan2/Documents/go-agree/docs/hexagonal-architecture.html",
+    "sha256": "1a0ac498e62bb837011aa720b70a60dd45ff6bdf931473bd9665aaf9c57d2684",
+    "bytes": 819797
+  },
+  "state": {
+    "detail": "read",
+    "motion": "still"
+  },
+  "chrome": {
+    "status": "available",
+    "executable": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+  },
+  "diagnostics": [
+    {
+      "code": "viewer/visual-check-runtime",
+      "severity": "error",
+      "message": "visual-check could not complete its Chrome inspection.",
+      "subject": {
+        "artifact": "/Users/dbetan2/Documents/go-agree/docs/hexagonal-architecture.html"
+      },
+      "evidence": {
+        "reason": "Chrome DevTools process exit failed: Chrome closed with signal SIGTRAP\nChrome process: signal SIGTRAP.\nChrome stderr:\n[0927/160255.843837:ERROR:third_party/crashpad/crashpad/util/mach/bootstrap.cc:65] bootstrap_check_in org.chromium.crashpad.child_port_handshake.40524.6402178.UPPBJAVSKXIVEJFL: Permission denied (1100)\n[0927/160255.844687:ERROR:third_party/crashpad/crashpad/util/file/file_io.cc:103] ReadExactly: expected 4, observed 0\n[0927/160255.845819:ERROR:third_party/crashpad/crashpad/util/file/file_io_posix.cc:208] open /Users/dbetan2/Library/Application Support/Google/Chrome/Crashpad/settings.dat: Operation not permitted (1)\n[0927/160255.845952:ERROR:third_party/crashpad/crashpad/util/file/file_io_posix.cc:208] open /Users/dbetan2/Library/Application Support/Google/Chrome/Crashpad/settings.dat: Operation not permitted (1)\n[40520:6402263:0927/160256.630684:FATAL:base/apple/mach_port_rendezvous_mac.cc:159] Check failed: kr == KERN_SUCCESS. bootstrap_check_in com.google.Chrome.MachPortRendezvousServer.40520: Permission denied (1100)"
+      },
+      "supportedFixes": [
+        "resolve the reported Chrome inspection error, then rerun visual-check"
+      ]
+    }
+  ],
+  "containment": {
+    "status": "fail",
+    "viewports": []
+  },
+  "readability": {
+    "status": "fail",
+    "minimumProjectedNodeTextPx": 6,
+    "viewports": []
+  },
+  "viewerChrome": {
+    "status": "fail",
+    "viewports": []
+  },
+  "captures": {
+    "status": "fail",
+    "screenshots": [],
+    "contactSheet": null
+  },
+  "sidecars": {
+    "receipt": "hexagonal-architecture.visual-check.json",
+    "contactSheet": "hexagonal-architecture.visual-check.html"
+  },
+  "error": "Chrome DevTools process exit failed: Chrome closed with signal SIGTRAP\nChrome process: signal SIGTRAP.\nChrome stderr:\n[0927/160255.843837:ERROR:third_party/crashpad/crashpad/util/mach/bootstrap.cc:65] bootstrap_check_in org.chromium.crashpad.child_port_handshake.40524.6402178.UPPBJAVSKXIVEJFL: Permission denied (1100)\n[0927/160255.844687:ERROR:third_party/crashpad/crashpad/util/file/file_io.cc:103] ReadExactly: expected 4, observed 0\n[0927/160255.845819:ERROR:third_party/crashpad/crashpad/util/file/file_io_posix.cc:208] open /Users/dbetan2/Library/Application Support/Google/Chrome/Crashpad/settings.dat: Operation not permitted (1)\n[0927/160255.845952:ERROR:third_party/crashpad/crashpad/util/file/file_io_posix.cc:208] open /Users/dbetan2/Library/Application Support/Google/Chrome/Crashpad/settings.dat: Operation not permitted (1)\n[40520:6402263:0927/160256.630684:FATAL:base/apple/mach_port_rendezvous_mac.cc:159] Check failed: kr == KERN_SUCCESS. bootstrap_check_in com.google.Chrome.MachPortRendezvousServer.40520: Permission denied (1100)"
+}
