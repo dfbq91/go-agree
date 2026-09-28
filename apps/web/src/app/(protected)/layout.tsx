@@ -1,3 +1,4 @@
+import { Logo } from '@/components/ui/Logo';
 import { UserNav } from '@/components/ui/UserNav';
 import { getServerAuthAdapter } from '@/lib/auth';
 import { es } from '@/locales/es';
@@ -24,21 +25,12 @@ export default async function ProtectedLayout({ children }: { children: React.Re
           <div className="flex items-center space-x-8">
             <Link
               href="/dashboard"
-              className="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-primary-500 rounded-lg p-0.5"
+              className="flex items-center gap-2.5 group focus:outline-none focus:ring-2 focus:ring-primary-500 rounded-lg p-0.5"
             >
-              <div className="w-9 h-9 rounded-xl bg-primary text-white flex items-center justify-center font-bold text-base shadow-sm group-hover:bg-primary-hover transition-colors">
-                G
-              </div>
-              <div className="flex flex-col">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-base font-bold text-gray-900 tracking-tight whitespace-nowrap">
-                    {es.brand.name}
-                  </span>
-                  <span className="hidden sm:inline-block text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-surface-muted text-gray-600 font-semibold border border-border-subtle">
-                    LEGAL STUDIO
-                  </span>
-                </div>
-              </div>
+              <Logo className="h-10 sm:h-11 w-auto" />
+              <span className="hidden sm:inline-block text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-surface-muted text-gray-600 font-semibold border border-border-subtle">
+                LEGAL STUDIO
+              </span>
             </Link>
             <nav className="hidden md:flex items-center space-x-6">
               <Link
@@ -75,4 +67,3 @@ export default async function ProtectedLayout({ children }: { children: React.Re
     </div>
   );
 }
-

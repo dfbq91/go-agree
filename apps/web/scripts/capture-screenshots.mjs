@@ -1,6 +1,6 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import { chromium } from '@playwright/test';
-import fs from 'fs';
-import path from 'path';
 
 const BASE_URL = process.env.BASE_URL || 'https://go-agree.netlify.app';
 const TEST_EMAIL = 'e2e_test_runner@gmail.com';
@@ -51,7 +51,9 @@ async function capture() {
       data: { email: TEST_EMAIL, password: TEST_PASSWORD },
     });
     if (!loginRes.ok()) {
-      console.warn(`[Auth] Direct API login failed status: ${loginRes.status()}. Trying UI login...`);
+      console.warn(
+        `[Auth] Direct API login failed status: ${loginRes.status()}. Trying UI login...`
+      );
       await page.fill('input[type="email"]', TEST_EMAIL);
       await page.fill('input[type="password"]', TEST_PASSWORD);
       await page.click('button[type="submit"]');
@@ -77,13 +79,13 @@ async function capture() {
     console.log(`[Questionnaire] Saved to ${questionnairePath}`);
 
     // 6. Summary: Let's see if we can open an existing summary or answer the questionnaire to summary
-    console.log(`[Summary] Navigating to summary mode...`);
+    console.log('[Summary] Navigating to summary mode...');
     const url = page.url();
     let contractId = null;
     if (url.includes('id=')) {
       contractId = new URL(url).searchParams.get('id');
     }
-    
+
     // Check if there is already a completed contract on dashboard to link to summary
     if (!contractId) {
       await page.goto(`${BASE_URL}/dashboard`, { waitUntil: 'networkidle' });
@@ -96,7 +98,9 @@ async function capture() {
         await page.goto(`${BASE_URL}/questionnaire?mode=summary`, { waitUntil: 'networkidle' });
       }
     } else {
-      await page.goto(`${BASE_URL}/questionnaire?id=${contractId}&mode=summary`, { waitUntil: 'networkidle' });
+      await page.goto(`${BASE_URL}/questionnaire?id=${contractId}&mode=summary`, {
+        waitUntil: 'networkidle',
+      });
     }
     await page.waitForTimeout(1500);
 

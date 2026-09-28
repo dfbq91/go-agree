@@ -3,11 +3,7 @@ import { getServerAuthAdapter } from '@/lib/auth';
 import { logger } from '@/lib/logger';
 import { es } from '@/locales/es';
 import { ResendConfirmationEmailUseCase } from '@go-agree/application';
-import {
-  AuthRateLimitExceededError,
-  DomainAuthError,
-  InvalidEmailError,
-} from '@go-agree/domain';
+import { AuthRateLimitExceededError, DomainAuthError, InvalidEmailError } from '@go-agree/domain';
 import { correlationStorage } from '@go-agree/infrastructure';
 import { NextResponse } from 'next/server';
 

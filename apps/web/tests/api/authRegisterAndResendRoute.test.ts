@@ -51,7 +51,9 @@ describe('Auth Register and Resend Confirmation API Routes', () => {
       expect(response.status).toBe(201);
 
       const json = await response.json();
-      expect(json.redirectTo).toBe('/confirm-email?email=test%40example.com&redirect=%2Fquestionnaire');
+      expect(json.redirectTo).toBe(
+        '/confirm-email?email=test%40example.com&redirect=%2Fquestionnaire'
+      );
       expect(mockRegisterWithEmail).toHaveBeenCalledWith(
         expect.objectContaining({
           email: 'test@example.com',

@@ -74,9 +74,7 @@ export const PlanCheckoutCard: React.FC<PlanCheckoutCardProps> = ({
             type="button"
             onClick={() => setBillingCycle('annual')}
             className={`flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-semibold transition-all ${
-              isAnnual
-                ? 'bg-white text-slate-900 shadow-xs'
-                : 'text-slate-500 hover:text-slate-900'
+              isAnnual ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500 hover:text-slate-900'
             }`}
           >
             <span>{es.landing.pricing.billingCycle.annual}</span>

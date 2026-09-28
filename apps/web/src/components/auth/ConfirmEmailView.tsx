@@ -11,7 +11,11 @@ interface ConfirmEmailViewProps {
   onResend?: (email: string) => Promise<void> | void;
 }
 
-export function ConfirmEmailView({ email: initialEmail = '', redirectUrl, onResend }: ConfirmEmailViewProps) {
+export function ConfirmEmailView({
+  email: initialEmail = '',
+  redirectUrl,
+  onResend,
+}: ConfirmEmailViewProps) {
   const [email, setEmail] = useState(initialEmail);
   const [isLoading, setIsLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -71,9 +75,7 @@ export function ConfirmEmailView({ email: initialEmail = '', redirectUrl, onRese
     }
   };
 
-  const loginUrl = redirectUrl
-    ? `/login?redirect=${encodeURIComponent(redirectUrl)}`
-    : '/login';
+  const loginUrl = redirectUrl ? `/login?redirect=${encodeURIComponent(redirectUrl)}` : '/login';
 
   return (
     <div className="w-full max-w-md mx-auto">
@@ -101,7 +103,9 @@ export function ConfirmEmailView({ email: initialEmail = '', redirectUrl, onRese
 
       {/* Headings */}
       <div className="text-center mb-6">
-        <h1 className="font-serif text-2xl font-bold text-slate-900 tracking-tight">{es.auth.confirmEmailTitle}</h1>
+        <h1 className="font-serif text-2xl font-bold text-slate-900 tracking-tight">
+          {es.auth.confirmEmailTitle}
+        </h1>
         <p className="text-sm text-slate-500 mt-1">{es.auth.confirmEmailSubtitle}</p>
       </div>
 
@@ -153,7 +157,10 @@ export function ConfirmEmailView({ email: initialEmail = '', redirectUrl, onRese
       <form onSubmit={handleResend} className="space-y-3" noValidate>
         {!initialEmail && (
           <div>
-            <label htmlFor="confirm-email-input" className="block text-xs font-medium text-slate-700 mb-1">
+            <label
+              htmlFor="confirm-email-input"
+              className="block text-xs font-medium text-slate-700 mb-1"
+            >
               {es.auth.emailLabel}
             </label>
             <input

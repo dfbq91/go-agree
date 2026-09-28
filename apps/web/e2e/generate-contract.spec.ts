@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { createClient } from '@supabase/supabase-js';
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
@@ -22,7 +22,9 @@ test.describe('Contract Generation & Dashboard Status E2E', () => {
       .eq('user_id', TEST_USER_ID);
   });
 
-  test('reproduces issue: check if "Actualización pendiente" appears after contract generation', async ({ page }) => {
+  test('reproduces issue: check if "Actualización pendiente" appears after contract generation', async ({
+    page,
+  }) => {
     test.setTimeout(120000);
     // 1. Log in via API request (which sets browser context cookies)
     const loginRes = await page.request.post('/api/auth/login', {
@@ -41,7 +43,9 @@ test.describe('Contract Generation & Dashboard Status E2E', () => {
 
     // Function to click next or review
     const clickNext = async () => {
-      const nextBtn = page.locator('button:has-text("Siguiente"), button:has-text("Revisar respuestas")');
+      const nextBtn = page.locator(
+        'button:has-text("Siguiente"), button:has-text("Revisar respuestas")'
+      );
       await expect(nextBtn).toBeVisible({ timeout: 5000 });
       await nextBtn.click();
     };
@@ -54,7 +58,9 @@ test.describe('Contract Generation & Dashboard Status E2E', () => {
 
     // Q1: Legal personality -> Individual
     console.log('[E2E] Answering Q1: Persona natural');
-    await expect(page.locator('#opt-q1_legal_personality-individual')).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('#opt-q1_legal_personality-individual')).toBeVisible({
+      timeout: 10000,
+    });
     await page.locator('#opt-q1_legal_personality-individual').check();
     await expect(page.locator('#opt-q1_legal_personality-individual')).toBeChecked();
     await clickNext();
@@ -62,7 +68,9 @@ test.describe('Contract Generation & Dashboard Status E2E', () => {
     // Q2: Description
     console.log('[E2E] Answering Q2: Description');
     await expect(page.locator('#input-q2_description_conditions')).toBeVisible({ timeout: 10000 });
-    await page.locator('#input-q2_description_conditions').fill('Desarrollo de software y consultoría técnica especializada');
+    await page
+      .locator('#input-q2_description_conditions')
+      .fill('Desarrollo de software y consultoría técnica especializada');
     await clickNext();
 
     // Q3: Domicile
@@ -74,15 +82,16 @@ test.describe('Contract Generation & Dashboard Status E2E', () => {
     // Q4: Breach impact
     console.log('[E2E] Answering Q4: Breach impact');
     await expect(page.locator('#input-q4_breach_impact')).toBeVisible({ timeout: 10000 });
-    await page.locator('#input-q4_breach_impact').fill('Retraso en el cronograma y pérdidas comerciales');
+    await page
+      .locator('#input-q4_breach_impact')
+      .fill('Retraso en el cronograma y pérdidas comerciales');
     await clickNext();
 
     // Q5: Modality -> one_time (Triggers background analysis)
     console.log('[E2E] Answering Q5: Entrega única');
-    const analyzePromise = page.waitForResponse(
-      (resp) => resp.url().includes('/analyze'),
-      { timeout: 15000 }
-    ).catch(() => null);
+    const analyzePromise = page
+      .waitForResponse((resp) => resp.url().includes('/analyze'), { timeout: 15000 })
+      .catch(() => null);
 
     await expect(page.locator('#opt-q5_modality-one_time')).toBeVisible({ timeout: 10000 });
     await page.locator('#opt-q5_modality-one_time').check();
@@ -102,14 +111,18 @@ test.describe('Contract Generation & Dashboard Status E2E', () => {
 
     // Q6: Service profile -> not_applicable
     console.log('[E2E] Answering Q6: No aplica');
-    await expect(page.locator('#opt-q6_service_profile-not_applicable')).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('#opt-q6_service_profile-not_applicable')).toBeVisible({
+      timeout: 10000,
+    });
     await page.locator('#opt-q6_service_profile-not_applicable').check();
     await expect(page.locator('#opt-q6_service_profile-not_applicable')).toBeChecked();
     await clickNext();
 
     // Q8: Termination notice -> days_30
     console.log('[E2E] Answering Q8: 30 días');
-    await expect(page.locator('#opt-q8_termination_notice-days_30')).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('#opt-q8_termination_notice-days_30')).toBeVisible({
+      timeout: 10000,
+    });
     await page.locator('#opt-q8_termination_notice-days_30').check();
     await expect(page.locator('#opt-q8_termination_notice-days_30')).toBeChecked();
     await clickNext();
@@ -129,7 +142,9 @@ test.describe('Contract Generation & Dashboard Status E2E', () => {
 
     // Q11: Dispute resolution -> ordinary_courts
     console.log('[E2E] Answering Q11: Tribunales ordinarios');
-    await expect(page.locator('#opt-q11_dispute_resolution-ordinary_courts')).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('#opt-q11_dispute_resolution-ordinary_courts')).toBeVisible({
+      timeout: 10000,
+    });
     await page.locator('#opt-q11_dispute_resolution-ordinary_courts').check();
     await expect(page.locator('#opt-q11_dispute_resolution-ordinary_courts')).toBeChecked();
     await clickNext();
@@ -151,7 +166,9 @@ test.describe('Contract Generation & Dashboard Status E2E', () => {
           await firstRadio.check();
         }
       }
-      const nextBtn = page.locator('button:has-text("Siguiente"), button:has-text("Revisar respuestas")');
+      const nextBtn = page.locator(
+        'button:has-text("Siguiente"), button:has-text("Revisar respuestas")'
+      );
       await expect(nextBtn).toBeVisible({ timeout: 10000 });
       await nextBtn.click();
       await page.waitForTimeout(500);
@@ -189,7 +206,9 @@ test.describe('Contract Generation & Dashboard Status E2E', () => {
         const contractUpdatedAt = new Date(dbContracts[0].updated_at).getTime();
         for (const doc of dbDocs) {
           const docCreatedAt = new Date(doc.created_at).getTime();
-          console.log(`[E2E DB check] format=${doc.file_format} contract.updated_at=${contractUpdatedAt} doc.created_at=${docCreatedAt} diff(contract - doc)=${contractUpdatedAt - docCreatedAt}ms`);
+          console.log(
+            `[E2E DB check] format=${doc.file_format} contract.updated_at=${contractUpdatedAt} doc.created_at=${docCreatedAt} diff(contract - doc)=${contractUpdatedAt - docCreatedAt}ms`
+          );
         }
       }
     }
@@ -208,7 +227,13 @@ test.describe('Contract Generation & Dashboard Status E2E', () => {
     await page.screenshot({ path: 'e2e-dashboard-result.png', fullPage: true });
 
     // Assert the behavior
-    expect(pendingCount, 'Bug detected: "Actualización pendiente" should NOT be visible on a newly completed contract!').toBe(0);
-    expect(downloadCount, 'Expected "Descargar" dropdown button to be visible on dashboard!').toBeGreaterThan(0);
+    expect(
+      pendingCount,
+      'Bug detected: "Actualización pendiente" should NOT be visible on a newly completed contract!'
+    ).toBe(0);
+    expect(
+      downloadCount,
+      'Expected "Descargar" dropdown button to be visible on dashboard!'
+    ).toBeGreaterThan(0);
   });
 });

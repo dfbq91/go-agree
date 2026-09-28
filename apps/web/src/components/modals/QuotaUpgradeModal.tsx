@@ -88,9 +88,7 @@ const QuotaUpgradeModalContent: React.FC<QuotaUpgradeModalProps> = ({
           </h2>
         </div>
 
-        <p className="text-sm text-slate-600 mb-6 leading-relaxed">
-          {modalDescription}
-        </p>
+        <p className="text-sm text-slate-600 mb-6 leading-relaxed">{modalDescription}</p>
 
         <div className="flex flex-col gap-2.5 sm:flex-row-reverse">
           <button

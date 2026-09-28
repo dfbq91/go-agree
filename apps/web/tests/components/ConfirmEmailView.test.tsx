@@ -7,7 +7,9 @@ describe('ConfirmEmailView Component', () => {
   it('renders confirmation view with email and instructions in Spanish', () => {
     render(<ConfirmEmailView email="test@example.com" />);
 
-    expect(screen.getByRole('heading', { level: 1, name: es.auth.confirmEmailTitle })).toBeDefined();
+    expect(
+      screen.getByRole('heading', { level: 1, name: es.auth.confirmEmailTitle })
+    ).toBeDefined();
     expect(screen.getByText(es.auth.confirmEmailSubtitle)).toBeDefined();
     expect(screen.getByText('test@example.com')).toBeDefined();
     expect(screen.getByText(es.auth.confirmEmailInstructions('test@example.com'))).toBeDefined();

@@ -21,9 +21,7 @@ export const PaymentProviderSelector: React.FC<PaymentProviderSelectorProps> = (
         <h3 className="font-serif text-lg font-bold text-slate-900">
           {es.checkout.providerSectionTitle}
         </h3>
-        <p className="text-xs text-slate-500 mt-0.5">
-          {es.checkout.providerSectionSubtitle}
-        </p>
+        <p className="text-xs text-slate-500 mt-0.5">{es.checkout.providerSectionSubtitle}</p>
       </div>
 
       <div className="space-y-3" role="radiogroup" aria-label={es.checkout.providerSectionTitle}>

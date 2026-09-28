@@ -47,7 +47,8 @@ export const es = {
       email
         ? `Hemos enviado un enlace de confirmación a ${email}. Por favor, revisa tu bandeja de entrada y haz clic en el enlace para activar tu cuenta.`
         : 'Hemos enviado un enlace de confirmación a tu correo electrónico. Por favor, revisa tu bandeja de entrada y haz clic en el enlace para activar tu cuenta.',
-    confirmEmailSpamNotice: '¿No recibiste el correo? Revisa tu carpeta de correo no deseado (spam).',
+    confirmEmailSpamNotice:
+      '¿No recibiste el correo? Revisa tu carpeta de correo no deseado (spam).',
     resendEmailButton: 'Reenviar correo de confirmación',
     resendingEmail: 'Reenviando...',
     resendEmailCooldown: (seconds: number) => `Reenviar en ${seconds}s`,

@@ -93,7 +93,10 @@ export function DeleteContractModal({
               <h3 id="delete-dialog-title" className="font-serif text-lg font-bold text-slate-900">
                 {es.dashboard.deleteModal.title}
               </h3>
-              <p id="delete-dialog-description" className="mt-2 text-sm text-slate-600 leading-relaxed">
+              <p
+                id="delete-dialog-description"
+                className="mt-2 text-sm text-slate-600 leading-relaxed"
+              >
                 {es.dashboard.deleteModal.message}
               </p>
               <div className="mt-3 p-3 bg-slate-50 rounded-xl border border-slate-200">

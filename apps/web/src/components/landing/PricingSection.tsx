@@ -78,7 +78,8 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ plan, isAuthenti
         {/* Free Plan Footnote Card */}
         <div className="mt-8 max-w-xl mx-auto bg-gray-50/80 border border-gray-200/80 rounded-2xl p-5 text-center">
           <p className="text-sm text-gray-600 leading-relaxed">
-            <strong className="text-gray-900 font-semibold">¿Solo necesitas unos pocos?</strong> Plan Gratuito disponible con 3 contratos completos para siempre sin tarjeta de crédito.
+            <strong className="text-gray-900 font-semibold">¿Solo necesitas unos pocos?</strong>{' '}
+            Plan Gratuito disponible con 3 contratos completos para siempre sin tarjeta de crédito.
           </p>
           {!isAuthenticated && (
             <div className="mt-2.5">
@@ -87,8 +88,19 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ plan, isAuthenti
                 className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors"
               >
                 <span>Crear cuenta gratuita</span>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                  />
                 </svg>
               </a>
             </div>

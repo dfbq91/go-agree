@@ -1,7 +1,7 @@
-import { chromium } from '@playwright/test';
 import { spawn } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
+import { chromium } from '@playwright/test';
 
 const PORT = 3005;
 const BASE_URL = `http://localhost:${PORT}`;

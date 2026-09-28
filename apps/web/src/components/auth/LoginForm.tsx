@@ -89,7 +89,10 @@ export function LoginForm({ onSubmit, redirectUrl }: LoginFormProps) {
       )}
 
       <div>
-        <label htmlFor="login-email" className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">
+        <label
+          htmlFor="login-email"
+          className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5"
+        >
           {es.auth.emailLabel}
         </label>
         <input
@@ -106,7 +109,10 @@ export function LoginForm({ onSubmit, redirectUrl }: LoginFormProps) {
 
       <div>
         <div className="flex justify-between items-center mb-1.5">
-          <label htmlFor="login-password" className="block text-xs font-bold uppercase tracking-wider text-gray-700">
+          <label
+            htmlFor="login-password"
+            className="block text-xs font-bold uppercase tracking-wider text-gray-700"
+          >
             {es.auth.passwordLabel}
           </label>
           <Link

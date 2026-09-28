@@ -203,7 +203,10 @@ export function DownloadDropdown({
               onClick={() => setIsOpen(false)}
               className="group flex items-center px-3 py-2 text-xs font-medium text-gray-700 hover:bg-surface-canvas hover:text-primary rounded-lg focus:bg-surface-canvas focus:outline-none transition-colors"
             >
-              <span className="w-2 h-2 rounded-full bg-red-500 mr-2.5 shrink-0" aria-hidden="true" />
+              <span
+                className="w-2 h-2 rounded-full bg-red-500 mr-2.5 shrink-0"
+                aria-hidden="true"
+              />
               {es.dashboard.download.pdf}
             </a>
           )}
@@ -215,7 +218,10 @@ export function DownloadDropdown({
               onClick={() => setIsOpen(false)}
               className="group flex items-center px-3 py-2 text-xs font-medium text-gray-700 hover:bg-surface-canvas hover:text-primary rounded-lg focus:bg-surface-canvas focus:outline-none transition-colors"
             >
-              <span className="w-2 h-2 rounded-full bg-blue-600 mr-2.5 shrink-0" aria-hidden="true" />
+              <span
+                className="w-2 h-2 rounded-full bg-blue-600 mr-2.5 shrink-0"
+                aria-hidden="true"
+              />
               {es.dashboard.download.docx}
             </a>
           )}

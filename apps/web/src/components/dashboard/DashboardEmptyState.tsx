@@ -28,9 +28,7 @@ export function DashboardEmptyState({ className = '' }: DashboardEmptyStateProps
         </svg>
       </div>
 
-      <h3 className="text-xl font-bold text-gray-900 tracking-tight">
-        {es.dashboard.emptyTitle}
-      </h3>
+      <h3 className="text-xl font-bold text-gray-900 tracking-tight">{es.dashboard.emptyTitle}</h3>
       <p className="mt-2 text-sm text-gray-500 max-w-md mx-auto leading-relaxed">
         {es.dashboard.emptySubtitle}
       </p>

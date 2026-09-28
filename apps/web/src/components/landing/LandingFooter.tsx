@@ -1,3 +1,4 @@
+import { Logo } from '@/components/ui/Logo';
 import { es } from '@/locales/es';
 import Link from 'next/link';
 import type React from 'react';
@@ -13,12 +14,9 @@ export const LandingFooter: React.FC = () => {
           <div className="md:col-span-2 space-y-4">
             <Link
               href="/"
-              className="flex items-center gap-2.5 text-white tracking-tight hover:opacity-90 transition-opacity"
+              className="inline-flex items-center hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-primary-500 rounded-lg p-0.5"
             >
-              <div className="w-8 h-8 rounded-xl bg-primary-600 flex items-center justify-center text-white font-bold text-base shadow-xs">
-                g
-              </div>
-              <span className="text-lg font-bold text-white tracking-tight">{es.brand.name}</span>
+              <Logo variant="dark" className="h-11 sm:h-12 w-auto" />
             </Link>
             <p className="text-sm text-gray-400 max-w-md leading-relaxed">
               {es.landing.footer.brandTagline}

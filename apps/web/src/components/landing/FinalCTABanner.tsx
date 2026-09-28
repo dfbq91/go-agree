@@ -36,7 +36,8 @@ export const FinalCTABanner: React.FC<FinalCTABannerProps> = ({ isAuthenticated 
 
         {/* Subtitle */}
         <p className="text-slate-400 text-sm sm:text-base max-w-xl mx-auto leading-relaxed">
-          Genera acuerdos listos para firmar fuera de la plataforma con la máxima formalidad y sin complicaciones.
+          Genera acuerdos listos para firmar fuera de la plataforma con la máxima formalidad y sin
+          complicaciones.
         </p>
 
         {/* CTA Button */}

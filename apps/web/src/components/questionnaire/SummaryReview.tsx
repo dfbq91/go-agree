@@ -301,7 +301,8 @@ export const SummaryReview: React.FC<SummaryReviewProps> = ({
             </p>
             <p>{es.questionnaire.summary.legalDisclaimerText}</p>
             <p className="mt-1 text-gray-500">
-              Los documentos generados no incluyen firma electrónica; están listos para que las partes los firmen de forma física o externa fuera de la plataforma.
+              Los documentos generados no incluyen firma electrónica; están listos para que las
+              partes los firmen de forma física o externa fuera de la plataforma.
             </p>
           </div>
         </div>
@@ -479,7 +480,9 @@ export const SummaryReview: React.FC<SummaryReviewProps> = ({
                         <div className="text-sm font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">
                           {es.questionnaire.summary.downloadWord}
                         </div>
-                        <div className="text-xs text-gray-500">Editable para modificaciones de texto</div>
+                        <div className="text-xs text-gray-500">
+                          Editable para modificaciones de texto
+                        </div>
                       </div>
                     </div>
                     <svg
@@ -502,7 +505,8 @@ export const SummaryReview: React.FC<SummaryReviewProps> = ({
                 <div className="p-4 rounded-xl bg-amber-50/80 border border-amber-200/80 text-amber-900 text-xs leading-relaxed text-center space-y-1">
                   <p className="font-semibold text-amber-950">Descargas temporalmente pausadas</p>
                   <p className="text-amber-800">
-                    Por favor regenera el documento usando el botón superior para compilar tus respuestas actualizadas.
+                    Por favor regenera el documento usando el botón superior para compilar tus
+                    respuestas actualizadas.
                   </p>
                 </div>
               ) : !isCompleted ? (
@@ -543,7 +547,8 @@ export const SummaryReview: React.FC<SummaryReviewProps> = ({
                     )}
                   </button>
                   <p className="text-xs text-center text-gray-500 leading-relaxed">
-                    Al confirmar, el sistema estructurará las cláusulas y generará los documentos Word y PDF.
+                    Al confirmar, el sistema estructurará las cláusulas y generará los documentos
+                    Word y PDF.
                   </p>
                 </div>
               ) : null}

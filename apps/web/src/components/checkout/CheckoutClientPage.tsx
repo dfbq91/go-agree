@@ -97,7 +97,9 @@ export const CheckoutClientPage: React.FC<CheckoutClientPageProps> = ({
               />
             </svg>
           </div>
-          <h2 className="font-serif text-lg font-bold text-slate-900">{es.plans.unlimitedAccess}</h2>
+          <h2 className="font-serif text-lg font-bold text-slate-900">
+            {es.plans.unlimitedAccess}
+          </h2>
           <p className="mt-2 text-sm text-slate-600 max-w-md mx-auto">
             {es.checkout.duplicateWarning}
           </p>

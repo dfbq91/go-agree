@@ -71,7 +71,10 @@ export function ResetPasswordForm({ onSubmit }: ResetPasswordFormProps) {
       )}
 
       <div>
-        <label htmlFor="reset-email" className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">
+        <label
+          htmlFor="reset-email"
+          className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5"
+        >
           {es.auth.emailLabel}
         </label>
         <input

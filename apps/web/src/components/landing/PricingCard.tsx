@@ -43,7 +43,9 @@ export const PricingCard: React.FC<PricingCardProps> = ({
             <span className="text-4xl sm:text-5xl font-black text-gray-900 tracking-tight">
               {displayPrice.formatted}
             </span>
-            <span className="text-gray-500 text-sm sm:text-base font-medium">{displayPrice.periodLabel}</span>
+            <span className="text-gray-500 text-sm sm:text-base font-medium">
+              {displayPrice.periodLabel}
+            </span>
           </div>
 
           {/* Billing Note */}
@@ -72,7 +74,9 @@ export const PricingCard: React.FC<PricingCardProps> = ({
                     clipRule="evenodd"
                   />
                 </svg>
-                <span className="text-sm sm:text-base text-gray-700 leading-snug font-medium">{feature}</span>
+                <span className="text-sm sm:text-base text-gray-700 leading-snug font-medium">
+                  {feature}
+                </span>
               </li>
             ))}
           </ul>

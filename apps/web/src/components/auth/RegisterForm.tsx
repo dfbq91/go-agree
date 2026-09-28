@@ -78,7 +78,10 @@ export function RegisterForm({ onSubmit, redirectUrl }: RegisterFormProps) {
       )}
 
       <div>
-        <label htmlFor="register-email" className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">
+        <label
+          htmlFor="register-email"
+          className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5"
+        >
           {es.auth.emailLabel}
         </label>
         <input
@@ -94,7 +97,10 @@ export function RegisterForm({ onSubmit, redirectUrl }: RegisterFormProps) {
       </div>
 
       <div>
-        <label htmlFor="register-password" className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">
+        <label
+          htmlFor="register-password"
+          className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5"
+        >
           {es.auth.passwordLabel}
         </label>
         <input

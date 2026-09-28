@@ -1,12 +1,14 @@
-import { chromium } from '@playwright/test';
 import { spawn } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
+import { chromium } from '@playwright/test';
 
 const PORT = 3008;
 const BASE_URL = `http://localhost:${PORT}/summary-preview`;
 const OUTPUT_DIR = path.resolve('/Users/dbetan2/Documents/go-agree/screenshots');
-const ARTIFACT_DIR = path.resolve('/Users/dbetan2/.gemini/antigravity/brain/b6d452b2-db22-49e6-81c7-5ed9c0ba63a1');
+const ARTIFACT_DIR = path.resolve(
+  '/Users/dbetan2/.gemini/antigravity/brain/b6d452b2-db22-49e6-81c7-5ed9c0ba63a1'
+);
 
 if (!fs.existsSync(OUTPUT_DIR)) {
   fs.mkdirSync(OUTPUT_DIR, { recursive: true });

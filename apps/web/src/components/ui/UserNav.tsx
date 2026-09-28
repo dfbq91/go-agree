@@ -37,9 +37,7 @@ export function UserNav({ userEmail, onLogout }: UserNavProps) {
           <div className="w-5 h-5 rounded-full bg-primary-100 text-primary-700 font-semibold flex items-center justify-center text-[11px]">
             {userEmail.charAt(0).toUpperCase()}
           </div>
-          <span className="font-medium text-gray-700 truncate max-w-[180px]">
-            {userEmail}
-          </span>
+          <span className="font-medium text-gray-700 truncate max-w-[180px]">{userEmail}</span>
         </div>
       )}
       <button
@@ -68,4 +66,3 @@ export function UserNav({ userEmail, onLogout }: UserNavProps) {
     </div>
   );
 }
-

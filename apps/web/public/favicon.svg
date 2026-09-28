@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" fill="none">
+  <!-- go-agree Favicon: Optimized square icon based on Variation 3 -->
+  <defs>
+    <linearGradient id="favCobalt" x1="0" y1="0" x2="128" y2="128" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+    <linearGradient id="favIceBase" x1="26" y1="0" x2="102" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#93C5FD"/>
+      <stop offset="100%" stop-color="#6EE7B7"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Container badge with squircle curvature matching design system -->
+  <rect width="128" height="128" rx="34" fill="url(#favCobalt)"/>
+
+  <!-- Inner subtle border for crisp boundary at 16x16 / 32x32 px -->
+  <rect x="1" y="1" width="126" height="126" rx="33" stroke="#FFFFFF" stroke-opacity="0.12" stroke-width="2"/>
+
+  <!-- Signature execution curve scaled & centered for high legibility at micro sizes -->
+  <path d="M 27 78 C 35 36 49 31 52 49 C 55 67 40 84 55 75 C 69 66 72 48 80 58 L 89 69 L 104 43" 
+        fill="none" 
+        stroke="#FFFFFF" 
+        stroke-width="7" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"/>
+
+  <!-- Evidentiary baseline rule -->
+  <path d="M 27 98 L 103 98" 
+        fill="none" 
+        stroke="url(#favIceBase)" 
+        stroke-width="6.5" 
+        stroke-linecap="round"/>
+
+  <!-- Consensus integrity pin accent at execution check terminal -->
+  <circle cx="104" cy="43" r="4" fill="#A7F3D0"/>
+</svg>

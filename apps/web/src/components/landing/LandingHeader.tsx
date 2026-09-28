@@ -1,5 +1,6 @@
 'use client';
 
+import { Logo } from '@/components/ui/Logo';
 import { es } from '@/locales/es';
 import Link from 'next/link';
 import type React from 'react';
@@ -21,14 +22,9 @@ export const LandingHeader: React.FC<LandingHeaderProps> = ({ isAuthenticated })
           <div className="flex items-center">
             <Link
               href="/"
-              className="flex items-center gap-2.5 group hover:opacity-95 transition-opacity"
+              className="flex items-center group hover:opacity-95 transition-opacity focus:outline-none focus:ring-2 focus:ring-primary-500 rounded-lg p-0.5"
             >
-              <div className="w-8 h-8 rounded-xl bg-primary-600 flex items-center justify-center text-white font-bold text-lg shadow-xs">
-                g
-              </div>
-              <span className="text-lg font-bold text-gray-900 tracking-tight group-hover:text-primary-600 transition-colors">
-                {es.brand.name}
-              </span>
+              <Logo className="h-11 sm:h-12 w-auto" />
             </Link>
           </div>
 

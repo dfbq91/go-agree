@@ -4,6 +4,13 @@ import { es } from '@/locales/es';
 export const metadata = {
   title: es.brand.name,
   description: es.brand.tagline,
+  icons: {
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/icon.svg', type: 'image/svg+xml' },
+    ],
+    apple: [{ url: '/favicon.svg' }],
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
